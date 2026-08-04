@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>東京冬日旅地圖 & 行程規劃 🇯🇵</title>
+  
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  
+  <!-- Google Fonts: Outfit (English) & Noto Sans TC (Traditional Chinese) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Link Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-light">
+  
+  <div class="app-container">
+    
+    <!-- Left Sidebar: Dashboard -->
+    <aside class="sidebar">
+      
+      <!-- Brand Header -->
+      <header class="brand-header">
+        <div class="header-logo">
+          <span class="emoji-logo">🗻</span>
+          <div>
+            <h1 id="trip-title">東京跨年預備行</h1>
+            <p id="trip-dates" class="subtitle">2026/12/9 ~ 12/14</p>
+          </div>
+        </div>
+        <div class="countdown-badge">
+          <span id="countdown-text">載入中...</span>
+        </div>
+      </header>
+      
+      <!-- Tab Navigation Buttons -->
+      <nav class="tab-navigation">
+        <button class="tab-btn active" data-tab="itinerary" id="tab-btn-itinerary">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12a9 9 0 11-6.219-8.56"/></svg>
+          行程規劃
+        </button>
+        <button class="tab-btn" data-tab="directory" id="tab-btn-directory">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          美食景點
+        </button>
+        <button class="tab-btn" data-tab="logistics" id="tab-btn-logistics">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          行前指南
+        </button>
+      </nav>
+      
+      <!-- Tab Content Area -->
+      <main class="tab-content">
+        
+        <!-- Tab 1: Itinerary Planner -->
+        <section class="tab-pane active" id="pane-itinerary">
+          <!-- Days Filter Bar -->
+          <div class="day-selector-wrapper">
+            <div class="day-selector" id="day-selector-container">
+              <button class="day-btn active" data-day="all">全部</button>
+              <button class="day-btn" data-day="1">D1</button>
+              <button class="day-btn" data-day="2">D2</button>
+              <button class="day-btn" data-day="3">D3</button>
+              <button class="day-btn" data-day="4">D4</button>
+              <button class="day-btn" data-day="5">D5</button>
+              <button class="day-btn" data-day="6">D6</button>
+            </div>
+          </div>
+          
+          <div class="itinerary-timeline" id="timeline-container">
+            <!-- Rendered dynamically in app.js -->
+          </div>
+        </section>
+        
+        <!-- Tab 2: Places Directory -->
+        <section class="tab-pane" id="pane-directory">
+          <button class="btn btn-primary" id="open-add-modal-btn" style="width: 100%; margin-bottom: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            新增自訂地點
+          </button>
+          
+          <!-- Search & Filter Controls -->
+          <div class="directory-controls">
+            <div class="search-box">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="place-search" placeholder="搜尋美食、景點、購物...">
+            </div>
+            
+            <div class="category-filters" id="category-filter-container">
+              <button class="filter-chip active" data-category="all">全部</button>
+              <button class="filter-chip" data-category="food">🍔 美食</button>
+              <button class="filter-chip" data-category="shopping">🛍️ 購物</button>
+              <button class="filter-chip" data-category="sightseeing">🗼 景點</button>
+              <button class="filter-chip" data-category="lodging">🏨 住宿</button>
+            </div>
+          </div>
+          
+          <div class="places-list" id="places-list-container">
+            <!-- Rendered dynamically in app.js -->
+          </div>
+        </section>
+        
+        <!-- Tab 3: Logistics & Packing List -->
+        <section class="tab-pane" id="pane-logistics">
+          
+          <!-- Flights Info -->
+          <div class="logistics-card">
+            <div class="card-header">
+              <svg class="logistics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+              <h3>往返機票資訊</h3>
+            </div>
+            <div class="flight-route-info">
+              <div class="flight-leg">
+                <span class="badge badge-go">去程</span>
+                <span class="flight-time" id="flight-arr-time">12/9 (週三) 12:50 ~ 16:50</span>
+              </div>
+              <div class="flight-leg">
+                <span class="badge badge-back">回程</span>
+                <span class="flight-time" id="flight-dep-time">12/14 (週一) 15:30 ~ 18:40</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Lodging Info -->
+          <div class="logistics-card">
+            <div class="card-header">
+              <svg class="logistics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <h3>住宿飯店</h3>
+            </div>
+            <div class="hotel-details">
+              <h4 id="hotel-name">SYLA HOTEL Oshiage</h4>
+              <p class="hotel-addr" id="hotel-address">東京都墨田區押上3丁目</p>
+              <p class="hotel-cost">費用總額：<strong id="hotel-cost">165,598日幣 (5晚)</strong></p>
+              <div class="hotel-actions">
+                <a href="#" id="hotel-agoda-link" target="_blank" class="btn btn-outline btn-sm">Agoda 訂房連結</a>
+                <button id="hotel-locate-btn" class="btn btn-primary btn-sm">在地图上標示</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Budget & Cost Calculator -->
+          <div class="logistics-card">
+            <div class="card-header">
+              <svg class="logistics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+              <h3>旅程預算與花費計算機 (5人分攤)</h3>
+            </div>
+            <div class="budget-calculator">
+              <div class="calc-row">
+                <div class="calc-group">
+                  <label for="calc-rate">日幣匯率 (台幣/1日圓)</label>
+                  <input type="number" id="calc-rate" value="0.22" step="0.0001" min="0.01">
+                </div>
+                <div class="calc-group">
+                  <label for="calc-flight">個人機票費用 (台幣)</label>
+                  <input type="number" id="calc-flight" value="14424" step="1" min="0">
+                </div>
+              </div>
+              
+              <div class="calc-row">
+                <div class="calc-group">
+                  <label for="calc-pocket">個人日幣預算 (餐飲/購物)</label>
+                  <input type="number" id="calc-pocket" value="50000" step="1000" min="0">
+                </div>
+                <div class="calc-group">
+                  <label>每人分攤住宿 (日圓)</label>
+                  <div class="calc-static-value"><span id="calc-hotel-jpy">33,120</span> JPY</div>
+                </div>
+              </div>
+
+              <div class="calc-divider"></div>
+
+              <div class="calc-results">
+                <div class="result-item">
+                  <span>機票花費 (台幣)</span>
+                  <strong id="res-flight-twd">NT$ 14,424</strong>
+                </div>
+                <div class="result-item">
+                  <span>住宿分攤 (台幣)</span>
+                  <strong id="res-hotel-twd">NT$ 7,286</strong>
+                </div>
+                <div class="result-item">
+                  <span>零用預算 (台幣)</span>
+                  <strong id="res-pocket-twd">NT$ 11,000</strong>
+                </div>
+                <div class="result-item total">
+                  <span>估計每人總花費</span>
+                  <strong id="res-total-twd">NT$ 32,710</strong>
+                </div>
+              </div>
+
+              <div class="budget-progress-container">
+                <div class="budget-progress-header">
+                  <span>預算目標：NT$ 50,000</span>
+                  <span id="budget-percentage">已用 65%</span>
+                </div>
+                <div class="budget-progress-bar">
+                  <div class="budget-progress-fill" id="budget-progress-fill" style="width: 65.4%;"></div>
+                </div>
+                <div class="budget-status-msg" id="budget-status-msg">
+                  預算非常充裕！還有 NT$ 17,290 可供使用。
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Subway Recommendation -->
+          <div class="logistics-card">
+            <div class="card-header">
+              <svg class="logistics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
+              <h3>地鐵與交通票券建議</h3>
+            </div>
+            <div class="subway-advice">
+              <p>本次住宿位於 <strong>押上站</strong> (晴空塔前)，擁有強大交通優勢：</p>
+              <ul>
+                <li><strong>東京地鐵 72 小時券 (Tokyo Subway Ticket)</strong>：成人 1,500 日幣。可於 D2、D3、D4 啟用，無限搭乘都營地鐵和東京 Metro 全線，省下大量交通費。</li>
+                <li><strong>IC卡 (Suica / Pasmo / 乘車碼)</strong>：用於有機場往返快速列車 (如 Keisei Skyaccess) 或搭乘 JR 山手線時。</li>
+                <li><strong>成田機場往返</strong>：直接搭乘 <strong>京成電鐵 Access 特急 (Keisei Access Express)</strong>，無須轉乘直達押上站，單程約 50-60 分鐘。</li>
+                <li><strong>羽田機場往返</strong>：直接搭乘 <strong>京急電鐵 機場急行 (Keikyū Airport Line)</strong>，直通都營淺草線無須轉乘直達押上站，單程約 35-40 分鐘。</li>
+              </ul>
+            </div>
+          </div>
+          
+          <!-- Trip Recommendations & Notices -->
+          <div class="logistics-card">
+            <div class="card-header">
+              <svg class="logistics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <h3>旅遊建議 & 重要提醒</h3>
+            </div>
+            <div class="subway-advice">
+              <p><strong>🥩 老闆不吃牛備註</strong>：D3 山笑ふ 壽喜燒可改點豬肉套餐（黑豚或 SPF 豚）；D5 翠雲上野店主打魚 & 豬；D5 American Diner Andra 可改點雞肉漢堡或熱狗。其他餐點都無牛肉相關。</p>
+
+              <p style="margin-top: 14px;"><strong>🎯 加碼景點推薦 (未排入 timeline、地圖上可見隨時加入)</strong>：</p>
+              <ul>
+                <li><strong>明治神宮</strong>：D3 想在原宿多留 1 小時可加碼，鳥居下 5 人合照超美</li>
+                <li><strong>SHIBUYA SKY 展望台</strong>：D3 澀谷 Harbs 前後可插入，訂 16:00 場看日落 + 夜景（需官網預約）</li>
+                <li><strong>秋葉原</strong>：你們興趣裡的動漫電玩男子聖地，可用半天加碼（離 D5 上野只 2 站）</li>
+                <li><strong>中野百老匯</strong>：二手動漫聖地，D4 新宿加碼可搭 JR 中央線 1 站到中野</li>
+                <li><strong>東京晴空塔展望台</strong>：住飯店旁邊，任何早上有空都可以上去（可買 Fast Ticket 免排隊）</li>
+                <li><strong>丸之內仲通り 聖誕點燈</strong>：D2 從花山烏冬走去東京車站順路穿越，不用特別安排</li>
+                <li><strong>Caretta 汐留 聖誕點燈</strong>：東京冬季 TOP3，藍色配樂燈光秀，值得排一晚</li>
+                <li><strong>六本木聖誕點燈</strong>：東京冬季 TOP3 之三，D3 澀谷結束後可延伸過來</li>
+                <li><strong>Solamachi 晴空街道</strong>：D6 打包後補伴手禮首選，飯店走 3 分鐘</li>
+                <li><strong>teamLab Planets 豐洲</strong>：數位藝術沉浸展場，脫鞋涉水拍照超上相（需官網預約）</li>
+              </ul>
+
+              <p style="margin-top: 14px;"><strong>📞 需事前預約的餐廳</strong>：</p>
+              <ul>
+                <li><strong>山笑ふ 壽喜燒 (D3)</strong>：一週前 Tabelog 或電話訂 5 人吧台位</li>
+                <li><strong>あずきとこおり 刨冰 (D4)</strong>：官網預約制，一週前訂 5 位</li>
+                <li><strong>大多福 關東煮 (D5)</strong>：老店建議打電話訂位，人均約 ¥5,000</li>
+              </ul>
+
+              <p style="margin-top: 14px;"><strong>⏰ 開門時間敏感的店</strong>：</p>
+              <ul>
+                <li><strong>Tonkatsu 檍 (D2)</strong>：11:00 開店，11:15 前排到隊，不然要 1 小時起</li>
+                <li><strong>PATH 荷蘭鬆餅 (D4)</strong>：14:00 關午市，最好 10:00 前到</li>
+                <li><strong>五代目花山烏冬 (D2)</strong>：晚市 17:30 開，若想吃午市 10:30 領號碼牌可搶首發</li>
+                <li><strong>PATISSERIE TEN& (D5)</strong>：11:00 開店、19:00 打烊，早去有位子坐</li>
+              </ul>
+
+              <p style="margin-top: 14px;"><strong>🐟 建議加碼：築地場外市場早市海鮮丼</strong> — 5 人早起殺去築地吃鮪魚丼、玉子燒現烤，若捨得早起可取代 D5 上午的 PATISSERIE TEN。</p>
+
+              <p style="margin-top: 10px;"><strong>🍜 山田的鰻 鰻骨拉麵</strong> — 這是以「鰻魚骨白湯拉麵」聞名的特色店家，使用高品質鰻魚骨熬製湯頭。已為您修正資訊並放在地圖候選景點中，隨時可加入您的行程。</p>
+
+              <p style="margin-top: 10px;"><strong>💴 現金 vs 卡</strong>：Lawson、老店、居酒屋、章魚燒攤只收現金；連鎖店、百貨、Uniqlo、Alpen 可刷卡或 IC 卡。建議每人 3~5 萬日幣現鈔。</p>
+            </div>
+          </div>
+
+          <!-- Packing Checklist -->
+          <div class="logistics-card">
+            <div class="card-header">
+              <svg class="logistics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <h3>行前清單 (5人出發)</h3>
+            </div>
+            <div class="packing-checklist">
+              <label class="todo-item"><input type="checkbox" id="checklist-passport"> <span>護照正本 (效期大於 6 個月)</span></label>
+              <label class="todo-item"><input type="checkbox" id="checklist-vjw"> <span>Visit Japan Web 填寫完成 (入境 QR Code)</span></label>
+              <label class="todo-item"><input type="checkbox" id="checklist-cash"> <span>日幣現金 (建議每人準備 3~5 萬日幣現鈔，其餘刷卡)</span></label>
+              <label class="todo-item"><input type="checkbox" id="checklist-sim"> <span>上網網卡 (eSIM 或實體 SIM 卡)</span></label>
+              <label class="todo-item"><input type="checkbox" id="checklist-power"> <span>行動電源與日本規格插頭充電線 (日本為兩扁腳插座，100V)</span></label>
+              <label class="todo-item"><input type="checkbox" id="checklist-clothes"> <span>保暖冬裝 (東京12月氣溫約 5°C ~ 12°C，室內有暖氣建議洋蔥式穿法)</span></label>
+              <label class="todo-item"><input type="checkbox" id="checklist-skincare"> <span>保濕乳液、護唇膏 (日本冬天空氣非常乾燥)</span></label>
+              <label class="todo-item"><input type="checkbox" id="checklist-medicine"> <span>個人常備藥物及環保餐具</span></label>
+            </div>
+          </div>
+        </section>
+      </main>
+      
+      <!-- Footer Info -->
+      <footer class="sidebar-footer">
+        <p>Made with ❤️ for Japan Trip 2026</p>
+      </footer>
+    </aside>
+    
+    <!-- Right Section: Map & Overlay Details -->
+    <section class="map-section">
+      <!-- Leaflet Map Element -->
+      <div id="map"></div>
+      
+      <!-- Theme & Action Floating Toolbar -->
+      <div class="floating-toolbar">
+        <button id="theme-toggle" class="float-btn" title="切換深淺色主題">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button id="reset-view-btn" class="float-btn" title="重設地圖範圍">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+        </button>
+      </div>
+      
+      <!-- Detail Slide-up/Drawer Panel -->
+      <div class="detail-drawer" id="detail-drawer">
+        <button class="close-drawer-btn" id="close-drawer-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        
+        <div class="drawer-content" id="drawer-content-body">
+          <!-- Dynamic injected details -->
+        </div>
+      </div>
+      
+    </section>
+    
+  </div>
+
+  <!-- Add Place Modal -->
+  <div class="modal-overlay" id="add-place-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>新增自訂地點</h3>
+        <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+      </div>
+      <form id="add-place-form">
+        <div class="form-grid">
+          
+          <div class="form-group full-width">
+            <label for="new-place-name">地點名稱 <span class="required">*</span></label>
+            <input type="text" id="new-place-name" placeholder="例如：一蘭拉麵 淺草店" required>
+          </div>
+          
+          <div class="form-group full-width">
+            <label for="new-place-english">日文/英文名稱</label>
+            <input type="text" id="new-place-english" placeholder="例如：Ichiran Asakusa">
+          </div>
+          
+          <div class="form-group full-width">
+            <label for="new-place-category">類別分類 <span class="required">*</span></label>
+            <select id="new-place-category" required>
+              <option value="food">🍔 美食</option>
+              <option value="shopping">🛍️ 購物</option>
+              <option value="sightseeing">🗼 景點</option>
+              <option value="lodging">🏨 住宿</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="new-place-day">分配至行程天數</label>
+            <select id="new-place-day">
+              <option value="">（僅加至地圖與總清單）</option>
+              <option value="1">第一天 Day 1</option>
+              <option value="2">第二天 Day 2</option>
+              <option value="3">第三天 Day 3</option>
+              <option value="4">第四天 Day 4</option>
+              <option value="5">第五天 Day 5</option>
+              <option value="6">第六天 Day 6</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="new-place-time">拜訪時間 (例如 14:30)</label>
+            <input type="text" id="new-place-time" placeholder="例如：14:30" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" title="請輸入 24 小時制時間，例如 14:30">
+          </div>
+          
+          <div class="form-group">
+            <label for="new-place-lat">緯度 (Latitude) <span class="required">*</span></label>
+            <input type="number" step="any" id="new-place-lat" placeholder="例如：35.7118" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="new-place-lng">經度 (Longitude) <span class="required">*</span></label>
+            <input type="number" step="any" id="new-place-lng" placeholder="例如：139.7909" required>
+          </div>
+          
+          <div class="form-group full-width">
+            <button type="button" class="btn btn-outline" id="map-pick-coords-btn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px; color: var(--accent-gold);"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+              在地圖上點選座標 (點我後在地圖上點擊)
+            </button>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="new-place-desc">地點備忘 / 筆記介紹</label>
+            <textarea id="new-place-desc" rows="3" placeholder="例如：必點招牌叉燒拉麵、需排隊、備註..."></textarea>
+          </div>
+          
+          <div class="form-group full-width">
+            <label for="new-place-gmaps">Google Maps 連結 (可空)</label>
+            <input type="url" id="new-place-gmaps" placeholder="https://maps.app.goo.gl/...">
+          </div>
+          
+          <div class="form-group full-width">
+            <label for="new-place-image">自訂照片網址 (可留空，會自動載入分類預設圖)</label>
+            <input type="url" id="new-place-image" placeholder="https://images.unsplash.com/...">
+          </div>
+
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" id="modal-cancel-btn">取消</button>
+          <button type="submit" class="btn btn-primary">儲存地點</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Map Pick Banner -->
+  <div class="map-picker-banner" id="map-picker-banner">
+    <div class="picker-banner-content">
+      <span>📍 請直接在地圖上任何位置點擊，以自動代入座標經緯度...</span>
+      <button class="btn btn-primary btn-sm" id="cancel-map-pick-btn">取消選點</button>
+    </div>
+  </div>
+
+  <!-- Leaflet Map JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- App Data and Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
