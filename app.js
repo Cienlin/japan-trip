@@ -198,13 +198,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // Close detail drawer when switching tabs to prevent mobile overlapping
         closeDrawer();
         
-        // Mobile expansion logic
-        if (window.innerWidth <= 500) {
-          if (!sidebar.classList.contains("expanded")) {
+        // Mobile expansion logic (Google Maps style)
+        if (window.innerWidth <= 768) {
+          if (prevTab !== tab) {
             sidebar.classList.add("expanded");
-          } else if (prevTab === tab) {
-            // Clicking again collapses
-            sidebar.classList.remove("expanded");
+          } else {
+            sidebar.classList.toggle("expanded");
           }
         }
       });
@@ -309,11 +308,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Normal click behavior
-      if (detailDrawer.classList.contains("open")) {
-        detailDrawer.classList.remove("open");
-        document.querySelectorAll(".marker-pin").forEach(pin => pin.classList.remove("active"));
-      }
-      if (window.innerWidth <= 500 && sidebar.classList.contains("expanded")) {
+      closeDrawer();
+      if (window.innerWidth <= 768) {
         sidebar.classList.remove("expanded");
       }
     });
@@ -826,6 +822,11 @@ document.addEventListener("DOMContentLoaded", () => {
   function openDrawer(placeId) {
     const place = allPlaces.find(p => p.id === placeId);
     if (!place) return;
+
+    // Automatically collapse sidebar on mobile when opening detail drawer so they never overlap (Google Maps style)
+    if (window.innerWidth <= 768) {
+      sidebar.classList.remove("expanded");
+    }
 
     currentSlideIndex = 0;
 
