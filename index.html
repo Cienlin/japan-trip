@@ -12,6 +12,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- Google Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
   
   <!-- Link Stylesheet -->
   <link rel="stylesheet" href="style.css">
@@ -40,15 +42,15 @@
       <!-- Tab Navigation Buttons -->
       <nav class="tab-navigation">
         <button class="tab-btn active" data-tab="itinerary" id="tab-btn-itinerary">
-          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12a9 9 0 11-6.219-8.56"/></svg>
+          <span class="material-symbols-outlined tab-icon">event_note</span>
           行程規劃
         </button>
         <button class="tab-btn" data-tab="directory" id="tab-btn-directory">
-          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span class="material-symbols-outlined tab-icon">explore</span>
           美食景點
         </button>
         <button class="tab-btn" data-tab="logistics" id="tab-btn-logistics">
-          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          <span class="material-symbols-outlined tab-icon">flight_takeoff</span>
           行前指南
         </button>
       </nav>
@@ -110,7 +112,7 @@
           <!-- Flights Info -->
           <div class="logistics-card">
             <div class="card-header">
-              <svg class="logistics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+              <span class="material-symbols-outlined logistics-icon">flight_takeoff</span>
               <h3>往返機票資訊</h3>
             </div>
             <div class="flight-route-info">
@@ -128,7 +130,7 @@
           <!-- Lodging Info -->
           <div class="logistics-card">
             <div class="card-header">
-              <svg class="logistics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <span class="material-symbols-outlined logistics-icon">hotel</span>
               <h3>住宿飯店</h3>
             </div>
             <div class="hotel-details">
@@ -145,7 +147,7 @@
           <!-- Budget & Cost Calculator -->
           <div class="logistics-card">
             <div class="card-header">
-              <svg class="logistics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+              <span class="material-symbols-outlined logistics-icon">account_balance_wallet</span>
               <h3>旅程預算與花費計算機 (5人分攤)</h3>
             </div>
             <div class="budget-calculator">
@@ -210,7 +212,7 @@
           <!-- Subway Recommendation -->
           <div class="logistics-card">
             <div class="card-header">
-              <svg class="logistics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
+              <span class="material-symbols-outlined logistics-icon">subway</span>
               <h3>地鐵與交通票券建議</h3>
             </div>
             <div class="subway-advice">
@@ -227,7 +229,7 @@
           <!-- Trip Recommendations & Notices -->
           <div class="logistics-card">
             <div class="card-header">
-              <svg class="logistics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span class="material-symbols-outlined logistics-icon">tips_and_updates</span>
               <h3>旅遊建議 & 重要提醒</h3>
             </div>
             <div class="subway-advice">
@@ -273,7 +275,7 @@
           <!-- Packing Checklist -->
           <div class="logistics-card">
             <div class="card-header">
-              <svg class="logistics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span class="material-symbols-outlined logistics-icon">playlist_add_check</span>
               <h3>行前清單 (5人出發)</h3>
             </div>
             <div class="packing-checklist">
