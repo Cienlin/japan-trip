@@ -128,6 +128,8 @@ body {
   padding: 24px 20px;
   border-bottom: 1px solid var(--border-color);
   display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   justify-content: space-between;
   align-items: center;
 }
@@ -742,6 +744,7 @@ body.theme-dark .filter-chip:hover {
 
 .hotel-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
@@ -850,6 +853,7 @@ body.theme-dark .btn-outline:hover {
   position: relative;
   height: 100dvh;
   width: 100%;
+  overflow: hidden;
 }
 
 #map {
@@ -973,10 +977,12 @@ body.theme-dark .btn-outline:hover {
   border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
   max-height: 85dvh;
   overflow-y: auto;
+  pointer-events: none;
 }
 
 .detail-drawer.open {
   transform: translateY(0);
+  pointer-events: auto;
 }
 
 .close-drawer-btn {
@@ -1199,6 +1205,7 @@ body.theme-dark .close-drawer-btn {
 
 .drawer-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 8px;
 }
@@ -1299,7 +1306,7 @@ body.theme-dark .close-drawer-btn {
   
   .detail-drawer {
     max-height: 80dvh;
-    bottom: 50dvh; /* Sit above the sidebar */
+    bottom: 0; /* Align with bottom of map section (sitting above sidebar) */
   }
 }
 
@@ -1754,7 +1761,7 @@ body.theme-dark .calc-results {
   border-color: rgba(239, 68, 68, 0.2);
 }
 
-@media (max-width: 400px) {
+@media (max-width: 600px) {
   .calc-row {
     grid-template-columns: 1fr;
     gap: 12px;

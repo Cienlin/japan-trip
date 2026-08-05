@@ -195,6 +195,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const prevTab = activeTab; // Store the previous active tab
         switchTab(tab);
         
+        // Close detail drawer when switching tabs to prevent mobile overlapping
+        closeDrawer();
+        
         // Mobile expansion logic
         if (window.innerWidth <= 500) {
           if (!sidebar.classList.contains("expanded")) {
@@ -274,11 +277,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // 8. Close Drawer
-    closeDrawerBtn.addEventListener("click", () => {
-      detailDrawer.classList.remove("open");
-      // Remove marker highlights
-      document.querySelectorAll(".marker-pin").forEach(pin => pin.classList.remove("active"));
-    });
+    closeDrawerBtn.addEventListener("click", closeDrawer);
 
     // 9. Map Click Handlers (picker mode vs normal modal drawer closing)
     map.on("click", (e) => {
@@ -637,9 +636,7 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("tokyo_trip_custom_places", JSON.stringify(storedPlaces));
 
     // Close detail drawer if active open
-    if (detailDrawer.classList.contains("open")) {
-      detailDrawer.classList.remove("open");
-    }
+    closeDrawer();
 
     // Refresh everything
     refreshAllPlaces();
@@ -964,9 +961,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("drawer-locate-btn").addEventListener("click", () => {
       locatePlace(placeId);
       if (window.innerWidth <= 500) {
-        detailDrawer.classList.remove("open"); // Close on mobile to show zoom
+        closeDrawer(); // Close on mobile to show zoom
       }
     });
+  }
+
+  function closeDrawer() {
+    if (detailDrawer) {
+      detailDrawer.classList.remove("open");
+    }
+    // Remove marker highlights
+    document.querySelectorAll(".marker-pin").forEach(pin => pin.classList.remove("active"));
   }
 
   // Packing Checklist Persistence
