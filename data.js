@@ -203,7 +203,129 @@ const PLACES = [
     }
   },
 
-  // ==================== DAY 3 (12/11 週五) — 青山 / 原宿 / 澀谷 / 表參道 ====================
+  // ==================== DAY 3 (12/11 週五, 平日) — 代代木八幡 + 新宿 ====================
+  {
+    id: "path_yoyogi",
+    name: "PATH 荷蘭鬆餅早餐 代代木八幡",
+    englishName: "PATH (パス) Yoyogi-Hachiman",
+    category: "food",
+    lat: 35.6688,
+    lng: 139.6899,
+    day: 3,
+    time: "10:00",
+    desc: "隱身代代木八幡的法式小餐館，招牌「Dutch Baby 荷蘭烤鬆餅」現點現烤，鬆軟餅皮上鋪滿生火腿、布拉塔起司、淋楓糖。08:00 開店、14:00 打烊，平日早去更容易有位。5 人可能要拆桌坐。",
+    images: ["path_1.jpg"],
+    gmaps: "https://maps.google.com/?q=PATH+Yoyogihachiman",
+    transitInfo: {
+      from: "SYLA HOTEL Oshiage",
+      method: "subway",
+      line: "半藏門線 → 千代田線",
+      duration: 40,
+      details: "09:00 押上站搭半藏門線至表參道，轉千代田線至代代木公園站，八幡口步行 3 分鐘。"
+    }
+  },
+  {
+    id: "alpen_tokyo",
+    name: "Alpen Tokyo 體育用品旗艦",
+    englishName: "Alpen Tokyo Shinjuku (アルペントーキョー)",
+    category: "shopping",
+    lat: 35.6934,
+    lng: 139.7007,
+    day: 3,
+    time: "12:30",
+    desc: "**清單上「一定要去」的點！** 新宿最狂運動用品大樓，地下 1 至 8 樓共 9 層。**特意排在平日(週五)來逛，避開週末可怕的結帳與試穿人潮！**",
+    images: ["sports_1.jpg"],
+    gmaps: "https://maps.google.com/?q=Alpen+Tokyo+Shinjuku",
+    transitInfo: {
+      from: "PATH 荷蘭鬆餅",
+      method: "subway",
+      line: "小田急線 / 千代田線 (代代木八幡 → 新宿)",
+      duration: 15,
+      details: "代代木八幡站搭小田急線 2 站至新宿站（4 分鐘），東口步行 4 分鐘至新宿三丁目方向。"
+    }
+  },
+  {
+    id: "magical_chiikawa_shinjuku",
+    name: "魔法少女吉伊卡哇專賣店 新宿店",
+    englishName: "Magical Chiikawa Store Shinjuku (まじかるちいかわストア)",
+    category: "shopping",
+    lat: 35.6917,
+    lng: 139.7038,
+    day: 3,
+    time: "13:45",
+    desc: "夢幻的主題專賣店「まじかるちいかわストア」！位於新宿 Marui 本館 (新宿丸井 1F)。**安排在平日前來，比起週末更能輕鬆進店與選購！**",
+    images: ["sports_1.jpg"],
+    gmaps: "https://maps.google.com/?q=Shinjuku+Marui+Main+Building",
+    transitInfo: {
+      from: "Alpen Tokyo",
+      method: "walk",
+      line: "徒步 (Walk 300m)",
+      duration: 4,
+      details: "從 Alpen Tokyo 出來沿新宿三丁目方向步行 4 分鐘即可抵達新宿 Marui 本館 1F。"
+    }
+  },
+  {
+    id: "shake_shack_shinjuku",
+    name: "Shake Shack 新宿 Southern Terrace",
+    englishName: "Shake Shack Shinjuku Southern Terrace",
+    category: "food",
+    lat: 35.6862,
+    lng: 139.7005,
+    day: 3,
+    time: "14:30",
+    desc: "紐約潮流漢堡東京店。你清單上的『shake shake』就是這家！新宿南口小田急塔 2F，經典 ShackBurger + 東京限定黑芝麻奶昔，平日午段內用位子更充裕。",
+    images: ["burger_1.jpg"],
+    gmaps: "https://maps.google.com/?q=Shake+Shack+Shinjuku+Southern+Terrace",
+    transitInfo: {
+      from: "魔法少女吉伊卡哇專賣店 新宿店",
+      method: "walk",
+      line: "徒步 (Walk 600m)",
+      duration: 8,
+      details: "從新宿 Marui 本館沿甲州街道往新宿南口方向步行 600 公尺至小田急南塔 2F。"
+    }
+  },
+  {
+    id: "azuki_to_kouri",
+    name: "あずきとこおり 精緻刨冰",
+    englishName: "Azuki to Kouri (あずきとこおり)",
+    category: "food",
+    lat: 35.6823,
+    lng: 139.6972,
+    day: 3,
+    time: "16:30",
+    desc: "米其林二星 Florilège 前甜點主廚開的預約制刨冰店。平日時段預約更容易成功！**強烈建議一週前官網預約 5 位**。",
+    images: ["ice_1.jpg"],
+    gmaps: "https://maps.google.com/?q=Azuki+to+Kouri",
+    transitInfo: {
+      from: "Shake Shack 新宿",
+      method: "walk",
+      line: "徒步 (Walk 1.2km)",
+      duration: 15,
+      details: "從新宿南口沿代代木方向往東南步行約 1.2 公里至千駄谷區。"
+    }
+  },
+  {
+    id: "omoide_yokocho",
+    name: "新宿回憶橫丁 居酒屋",
+    englishName: "Omoide Yokocho (思い出横丁)",
+    category: "food",
+    lat: 35.6931,
+    lng: 139.6997,
+    day: 3,
+    time: "19:30",
+    desc: "昭和風情極濃的窄巷居酒屋群！週五夜晚正是下班上班族聚會氣氛最棒的時候，炭火烤雞肉串 + Highball 收尾大男生日最對味。想跑酒吧餐後再走 5 分鐘到黃金街分組體驗。",
+    images: ["izakaya_1.jpg"],
+    gmaps: "https://maps.google.com/?q=Omoide+Yokocho+Shinjuku",
+    transitInfo: {
+      from: "あずきとこおり",
+      method: "walk",
+      line: "徒步 (Walk 1.0km) 回新宿西口",
+      duration: 13,
+      details: "從千駄谷步行返回新宿西口出站，思い出橫丁就在西口斜對面。玩到 24:00 前趕末班車押上線回飯店。"
+    }
+  },
+
+  // ==================== DAY 4 (12/12 週六) — 青山 / 原宿 / 澀谷 / 表參道 ====================
   {
     id: "cafe_kitsune_aoyama",
     name: "Café Kitsuné 青山",
@@ -211,7 +333,7 @@ const PLACES = [
     category: "food",
     lat: 35.6648,
     lng: 139.7153,
-    day: 3,
+    day: 4,
     time: "10:30",
     desc: "法國時尚品牌 Maison Kitsuné 旗下咖啡廳，木造和風竹林裝潢極有質感。點一杯拿鐵配狐狸餅乾，開啟表參道/青山散步日。",
     images: ["kitsune_1.jpg"],
@@ -231,9 +353,9 @@ const PLACES = [
     category: "food",
     lat: 35.6670,
     lng: 139.7057,
-    day: 3,
+    day: 4,
     time: "13:00",
-    desc: "你清單上的『大阪燒』實際位置！原宿裏通鐵板燒老店，客人自己在鐵板前煎大阪燒、廣島燒、文字燒、炒麵。5 個人圍鐵板一起玩最好玩，中午時段更好訂位。",
+    desc: "你清單上的『大阪燒』實際位置！原宿裏通鐵板燒老店，客人自己在鐵板前煎大阪燒、廣島燒、文字燒、炒麵。5 個人圍鐵板一起玩最好玩。",
     images: ["okonomiyaki_1.jpg"],
     gmaps: "https://maps.app.goo.gl/Gh6o8XyB8696pZx78",
     transitInfo: {
@@ -245,23 +367,43 @@ const PLACES = [
     }
   },
   {
+    id: "chiikawa_harajuku",
+    name: "Chiikawa Land 原宿店",
+    englishName: "Chiikawa Land Harajuku (Kiddy Land 1F)",
+    category: "shopping",
+    lat: 35.6675,
+    lng: 139.7058,
+    day: 4,
+    time: "14:30",
+    desc: "位於原宿 Kiddy Land 1 樓的旗艦級吉伊卡哇專賣店！周邊款式極齊全，還有獨家的打卡牆與原宿限定紀念品。吃完原宿大阪燒順路逛極流暢。",
+    images: ["uniqlo_1.jpg"],
+    gmaps: "https://maps.google.com/?q=Kiddy+Land+Harajuku",
+    transitInfo: {
+      from: "原宿大阪燒 やいやい",
+      method: "walk",
+      line: "徒步 (Walk 250m)",
+      duration: 3,
+      details: "從裏原宿やいやい大阪燒出來往明治通り/表參道方向步行 3 分鐘至 Kiddy Land 原宿店 1F。"
+    }
+  },
+  {
     id: "harbs_shibuya",
     name: "HARBS 蛋糕 澀谷 Hikarie 店",
     englishName: "HARBS Shibuya Hikarie ShinQs",
     category: "food",
     lat: 35.6595,
     lng: 139.7045,
-    day: 3,
+    day: 4,
     time: "16:00",
     desc: "招牌「水果千層蛋糕 Mille-crepes」層次分明，鮮草莓、奇異果、香蕉、哈密瓜配鮮奶油與可麗餅皮，是東京女生（和五個大男生）都愛的下午茶。逛完 Hikarie 直接半藏門線回押上超方便。",
     images: ["harbs_1.jpg"],
     gmaps: "https://maps.google.com/?q=HARBS+Shibuya+Hikarie",
     transitInfo: {
-      from: "やいやい 大阪燒",
+      from: "Chiikawa Land 原宿店",
       method: "subway",
       line: "JR 山手線 (原宿 → 澀谷)",
       duration: 10,
-      details: "回原宿站搭 JR 山手線 1 站至澀谷（2 分鐘），從 Hikarie 出口直達商城 B3F。"
+      details: "從 Kiddy Land 走至原宿/明治神宮前站搭 JR 山手線 1 站至澀谷（2 分鐘），從 Hikarie 出口直達 B3F。"
     }
   },
   {
@@ -271,7 +413,7 @@ const PLACES = [
     category: "food",
     lat: 35.6675,
     lng: 139.7110,
-    day: 3,
+    day: 4,
     time: "19:00",
     desc: "主打「一人一鍋」的高質感壽喜燒/涮涮鍋，圓弧吧台各人獨立銅鍋，選頂級山形和牛。⚠️ **老闆不吃牛可點豬肉套餐（黑豚 or SPF 豚，一樣鮮嫩）**。強烈建議一週前 Tabelog 或電話預約 5 人吧台位。",
     images: ["sukiyaki_1.jpg", "sukiyaki_2.jpg"],
@@ -282,108 +424,6 @@ const PLACES = [
       line: "東京 Metro 銀座線 (澀谷 → 表參道)",
       duration: 10,
       details: "澀谷站搭銀座線 1 站至表參道站，A4 出口步行 4 分鐘。晚餐結束搭半藏門線直達押上。"
-    }
-  },
-
-  // ==================== DAY 4 (12/12 週六) — 代代木八幡 + 新宿 ====================
-  {
-    id: "path_yoyogi",
-    name: "PATH 荷蘭鬆餅早餐 代代木八幡",
-    englishName: "PATH (パス) Yoyogi-Hachiman",
-    category: "food",
-    lat: 35.6688,
-    lng: 139.6899,
-    day: 4,
-    time: "10:00",
-    desc: "隱身代代木八幡的法式小餐館，招牌「Dutch Baby 荷蘭烤鬆餅」現點現烤，鬆軟餅皮上鋪滿生火腿、布拉塔起司、淋楓糖。08:00 開店、14:00 打烊，一定要早去。5 人可能要拆桌坐。",
-    images: ["path_1.jpg"],
-    gmaps: "https://maps.google.com/?q=PATH+Yoyogihachiman",
-    transitInfo: {
-      from: "SYLA HOTEL Oshiage",
-      method: "subway",
-      line: "半藏門線 → 千代田線",
-      duration: 40,
-      details: "09:00 押上站搭半藏門線至表參道，轉千代田線至代代木公園站，八幡口步行 3 分鐘。"
-    }
-  },
-  {
-    id: "alpen_tokyo",
-    name: "Alpen Tokyo 體育用品旗艦",
-    englishName: "Alpen Tokyo Shinjuku (アルペントーキョー)",
-    category: "shopping",
-    lat: 35.6934,
-    lng: 139.7007,
-    day: 4,
-    time: "12:30",
-    desc: "**清單上「一定要去」的點！** 新宿最狂運動用品大樓，地下 1 至 8 樓共 9 層：露營裝備、高爾夫、足球、籃球、慢跑鞋、日本限定運動服飾、Yonex/Mizuno/Asics 全系列。逛 2 小時保底。",
-    images: ["sports_1.jpg"],
-    gmaps: "https://maps.google.com/?q=Alpen+Tokyo+Shinjuku",
-    transitInfo: {
-      from: "PATH 荷蘭鬆餅",
-      method: "subway",
-      line: "小田急線 / 千代田線 (代代木八幡 → 新宿)",
-      duration: 15,
-      details: "代代木八幡站搭小田急線 2 站至新宿站（4 分鐘），東口步行 4 分鐘至新宿三丁目方向。"
-    }
-  },
-  {
-    id: "shake_shack_shinjuku",
-    name: "Shake Shack 新宿 Southern Terrace",
-    englishName: "Shake Shack Shinjuku Southern Terrace",
-    category: "food",
-    lat: 35.6862,
-    lng: 139.7005,
-    day: 4,
-    time: "14:30",
-    desc: "紐約潮流漢堡東京店。你清單上的『shake shake』就是這家！新宿南口小田急塔 2F，經典 ShackBurger + 東京限定黑芝麻奶昔，是逛完 Alpen 的補血午餐點。",
-    images: ["burger_1.jpg"],
-    gmaps: "https://maps.google.com/?q=Shake+Shack+Shinjuku+Southern+Terrace",
-    transitInfo: {
-      from: "Alpen Tokyo",
-      method: "walk",
-      line: "徒步 (Walk 900m)",
-      duration: 12,
-      details: "從 Alpen 沿甲州街道往南走到新宿南口，過馬路上小田急南塔 2F。"
-    }
-  },
-  {
-    id: "azuki_to_kouri",
-    name: "あずきとこおり 精緻刨冰",
-    englishName: "Azuki to Kouri (あずきとこおり)",
-    category: "food",
-    lat: 35.6823,
-    lng: 139.6972,
-    day: 4,
-    time: "16:30",
-    desc: "米其林二星 Florilège 前甜點主廚開的預約制刨冰店。將法式甜點的幕斯、蛋白霜、焦糖融入刨冰，一碗要價 ¥2,000 起，冬天也超搶手。**強烈建議一週前官網預約 5 位**。",
-    images: ["ice_1.jpg"],
-    gmaps: "https://maps.google.com/?q=Azuki+to+Kouri",
-    transitInfo: {
-      from: "Shake Shack 新宿",
-      method: "walk",
-      line: "徒步 (Walk 1.2km)",
-      duration: 15,
-      details: "從新宿南口沿代代木方向往東南步行約 1.2 公里至千駄谷區。"
-    }
-  },
-  {
-    id: "omoide_yokocho",
-    name: "新宿回憶橫丁 居酒屋",
-    englishName: "Omoide Yokocho (思い出横丁)",
-    category: "food",
-    lat: 35.6931,
-    lng: 139.6997,
-    day: 4,
-    time: "19:30",
-    desc: "昭和風情極濃的窄巷居酒屋群，炭火烤雞肉串香氣四溢，比黃金街更適合 5 人團體（黃金街的店太小、5 人常擠不進）。烤串 + Highball 收尾大男生日最對味。想跑酒吧的話餐後再走 5 分鐘到黃金街分組體驗一下。",
-    images: ["izakaya_1.jpg"],
-    gmaps: "https://maps.google.com/?q=Omoide+Yokocho+Shinjuku",
-    transitInfo: {
-      from: "あずきとこおり",
-      method: "walk",
-      line: "徒步 (Walk 1.0km) 回新宿西口",
-      duration: 13,
-      details: "從千駄谷步行返回新宿西口出站，思い出橫丁就在西口斜對面。玩到 24:00 前趕末班車押上線回飯店。"
     }
   },
 
@@ -512,6 +552,88 @@ const PLACES = [
   // ==================== DAY 6 (12/14 週一) — 打包 + 回程 ====================
   // 無排定行程 — 09:00 起床打包，12:30 押上站搭京成 Access 特急直達成田機場
 
+  // ==================== 吉伊卡哇專賣店 (Chiikawa Stores) ====================
+  {
+    id: "chiikawa_solamachi",
+    name: "Chiikawa Land 晴空塔店 (Solamachi)",
+    englishName: "Chiikawa Land Tokyo Solamachi (ちいかわらんど)",
+    category: "shopping",
+    lat: 35.7100,
+    lng: 139.8120,
+    day: 1,
+    time: "18:00",
+    desc: "晴空塔 Solamachi 3F 的吉伊卡哇專賣店！離住宿 SYLA HOTEL 走路只要 3 分鐘。第一天抵達押上放好行李後，可以在去淺草前或晚餐後直接來逛，買齊東京晴空塔限定與熱門周邊！",
+    images: ["uniqlo_1.jpg"],
+    gmaps: "https://maps.google.com/?q=Chiikawa+Land+Tokyo+Solamachi",
+    transitInfo: {
+      from: "SYLA HOTEL Oshiage",
+      method: "walk",
+      line: "徒步 (Walk 300m)",
+      duration: 4,
+      details: "從飯店步行 3 分鐘直達 Tokyo Solamachi 3 樓 East Yard 12 番地。"
+    }
+  },
+  {
+    id: "chiikawa_tokyo_station",
+    name: "Chiikawa Land 東京車站店",
+    englishName: "Chiikawa Land TOKYO Station (ちいかわらんど)",
+    category: "shopping",
+    lat: 35.6812,
+    lng: 139.7671,
+    day: 2,
+    time: "19:00",
+    desc: "位於東京車站一番街 B1F「東京動漫人物街 (Tokyo Character Street)」內的超人氣吉伊卡哇專賣店。有許多東京車站限定的站長系列、鐵道主題吉伊卡哇周邊，適合在 D2 買伴手禮時一併血拼！",
+    images: ["subway_1.jpg"],
+    gmaps: "https://maps.google.com/?q=Chiikawa+Land+TOKYO+Station",
+    transitInfo: {
+      from: "花山烏冬",
+      method: "subway",
+      line: "東京 Metro 丸之內線 (銀座 → 東京)",
+      duration: 8,
+      details: "銀座站搭丸之內線 1 站至東京站，出站直通東京車站一番街 B1F 角色街。"
+    }
+  },
+  {
+    id: "chiikawa_harajuku",
+    name: "Chiikawa Land 原宿店",
+    englishName: "Chiikawa Land Harajuku (Kiddy Land 1F)",
+    category: "shopping",
+    lat: 35.6675,
+    lng: 139.7058,
+    day: 3,
+    time: "14:30",
+    desc: "位於原宿 Kiddy Land 1 樓的旗艦級吉伊卡哇專賣店！周邊款式極齊全，還有獨家的打卡牆與原宿限定紀念品。D3 吃完原宿大阪燒或逛表參道時順路安排最流暢。",
+    images: ["uniqlo_1.jpg"],
+    gmaps: "https://maps.google.com/?q=Kiddy+Land+Harajuku",
+    transitInfo: {
+      from: "原宿大阪燒 やいやい",
+      method: "walk",
+      line: "徒步 (Walk 250m)",
+      duration: 3,
+      details: "從裏原宿やいやい大阪燒出來往明治通り/表參道方向步行 3 分鐘至 Kiddy Land 原宿店 1F。"
+    }
+  },
+  {
+    id: "magical_chiikawa_shinjuku",
+    name: "魔法少女吉伊卡哇專賣店 新宿店",
+    englishName: "Magical Chiikawa Store Shinjuku (まじかるちいかわストア)",
+    category: "shopping",
+    lat: 35.6917,
+    lng: 139.7038,
+    day: 4,
+    time: "13:45",
+    desc: "夢幻的主題專賣店「まじかるちいかわストア」！位於新宿 Marui 本館 (新宿丸井 1F)。全店以魔法少女風格打造，裝潢與周邊都充滿變身魔法小可愛的超萌造型，是吉伊卡哇粉必朝聖之地！(熱門時段需注意是否有現場整理券或預約制)",
+    images: ["sports_1.jpg"],
+    gmaps: "https://maps.google.com/?q=Shinjuku+Marui+Main+Building",
+    transitInfo: {
+      from: "Alpen Tokyo",
+      method: "walk",
+      line: "徒步 (Walk 300m)",
+      duration: 4,
+      details: "從 Alpen Tokyo 出來沿新宿三丁目方向步行 4 分鐘即可抵達新宿 Marui 本館 1F。"
+    }
+  },
+
   // ==================== 未排入行程的候補地點（地圖上可見，隨時可加入行程） ====================
   {
     id: "yamada_unagi",
@@ -527,8 +649,6 @@ const PLACES = [
     gmaps: "https://maps.app.goo.gl/JQu23KQcmjkVXoaf7",
     transitInfo: null
   },
-
-  // ---------- 以下是我原本推薦但你 txt 沒列出的地點，全部改成候補（地圖顯示、時間軸不排入） ----------
   {
     id: "meiji_jingu",
     name: "明治神宮 (推薦景點)",
@@ -639,20 +759,6 @@ const PLACES = [
     desc: "🌟 **推薦候補**：東京冬季 TOP3 之三！Roppongi Hills 櫸木坂道藍白 LED + Midtown 花園草坪星空點燈。若 D3 澀谷結束後想加碼可延伸過來看（點燈到 23:00）。",
     images: ["subway_1.jpg"],
     gmaps: "https://maps.google.com/?q=Roppongi+Hills+Illumination",
-    transitInfo: null
-  },
-  {
-    id: "solamachi_souvenir",
-    name: "東京 Solamachi 晴空街道 (推薦景點)",
-    englishName: "Tokyo Solamachi",
-    category: "shopping",
-    lat: 35.7100,
-    lng: 139.8120,
-    day: null,
-    time: null,
-    desc: "🌟 **推薦候補**：晴空塔樓下 300 間店商場，飯店走路 3 分鐘。有 Tokyo Banana、Calbee+、寶可夢中心、藥妝、Uniqlo。D6 回程日打包完若還沒買夠伴手禮，10:00 開店去補剛好。",
-    images: ["subway_1.jpg"],
-    gmaps: "https://maps.google.com/?q=Tokyo+Solamachi",
     transitInfo: null
   },
   {
