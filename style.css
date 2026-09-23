@@ -954,6 +954,26 @@ body.theme-dark .leaflet-control-attribution {
   filter: none;
 }
 
+/* Version Badge (左上角,方便看快取狀態) */
+.version-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  font-family: var(--font-primary);
+  letter-spacing: 0.3px;
+  z-index: 10;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  user-select: none;
+}
+
 /* Floating Toolbar */
 .floating-toolbar {
   position: absolute;
@@ -1431,6 +1451,11 @@ body.theme-dark .close-drawer-btn {
     top: calc(14px + env(safe-area-inset-top, 0px));
     right: calc(14px + env(safe-area-inset-right, 0px));
     z-index: 10;
+  }
+
+  .version-badge {
+    top: calc(14px + env(safe-area-inset-top, 0px));
+    left: calc(14px + env(safe-area-inset-left, 0px));
   }
 
   /* Bottom Navigation Sheet (Sidebar) — sidebar 貼底,
