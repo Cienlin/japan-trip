@@ -50,7 +50,7 @@
   --accent-gold-bg: #e0f2fe;
   
   --scrollbar-thumb: #cbd5e1;
-  --glass-blur: 12px;
+  --glass-blur: blur(12px); /* 必須是 filter function,不能只寫 12px,否則 backdrop-filter 整條失效 */
   --glass-border: 1px solid rgba(255, 255, 255, 0.5);
 }
 

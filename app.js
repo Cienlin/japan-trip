@@ -807,7 +807,9 @@ document.addEventListener("DOMContentLoaded", () => {
         offset: L.point(0, -26)
       });
 
-      marker.on("click", () => {
+      marker.on("click", (ev) => {
+        // 防止事件冒泡到 map.on("click"),否則 iOS Safari 上會馬上觸發 closeDrawer
+        if (ev && ev.originalEvent) L.DomEvent.stopPropagation(ev.originalEvent);
         highlightMarkerPin(place.id);
         openDrawer(place.id);
       });
