@@ -57,6 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Map Elements
   const themeToggleBtn = document.getElementById("theme-toggle");
   const resetViewBtn = document.getElementById("reset-view-btn");
+  const zoomInBtn = document.getElementById("zoom-in-btn");
+  const zoomOutBtn = document.getElementById("zoom-out-btn");
   const iconSun = themeToggleBtn.querySelector(".icon-sun");
   const iconMoon = themeToggleBtn.querySelector(".icon-moon");
   
@@ -281,13 +283,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function initMap() {
     // Center map around Tokyo area covering Asakusa, Ginza, Shinjuku, Shibuya
     map = L.map("map", {
-      zoomControl: false,
-      maxZoom: 18,
+      zoomControl: false, // 用自訂的 floating-toolbar 按鈕取代
+      maxZoom: 19,
       minZoom: 10
     }).setView([35.6895, 139.755], 12);
-
-    // Place zoom control at top-left
-    L.control.zoom({ position: "topleft" }).addTo(map);
 
     // Add Tile Layer (單一 source,主題切換靠 CSS filter,不用重新請求 tile)
     activeTileLayer = L.tileLayer(tileUrl, {
@@ -371,6 +370,10 @@ document.addEventListener("DOMContentLoaded", () => {
     resetViewBtn.addEventListener("click", () => {
       fitMapToActiveMarkers();
     });
+
+    // 6b. Custom zoom buttons (取代 Leaflet 預設左上角 zoom control)
+    zoomInBtn.addEventListener("click", () => map.zoomIn());
+    zoomOutBtn.addEventListener("click", () => map.zoomOut());
 
     // 7. Locate Hotel button in Logistics
     hotelLocateBtn.addEventListener("click", () => {
