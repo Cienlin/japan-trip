@@ -1489,18 +1489,23 @@ body.theme-dark .close-drawer-btn {
     display: block;
   }
   
-  /* Place Detail Drawer (Google Maps style card) */
+  /* Place Detail Drawer — 浮在底部 sidebar (nav) 之上,兩者互不遮擋 */
   .detail-drawer {
     position: fixed;
-    bottom: 0;
+    /* 貼在 sidebar 上緣,不會蓋到 tab 列 */
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px));
     left: 0;
     right: 0;
     width: 100%;
-    max-height: 75dvh;
+    /* 上緣至少要離螢幕頂端有距離,不能吃掉整個地圖 */
+    max-height: calc(75dvh - 64px);
     z-index: 30;
+    background: var(--bg-card); /* 用比較實的卡片色,避免透過去看到 sidebar */
+    border-top: 1px solid var(--border-color);
     border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
-    box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.25);
-    transform: translateY(100%);
+    box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.18);
+    /* 關閉時 translateY 要超過自身高度 + sidebar 高度,才會完全滑出視窗 */
+    transform: translateY(calc(100% + 80px));
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.35s;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -1515,9 +1520,9 @@ body.theme-dark .close-drawer-btn {
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0s;
   }
 
+  /* sidebar 已經處理 safe-area,drawer 不用再加底部 padding */
   .drawer-content {
-    padding: 20px 16px;
-    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    padding: 20px 16px 24px;
   }
 
   /* 手機直立時,圖片 carousel 縮小,騰出空間給描述和交通 */
