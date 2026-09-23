@@ -1413,7 +1413,10 @@ body.theme-dark .close-drawer-btn {
 @media (max-width: 768px) {
   html, body {
     width: 100%;
-    height: var(--app-height);
+    /* 多層 fallback:iOS PWA 各版本對這幾個單位認知不同 */
+    height: 100vh;
+    height: 100dvh;
+    height: -webkit-fill-available;
     min-height: 0;
     overflow: hidden;
     overscroll-behavior: none;
@@ -1422,27 +1425,27 @@ body.theme-dark .close-drawer-btn {
 
   .app-container {
     display: block;
-    /* 用 inset: 0 讓 app-container 撐滿整個 layout viewport,
-       position: fixed 才會有正確參考點給裡面的 absolute 元素 */
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    width: auto;
-    height: auto;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    height: -webkit-fill-available;
     overflow: hidden;
   }
 
   .map-section {
-    /* absolute 相對 app-container 定位,填滿容器 */
-    position: absolute;
+    /* fixed 直接對 viewport,避免 iOS PWA 的 inset:0 有時失效 */
+    position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    width: auto;
-    height: auto;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    height: -webkit-fill-available;
     z-index: 1;
     overflow: hidden;
   }
@@ -1463,16 +1466,16 @@ body.theme-dark .close-drawer-btn {
     left: calc(14px + env(safe-area-inset-left, 0px));
   }
 
-  /* Bottom Navigation Sheet (Sidebar) — 玻璃卡片延伸到螢幕底(包含 safe-area),
-     Home 指示器懸浮於玻璃卡片上,像 Google Maps 的做法 */
+  /* Bottom Navigation Sheet (Sidebar) — 純 64px 玻璃卡片緊貼螢幕底,
+     不做 safe-area 延伸,Home 指示器懸浮於 tabs 上 (Instagram 風) */
   .sidebar {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     width: 100%;
-    height: calc(64px + env(safe-area-inset-bottom, 0px));
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    height: 64px;
+    padding-bottom: 0;
     background: var(--bg-sidebar);
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
@@ -1487,7 +1490,8 @@ body.theme-dark .close-drawer-btn {
   }
 
   .sidebar.expanded {
-    height: 75%;
+    height: 75vh;
+    height: 75dvh;
   }
   
   .brand-header {

@@ -20,12 +20,14 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.appendChild(probe);
       const safeBottom = Math.round(probe.getBoundingClientRect().height);
       probe.remove();
-      // .app-container 實測高度 + sidebar 底部 y 座標
+      // .app-container 實測高度 + sidebar 底部 y 座標 + 螢幕實際尺寸
       const container = document.querySelector(".app-container");
       const sidebar = document.querySelector(".sidebar");
       const cH = container ? Math.round(container.offsetHeight) : "N/A";
       const sBot = sidebar ? Math.round(sidebar.getBoundingClientRect().bottom) : "N/A";
-      badge.textContent = `v1.0.5 ${isStandalone ? "[PWA]" : "[web]"} vh:${vh} vv:${vv} sb:${safeBottom} cH:${cH} sBot:${sBot}`;
+      const scH = window.screen.height;
+      const docH = document.documentElement.clientHeight;
+      badge.textContent = `v1.0.6 ${isStandalone ? "[PWA]" : "[web]"} vh:${vh} vv:${vv} sb:${safeBottom} cH:${cH} sBot:${sBot} scH:${scH} docH:${docH}`;
     }
   };
   syncAppViewportHeight();
