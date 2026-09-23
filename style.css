@@ -1466,16 +1466,17 @@ body.theme-dark .close-drawer-btn {
     left: calc(14px + env(safe-area-inset-left, 0px));
   }
 
-  /* Bottom Navigation Sheet (Sidebar) — 純 64px 玻璃卡片緊貼螢幕底,
-     不做 safe-area 延伸,Home 指示器懸浮於 tabs 上 (Instagram 風) */
+  /* Bottom Navigation Sheet (Sidebar) — 負 bottom 讓玻璃卡片延伸過 iOS 假的
+     layout viewport 底,到達物理螢幕底。iPhone 17 PWA sb:0 用 max() fallback 34px。
+     Tab 內容仍留在頂部 64px,底下延伸部分是 glass 背景(不是空白) */
   .sidebar {
     position: fixed;
-    bottom: 0;
+    bottom: calc(-1 * max(env(safe-area-inset-bottom, 0px), 34px));
     left: 0;
     right: 0;
     width: 100%;
-    height: 64px;
-    padding-bottom: 0;
+    height: calc(64px + max(env(safe-area-inset-bottom, 0px), 34px));
+    padding-bottom: max(env(safe-area-inset-bottom, 0px), 34px);
     background: var(--bg-sidebar);
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
