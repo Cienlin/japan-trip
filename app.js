@@ -6,6 +6,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const syncAppViewportHeight = () => {
     const viewportHeight = window.visualViewport?.height || window.innerHeight;
     document.documentElement.style.setProperty("--app-height", `${viewportHeight}px`);
+
+    // Debug info in badge
+    const badge = document.getElementById("version-badge");
+    if (badge) {
+      const vh = window.innerHeight;
+      const vv = window.visualViewport?.height ? Math.round(window.visualViewport.height) : "N/A";
+      const isStandalone = window.matchMedia("(display-mode: standalone)").matches ||
+                           window.navigator.standalone === true;
+      // 讀 CSS 的 env(safe-area-inset-bottom) 需借助 DOM 測量
+      const probe = document.createElement("div");
+      probe.style.cssText = "position:fixed;bottom:0;height:env(safe-area-inset-bottom,0px);visibility:hidden;";
+      document.body.appendChild(probe);
+      const safeBottom = Math.round(probe.getBoundingClientRect().height);
+      probe.remove();
+      badge.textContent = `v1.0.3 ${isStandalone ? "[PWA]" : "[web]"} vh:${vh} vv:${vv} sb:${safeBottom}`;
+    }
   };
   syncAppViewportHeight();
   window.addEventListener("resize", syncAppViewportHeight, { passive: true });
