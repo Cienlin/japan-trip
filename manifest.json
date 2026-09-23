@@ -1,0 +1,28 @@
+{
+  "name": "東京冬日 5 人行 🇯🇵",
+  "short_name": "東京行",
+  "description": "2026/12/9~12/14 東京 6 天 5 夜互動地圖與行程規劃",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f7f9fb",
+  "theme_color": "#0a4269",
+  "lang": "zh-TW",
+  "dir": "ltr",
+  "categories": ["travel", "navigation", "lifestyle"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

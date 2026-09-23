@@ -1209,3 +1209,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   init();
 });
+
+// ==========================================
+// PWA:註冊 Service Worker(頁面載入完再註冊,不阻塞首次渲染)
+// ==========================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch((err) => {
+      console.warn('Service Worker 註冊失敗:', err);
+    });
+  });
+}
