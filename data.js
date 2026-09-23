@@ -2,6 +2,8 @@ const TRIP_METADATA = {
   title: "東京冬日 5 人行 🇯🇵",
   dates: "2026/12/9 ~ 12/14 (六天五夜)",
   peopleCount: 5,
+  // ISO 起飛時間 — 用於倒數計時,單一資料源
+  departureISO: "2026-12-09T12:50:00+09:00",
   flightDetails: {
     arrival: {
       date: "12/9 (週三)",
@@ -18,6 +20,9 @@ const TRIP_METADATA = {
     name: "SYLA HOTEL Oshiage (押上)",
     address: "東京都墨田區押上 3 丁目 (Oshiage, Sumida-ku) — 走 5 分鐘到晴空塔",
     cost: "165,598 日幣 (5 晚總額，5 人平分約 33,120 日幣/人)",
+    // 結構化欄位:總價 / 每人 — app.js 從此計算,不再硬編碼
+    totalCostJpy: 165598,
+    perPersonJpy: 33120,
     link: "https://www.agoda.com/zh-tw/syla-hotel-oshiage/hotel/all/tokyo-jp.html?checkIn=2026-12-9&los=5",
     coordinates: [35.7108, 139.8150]
   }

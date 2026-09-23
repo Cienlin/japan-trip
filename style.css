@@ -633,6 +633,87 @@ body.theme-dark .filter-chip:hover {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-width: 0; /* 讓內部子元素 ellipsis 生效 */
+}
+
+.place-card-body-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.place-card-title-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.place-card-title-wrap h3 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.place-card-eng {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timeline-card-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.transit-details {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.transit-step-emoji {
+  font-size: 1.3rem;
+}
+
+.transit-step-details {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.transit-step-duration {
+  margin-left: auto;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.transit-duration-lg {
+  font-size: 1rem;
+}
+
+.transit-step-unit {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.btn-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.btn-icon-accent {
+  color: var(--accent-gold);
+}
+
+.btn-full {
+  width: 100%;
+  margin-bottom: 12px;
+  gap: 8px;
 }
 
 .place-card-meta {
@@ -1593,6 +1674,24 @@ body.theme-dark .close-drawer-btn {
   margin-top: 20px;
   border-top: 1px solid var(--border-color);
   padding-top: 16px;
+}
+
+/* Confirm dialog — smaller card, no border-top on actions */
+.confirm-modal-card {
+  max-width: 380px;
+  gap: 12px;
+}
+
+.confirm-modal-card .form-actions {
+  margin-top: 8px;
+  padding-top: 12px;
+}
+
+.confirm-modal-message {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-main);
+  padding: 4px 0;
 }
 
 /* Map Picker Banner overlaying the map */

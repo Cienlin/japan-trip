@@ -2,8 +2,15 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   // 1. Initialize State
+  const STORAGE_KEYS = {
+    theme: "tokyo_trip_theme",
+    customPlaces: "tokyo_trip_custom_places",
+    checklist: "tokyo_trip_checklist_state",
+    budget: "tokyo_trip_budget_inputs"
+  };
+
   let map = null;
-  let activeTheme = 'light';
+  let activeTheme = localStorage.getItem(STORAGE_KEYS.theme) || 'light';
   let activeTab = 'itinerary';
   let activeDay = 'all';
   let activeCategory = 'all';
@@ -90,11 +97,73 @@ document.addEventListener("DOMContentLoaded", () => {
     sightseeing: "🗼"
   };
 
+  // Transit method → emoji lookup
+  const transitEmojis = {
+    walk: "🚶",
+    bus: "🚌",
+    subway: "🚃",
+    train: "🚆"
+  };
+
+  // Category → default fallback image
+  const categoryDefaultImage = {
+    food: "tonkatsu_1.jpg",
+    shopping: "uniqlo_1.jpg",
+    sightseeing: "sensoji_1.jpg",
+    lodging: "hotel_1.jpg"
+  };
+
+  // Helpers
+  const resolveImageUrl = (img, fallback = "subway_1.jpg") => {
+    if (!img) return `images/${fallback}`;
+    return (img.startsWith("http://") || img.startsWith("https://")) ? img : `images/${img}`;
+  };
+
+  const firstImageOf = (place) => {
+    const list = place.images && place.images.length > 0 ? place.images : null;
+    return resolveImageUrl(list ? list[0] : null);
+  };
+
+  const transitEmojiOf = (info) => transitEmojis[info?.method] || "🚃";
+
+  // Escape HTML to prevent XSS from user-added custom places (name/desc/etc.)
+  const escapeHtml = (str) => {
+    if (str === null || str === undefined) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  };
+
+  // Sanitize a URL for safe use in href/src. Rejects javascript:, data: etc.
+  const safeUrl = (url) => {
+    if (!url) return "";
+    const trimmed = String(url).trim();
+    if (/^\s*(javascript|data|vbscript):/i.test(trimmed)) return "";
+    return trimmed;
+  };
+
+  // Escape a URL for safe interpolation inside a CSS url("...") value.
+  const cssEscapeUrl = (url) => String(url || "").replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+
+  // Shared markup for the delete pin on custom places.
+  // Uses [data-action="delete-place"] so we can rely on event delegation instead of inline onclick.
+  const deleteButtonMarkup = () => `
+    <button class="delete-place-btn" title="刪除自訂地點" data-action="delete-place" aria-label="刪除此自訂地點">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+    </button>
+  `;
+
   // ==========================================
   // INITIALIZATION & DATA MERGING
   // ==========================================
   
   function init() {
+    // Apply persisted theme before anything else so no flash
+    applyTheme(activeTheme);
+
     // Load persisted custom places
     refreshAllPlaces();
 
@@ -145,9 +214,63 @@ document.addEventListener("DOMContentLoaded", () => {
     allPlaces = [...defaultPlaces, ...customPlaces];
   }
 
+  // Reusable confirm dialog — replaces native window.confirm() which is ugly and blocks UI on mobile
+  function confirmDialog(message) {
+    return new Promise(resolve => {
+      const modal = document.getElementById("confirm-modal");
+      const msgEl = document.getElementById("confirm-modal-message");
+      const okBtn = document.getElementById("confirm-modal-ok");
+      const cancelBtn = document.getElementById("confirm-modal-cancel");
+      if (!modal || !okBtn || !cancelBtn) {
+        resolve(window.confirm(message));
+        return;
+      }
+      msgEl.textContent = message;
+      modal.classList.add("show");
+
+      const cleanup = (result) => {
+        modal.classList.remove("show");
+        okBtn.removeEventListener("click", onOk);
+        cancelBtn.removeEventListener("click", onCancel);
+        modal.removeEventListener("click", onOverlay);
+        document.removeEventListener("keydown", onKey);
+        resolve(result);
+      };
+      const onOk = () => cleanup(true);
+      const onCancel = () => cleanup(false);
+      const onOverlay = (e) => { if (e.target === modal) cleanup(false); };
+      const onKey = (e) => {
+        if (e.key === "Escape") cleanup(false);
+        else if (e.key === "Enter") cleanup(true);
+      };
+      okBtn.addEventListener("click", onOk);
+      cancelBtn.addEventListener("click", onCancel);
+      modal.addEventListener("click", onOverlay);
+      document.addEventListener("keydown", onKey);
+      setTimeout(() => okBtn.focus(), 50);
+    });
+  }
+
+  // Apply a theme: swap body class, icons, and map tile layer
+  function applyTheme(theme) {
+    document.body.classList.toggle("theme-dark", theme === 'dark');
+    document.body.classList.toggle("theme-light", theme === 'light');
+    iconSun.style.display = theme === 'dark' ? "none" : "block";
+    iconMoon.style.display = theme === 'dark' ? "block" : "none";
+
+    if (map && activeTileLayer) {
+      map.removeLayer(activeTileLayer);
+      activeTileLayer = L.tileLayer(tileUrls[theme], {
+        attribution: tileAttribution
+      }).addTo(map);
+    }
+  }
+
   // Countdown timer
   function initCountdown() {
-    const targetDate = new Date("2026-12-09T12:50:00+09:00"); // 12:50 Tokyo Time
+    const iso = (typeof TRIP_METADATA !== "undefined" && TRIP_METADATA.departureISO)
+      || "2026-12-09T12:50:00+09:00";
+    const targetDate = new Date(iso);
     const now = new Date();
     const diff = targetDate - now;
 
@@ -234,35 +357,22 @@ document.addEventListener("DOMContentLoaded", () => {
       renderDirectory();
     });
 
-    // 4. Search input search (Directory Tab)
+    // 4. Search input search (Directory Tab) — debounced 150ms
+    let searchDebounceTimer = null;
     searchInput.addEventListener("input", (e) => {
-      searchQuery = e.target.value.toLowerCase().trim();
-      renderDirectory();
+      const value = e.target.value.toLowerCase().trim();
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => {
+        searchQuery = value;
+        renderDirectory();
+      }, 150);
     });
 
     // 5. Theme Toggle Button
     themeToggleBtn.addEventListener("click", () => {
-      if (activeTheme === 'light') {
-        activeTheme = 'dark';
-        document.body.classList.remove("theme-light");
-        document.body.classList.add("theme-dark");
-        iconSun.style.display = "none";
-        iconMoon.style.display = "block";
-      } else {
-        activeTheme = 'light';
-        document.body.classList.remove("theme-dark");
-        document.body.classList.add("theme-light");
-        iconSun.style.display = "block";
-        iconMoon.style.display = "none";
-      }
-      
-      // Update tile layer source
-      if (map && activeTileLayer) {
-        map.removeLayer(activeTileLayer);
-        activeTileLayer = L.tileLayer(tileUrls[activeTheme], {
-          attribution: tileAttribution
-        }).addTo(map);
-      }
+      activeTheme = activeTheme === 'light' ? 'dark' : 'light';
+      applyTheme(activeTheme);
+      localStorage.setItem(STORAGE_KEYS.theme, activeTheme);
     });
 
     // 6. Reset view button
@@ -331,6 +441,16 @@ document.addEventListener("DOMContentLoaded", () => {
     modalCloseBtn.addEventListener("click", closeAddModal);
     modalCancelBtn.addEventListener("click", closeAddModal);
 
+    // Close add-place modal via Escape or overlay click
+    addPlaceModal.addEventListener("click", (e) => {
+      if (e.target === addPlaceModal) closeAddModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && addPlaceModal.classList.contains("show")) {
+        closeAddModal();
+      }
+    });
+
     // Coordinate picker button click
     mapPickCoordsBtn.addEventListener("click", () => {
       addPlaceModal.classList.remove("show");
@@ -367,17 +487,8 @@ document.addEventListener("DOMContentLoaded", () => {
         gmaps = `https://maps.google.com/?q=${encodeURIComponent(name)}`;
       }
 
-      let imageVal = document.getElementById("new-place-image").value.trim();
-      let images = [];
-      if (imageVal) {
-        images = [imageVal];
-      } else {
-        // Fallback default graphics
-        if (category === "food") images = ["tonkatsu_1.jpg"];
-        else if (category === "shopping") images = ["uniqlo_1.jpg"];
-        else if (category === "sightseeing") images = ["sensoji_1.jpg"];
-        else images = ["hotel_1.jpg"];
-      }
+      const imageVal = safeUrl(document.getElementById("new-place-image").value.trim());
+      const images = imageVal ? [imageVal] : [categoryDefaultImage[category] || "hotel_1.jpg"];
 
       const newPlace = {
         id: `custom_${Date.now()}`,
@@ -475,31 +586,31 @@ document.addEventListener("DOMContentLoaded", () => {
       // Time comes from data.js `place.time` field
       const timeText = place.time || "";
 
-      // Add delete button if it's a custom place
       const isCustom = place.id.startsWith("custom_");
-      const deleteBtnHtml = isCustom ? `
-        <button class="delete-place-btn" title="刪除自訂地點" onclick="deleteCustomPlace('${place.id}', event)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-        </button>
-      ` : '';
+      const deleteBtnHtml = isCustom ? deleteButtonMarkup() : '';
 
       itemEl.innerHTML = `
         <div class="timeline-marker"></div>
         <div class="timeline-card">
           <div class="timeline-card-header">
-            <span class="timeline-time-badge">${timeText || "自訂行程"}</span>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="timeline-day-tag">Day ${place.day}</span>
+            <span class="timeline-time-badge">${escapeHtml(timeText || "自訂行程")}</span>
+            <div class="timeline-card-header-right">
+              <span class="timeline-day-tag">Day ${escapeHtml(place.day)}</span>
               ${deleteBtnHtml}
             </div>
           </div>
-          <h4>${place.name}</h4>
-          <span class="english-name">${place.englishName}</span>
-          <p class="card-desc">${place.desc}</p>
+          <h4>${escapeHtml(place.name)}</h4>
+          <span class="english-name">${escapeHtml(place.englishName)}</span>
+          <p class="card-desc">${escapeHtml(place.desc)}</p>
         </div>
       `;
 
-      itemEl.addEventListener("click", () => {
+      itemEl.addEventListener("click", (e) => {
+        if (e.target.closest('[data-action="delete-place"]')) {
+          e.stopPropagation();
+          deleteCustomPlace(place.id);
+          return;
+        }
         locatePlace(place.id);
         openDrawer(place.id);
       });
@@ -511,18 +622,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const transitEl = document.createElement("div");
         transitEl.className = "transit-log";
         
-        let transitEmoji = "🚃";
-        if (place.transitInfo.method === "walk") transitEmoji = "🚶";
-        else if (place.transitInfo.method === "bus") transitEmoji = "🚌";
+        const transitEmoji = transitEmojiOf(place.transitInfo);
 
         transitEl.innerHTML = `
           <div class="transit-icon-wrapper">
             <span class="transit-icon">${transitEmoji}</span>
           </div>
           <div>
-            ${place.transitInfo.line} - <span class="transit-duration">${place.transitInfo.duration} 分鐘</span>
-            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">
-              ${place.transitInfo.details}
+            ${escapeHtml(place.transitInfo.line)} - <span class="transit-duration">${escapeHtml(place.transitInfo.duration)} 分鐘</span>
+            <div class="transit-details">
+              ${escapeHtml(place.transitInfo.details)}
             </div>
           </div>
         `;
@@ -539,12 +648,10 @@ document.addEventListener("DOMContentLoaded", () => {
     let filtered = allPlaces.filter(place => {
       // Category filter
       if (activeCategory !== "all" && place.category !== activeCategory) return false;
-      // Search query filter
+      // Search query filter (null-safe)
       if (searchQuery) {
-        const matchName = place.name.toLowerCase().includes(searchQuery);
-        const matchEng = place.englishName.toLowerCase().includes(searchQuery);
-        const matchDesc = place.desc.toLowerCase().includes(searchQuery);
-        return matchName || matchEng || matchDesc;
+        const haystack = `${place.name || ""} ${place.englishName || ""} ${place.desc || ""}`.toLowerCase();
+        return haystack.includes(searchQuery);
       }
       return true;
     });
@@ -560,40 +667,36 @@ document.addEventListener("DOMContentLoaded", () => {
       cardEl.setAttribute("data-id", place.id);
       
       const isCustom = place.id.startsWith("custom_");
-      const deleteBtnHtml = isCustom ? `
-        <button class="delete-place-btn" title="刪除自訂地點" onclick="deleteCustomPlace('${place.id}', event)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-        </button>
-      ` : '';
+      const deleteBtnHtml = isCustom ? deleteButtonMarkup() : '';
 
-      // Determine picture path (handle user added absolute image URLs)
-      let mainImg = "images/subway_1.jpg";
-      if (place.images && place.images.length > 0) {
-        const img = place.images[0];
-        mainImg = (img.startsWith("http://") || img.startsWith("https://")) ? img : `images/${img}`;
-      }
+      const mainImg = firstImageOf(place);
 
       cardEl.innerHTML = `
-        <div class="place-card-img" style="background-image: url('${mainImg}');"></div>
+        <div class="place-card-img"></div>
         <div class="place-card-body">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div style="flex: 1; min-width: 0;">
-              <h3 style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${place.name}</h3>
-              <div style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${place.englishName}</div>
+          <div class="place-card-body-top">
+            <div class="place-card-title-wrap">
+              <h3>${escapeHtml(place.name)}</h3>
+              <div class="place-card-eng">${escapeHtml(place.englishName)}</div>
             </div>
             ${deleteBtnHtml}
           </div>
           <div class="place-card-meta">
-            <span class="place-card-category" data-cat="${place.category}">${categoryEmojis[place.category]} ${getCategoryChinese(place.category)}</span>
-            <span class="place-card-day">${place.day ? `Day ${place.day}` : '自訂'}</span>
+            <span class="place-card-category" data-cat="${escapeHtml(place.category)}">${categoryEmojis[place.category] || ''} ${escapeHtml(getCategoryChinese(place.category))}</span>
+            <span class="place-card-day">${place.day ? `Day ${escapeHtml(place.day)}` : '自訂'}</span>
           </div>
         </div>
       `;
+      // Set background-image via DOM to avoid CSS injection
+      const imgEl = cardEl.querySelector(".place-card-img");
+      if (imgEl) imgEl.style.backgroundImage = `url("${cssEscapeUrl(mainImg)}")`;
 
       cardEl.addEventListener("click", (e) => {
-        // Prevent trigger if clicking on the delete button
-        if (e.target.closest(".delete-place-btn")) return;
-        
+        if (e.target.closest('[data-action="delete-place"]')) {
+          e.stopPropagation();
+          deleteCustomPlace(place.id);
+          return;
+        }
         switchTab("itinerary"); // Sync tab
         locatePlace(place.id);
         openDrawer(place.id);
@@ -611,35 +714,25 @@ document.addEventListener("DOMContentLoaded", () => {
     return "";
   }
 
-  // Delete Custom Place Global Function
-  window.deleteCustomPlace = function (id, event) {
-    if (event) event.stopPropagation(); // Stop card navigate bubble
-    
-    if (!confirm("確定要刪除此自訂地點嗎？")) return;
-    
-    let storedPlaces = [];
-    const stored = localStorage.getItem("tokyo_trip_custom_places");
-    if (stored) {
-      try {
-        storedPlaces = JSON.parse(stored);
-      } catch (e) {
-        storedPlaces = [];
-      }
-    }
-    
-    // Filter and update
-    storedPlaces = storedPlaces.filter(p => p.id !== id);
-    localStorage.setItem("tokyo_trip_custom_places", JSON.stringify(storedPlaces));
+  // Delete a custom place by id (called via event delegation from card / timeline click handlers)
+  function deleteCustomPlace(id) {
+    confirmDialog("確定要刪除此自訂地點嗎？").then(ok => {
+      if (!ok) return;
 
-    // Close detail drawer if active open
-    closeDrawer();
+      const target = customPlaces.find(p => p.id === id);
+      const filtered = customPlaces.filter(p => p.id !== id);
+      localStorage.setItem(STORAGE_KEYS.customPlaces, JSON.stringify(filtered));
 
-    // Refresh everything
-    refreshAllPlaces();
-    renderItinerary();
-    renderDirectory();
-    updateMapMarkers();
-  };
+      closeDrawer();
+      refreshAllPlaces();
+      renderItinerary();
+      renderDirectory();
+      updateMapMarkers();
+
+      // Keep target reference so tests / debug can log if needed
+      void target;
+    });
+  }
 
   // ==========================================
   // MAP INTERACTIONS & MARKERS
@@ -669,8 +762,8 @@ document.addEventListener("DOMContentLoaded", () => {
     placesToShow.forEach(place => {
       // Custom Div Icon to style markers with category colors
       const markerHtml = `
-        <div class="marker-pin" data-cat="${place.category}" id="pin-${place.id}">
-          <span class="marker-icon">${categoryEmojis[place.category]}</span>
+        <div class="marker-pin" data-cat="${escapeHtml(place.category)}" id="pin-${escapeHtml(place.id)}">
+          <span class="marker-icon">${categoryEmojis[place.category] || ''}</span>
         </div>
       `;
       
@@ -684,28 +777,32 @@ document.addEventListener("DOMContentLoaded", () => {
       const marker = L.marker([place.lat, place.lng], { icon: customIcon }).addTo(map);
       marker.placeId = place.id;
       
-      // Determine picture path (handle user added absolute image URLs)
-      let mainImg = "images/subway_1.jpg";
-      if (place.images && place.images.length > 0) {
-        const img = place.images[0];
-        mainImg = (img.startsWith("http://") || img.startsWith("https://")) ? img : `images/${img}`;
-      }
+      const mainImg = firstImageOf(place);
 
-      // Popup Content
-      const popupContent = `
-        <div class="popup-card">
-          <div class="popup-img" style="background-image: url('${mainImg}')"></div>
-          <div class="popup-body">
-            <h3>${place.name}</h3>
-            <p>${place.englishName}</p>
-            <a href="#" class="popup-link" onclick="window.dispatchEvent(new CustomEvent('open-place-drawer', {detail: '${place.id}'})); return false;">
-              查看詳細資訊與交通 &rarr;
-            </a>
-          </div>
+      // Popup Content — built as DOM to avoid string-injection into style="url(...)" and onclick
+      const popupEl = document.createElement("div");
+      popupEl.className = "popup-card";
+      popupEl.innerHTML = `
+        <div class="popup-img"></div>
+        <div class="popup-body">
+          <h3>${escapeHtml(place.name)}</h3>
+          <p>${escapeHtml(place.englishName)}</p>
+          <a href="#" class="popup-link" data-action="open-drawer">
+            查看詳細資訊與交通 &rarr;
+          </a>
         </div>
       `;
-      
-      marker.bindPopup(popupContent, {
+      const popupImgEl = popupEl.querySelector(".popup-img");
+      if (popupImgEl) popupImgEl.style.backgroundImage = `url("${cssEscapeUrl(mainImg)}")`;
+      const popupLinkEl = popupEl.querySelector('[data-action="open-drawer"]');
+      if (popupLinkEl) {
+        popupLinkEl.addEventListener("click", (ev) => {
+          ev.preventDefault();
+          openDrawer(place.id);
+        });
+      }
+
+      marker.bindPopup(popupEl, {
         closeButton: true,
         offset: L.point(0, -26)
       });
@@ -810,11 +907,6 @@ document.addEventListener("DOMContentLoaded", () => {
     highlightMarkerPin(placeId);
   }
 
-  // Listen to popup redirects
-  window.addEventListener("open-place-drawer", (e) => {
-    openDrawer(e.detail);
-  });
-
   // ==========================================
   // DRAWER & SLIDER
   // ==========================================
@@ -830,37 +922,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
     currentSlideIndex = 0;
 
-    // Build Image Slider HTML
-    let imageSlidesHtml = "";
+    // Build Image Slider HTML — slide background images are applied via DOM below to avoid CSS injection
     let indicatorsHtml = "";
-    
     const imageList = place.images && place.images.length > 0 ? place.images : ["subway_1.jpg"];
-    
-    imageList.forEach((img, idx) => {
-      const imgSrc = (img.startsWith("http://") || img.startsWith("https://")) ? img : `images/${img}`;
-      imageSlidesHtml += `<div class="carousel-slide" style="background-image: url('${imgSrc}');"></div>`;
+    const resolvedImageUrls = imageList.map(img => resolveImageUrl(img));
+    const imageSlidesHtml = imageList.map((_, idx) => `<div class="carousel-slide" data-slide-idx="${idx}"></div>`).join("");
+    imageList.forEach((_, idx) => {
       indicatorsHtml += `<span class="indicator ${idx === 0 ? 'active' : ''}" data-idx="${idx}"></span>`;
     });
 
     // Build Transit details in drawer
     let drawerTransitHtml = "";
     if (place.transitInfo) {
-      let tEmoji = "🚃";
-      if (place.transitInfo.method === "walk") tEmoji = "🚶";
-      else if (place.transitInfo.method === "bus") tEmoji = "🚌";
+      const tEmoji = transitEmojiOf(place.transitInfo);
       
       drawerTransitHtml = `
         <div class="detail-transit-block">
-          <div class="transit-header-text">交通路線 (起點: ${place.transitInfo.from})</div>
+          <div class="transit-header-text">交通路線 (起點: ${escapeHtml(place.transitInfo.from)})</div>
           <div class="transit-step-body">
-            <span style="font-size: 1.3rem;">${tEmoji}</span>
+            <span class="transit-step-emoji">${tEmoji}</span>
             <div>
-              <div class="transit-desc-text">${place.transitInfo.line}</div>
-              <div style="font-size: 0.8rem; color: var(--text-muted);">${place.transitInfo.details}</div>
+              <div class="transit-desc-text">${escapeHtml(place.transitInfo.line)}</div>
+              <div class="transit-step-details">${escapeHtml(place.transitInfo.details)}</div>
             </div>
-            <div style="margin-left: auto; text-align: right; white-space: nowrap;">
-              <span class="transit-duration" style="font-size: 1rem;">${place.transitInfo.duration}</span>
-              <span style="font-size: 0.75rem; color: var(--text-muted);">分鐘</span>
+            <div class="transit-step-duration">
+              <span class="transit-duration transit-duration-lg">${escapeHtml(place.transitInfo.duration)}</span>
+              <span class="transit-step-unit">分鐘</span>
             </div>
           </div>
         </div>
@@ -891,28 +978,28 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="detail-info">
           <div class="detail-header">
             <div class="detail-title-row">
-              <h2>${place.name}</h2>
+              <h2>${escapeHtml(place.name)}</h2>
               <div class="detail-badges">
-                <span class="tag-badge" data-cat="${place.category}">${categoryEmojis[place.category]} ${getCategoryChinese(place.category)}</span>
-                ${place.day ? `<span class="tag-badge tag-badge-day">Day ${place.day}</span>` : ''}
+                <span class="tag-badge" data-cat="${escapeHtml(place.category)}">${categoryEmojis[place.category] || ''} ${escapeHtml(getCategoryChinese(place.category))}</span>
+                ${place.day ? `<span class="tag-badge tag-badge-day">Day ${escapeHtml(place.day)}</span>` : ''}
               </div>
             </div>
-            <div class="detail-english">${place.englishName}</div>
+            <div class="detail-english">${escapeHtml(place.englishName)}</div>
           </div>
-          
+
           <div class="detail-desc">
-            ${place.desc}
+            ${escapeHtml(place.desc)}
           </div>
-          
+
           ${drawerTransitHtml}
-          
+
           <div class="drawer-actions">
-            <a href="${place.gmaps}" target="_blank" class="btn btn-primary">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px; margin-right:6px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <a href="${escapeHtml(safeUrl(place.gmaps))}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               Google Maps 地圖導航
             </a>
             <button class="btn btn-outline" id="drawer-locate-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px; margin-right:6px;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
               定位地圖
             </button>
           </div>
@@ -920,6 +1007,12 @@ document.addEventListener("DOMContentLoaded", () => {
         
       </div>
     `;
+
+    // Apply resolved image URLs to each carousel slide via DOM (avoids CSS injection)
+    drawerContentBody.querySelectorAll(".carousel-slide").forEach((slide, idx) => {
+      const url = resolvedImageUrls[idx];
+      if (url) slide.style.backgroundImage = `url("${cssEscapeUrl(url)}")`;
+    });
 
     // Open Drawer
     detailDrawer.classList.add("open");
@@ -1014,8 +1107,12 @@ document.addEventListener("DOMContentLoaded", () => {
     
     if (!calcRateInput || !calcFlightInput || !calcPocketInput) return;
 
-    const hotelPerPersonJpy = 33120;
+    const hotelPerPersonJpy = TRIP_METADATA?.accommodation?.perPersonJpy ?? 33120;
     const targetBudgetTwd = 50000;
+
+    // Sync the static "每人分攤住宿" display with the metadata so it can never drift
+    const hotelJpyDisplay = document.getElementById("calc-hotel-jpy");
+    if (hotelJpyDisplay) hotelJpyDisplay.textContent = hotelPerPersonJpy.toLocaleString();
 
     // Load saved inputs
     const stored = localStorage.getItem("tokyo_trip_budget_inputs");
