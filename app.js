@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const sidebar = document.querySelector(".sidebar");
       const cH = container ? Math.round(container.offsetHeight) : "N/A";
       const sBot = sidebar ? Math.round(sidebar.getBoundingClientRect().bottom) : "N/A";
-      badge.textContent = `v1.0.4 ${isStandalone ? "[PWA]" : "[web]"} vh:${vh} vv:${vv} sb:${safeBottom} cH:${cH} sBot:${sBot}`;
+      badge.textContent = `v1.0.5 ${isStandalone ? "[PWA]" : "[web]"} vh:${vh} vv:${vv} sb:${safeBottom} cH:${cH} sBot:${sBot}`;
     }
   };
   syncAppViewportHeight();
