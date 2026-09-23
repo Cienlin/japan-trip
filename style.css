@@ -1431,19 +1431,22 @@ body.theme-dark .close-drawer-btn {
     z-index: 10;
   }
 
-  /* Bottom Navigation Sheet (Sidebar) — 浮在 iOS safe-area 上方,
-     Home 指示器區域直接顯示地圖,避免 PWA 底部有塊白色空白 */
+  /* Bottom Navigation Sheet (Sidebar) — sidebar 貼底,
+     但只有 tab-navigation 有 glass 背景,safe-area padding 區域透明,
+     可以直接看到地圖 → Home 指示器懸浮於地圖上,無白色空白 */
   .sidebar {
     position: fixed;
-    bottom: env(safe-area-inset-bottom, 0px);
+    bottom: 0;
     left: 0;
     right: 0;
     width: 100%;
-    height: 64px;
-    padding-bottom: 0;
-    border-top: 1px solid var(--border-color);
-    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+    height: calc(64px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-top: none;
+    box-shadow: none;
     z-index: 20;
     transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
@@ -1452,7 +1455,13 @@ body.theme-dark .close-drawer-btn {
   }
 
   .sidebar.expanded {
-    height: calc(75dvh - env(safe-area-inset-bottom, 0px));
+    height: 75dvh;
+    background: var(--bg-sidebar);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-top: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
   }
   
   .brand-header {
@@ -1468,11 +1477,26 @@ body.theme-dark .close-drawer-btn {
   .tab-navigation {
     height: 64px;
     margin: 0;
-    border: none;
-    background: transparent;
     padding: 0 12px;
     align-items: center;
     flex-shrink: 0;
+    /* 未展開時,tab-nav 自己扛起 glass card 視覺;展開時被 sidebar 背景蓋過去 */
+    background: var(--bg-sidebar);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-top: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+  }
+
+  /* sidebar 展開時,tab-nav 不用重複的圓角/邊框/陰影(交給 sidebar 本體) */
+  .sidebar.expanded .tab-navigation {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-top: none;
+    border-radius: 0;
+    box-shadow: none;
   }
   
   .tab-btn {
