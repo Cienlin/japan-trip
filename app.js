@@ -14,24 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
       ? Math.max(vv, window.innerHeight || 0, window.screen.height || 0)
       : vv;
     document.documentElement.style.setProperty("--app-height", `${viewportHeight}px`);
-
-    // Debug info in badge
-    const badge = document.getElementById("version-badge");
-    if (badge) {
-      const vh = window.innerHeight;
-      const vvR = window.visualViewport?.height ? Math.round(window.visualViewport.height) : "N/A";
-      const probe = document.createElement("div");
-      probe.style.cssText = "position:fixed;bottom:0;height:env(safe-area-inset-bottom,0px);visibility:hidden;";
-      document.body.appendChild(probe);
-      const safeBottom = Math.round(probe.getBoundingClientRect().height);
-      probe.remove();
-      const container = document.querySelector(".app-container");
-      const sidebar = document.querySelector(".sidebar");
-      const cH = container ? Math.round(container.offsetHeight) : "N/A";
-      const sBot = sidebar ? Math.round(sidebar.getBoundingClientRect().bottom) : "N/A";
-      const scH = window.screen.height;
-      badge.textContent = `v1.0.8 ${isStandalone ? "[PWA]" : "[web]"} vh:${vh} vv:${vvR} sb:${safeBottom} cH:${cH} sBot:${sBot} scH:${scH} appH:${Math.round(viewportHeight)}`;
-    }
   };
   syncAppViewportHeight();
   window.addEventListener("resize", syncAppViewportHeight, { passive: true });

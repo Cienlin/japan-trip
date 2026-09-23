@@ -954,28 +954,24 @@ body.theme-dark .leaflet-control-attribution {
   filter: none;
 }
 
-/* Version + Debug Badge (左上角,診斷 iOS PWA viewport 用) */
+/* Version Badge (左上角,方便看快取狀態) */
 .version-badge {
   position: absolute;
   top: 16px;
   left: 16px;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.55);
   color: #fff;
   padding: 4px 10px;
   border-radius: 12px;
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--font-primary);
   letter-spacing: 0.3px;
   z-index: 10;
   pointer-events: none;
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   user-select: none;
-  white-space: nowrap;
-  max-width: calc(100vw - 90px);
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* Floating Toolbar */
