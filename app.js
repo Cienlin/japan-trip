@@ -14,13 +14,18 @@ document.addEventListener("DOMContentLoaded", () => {
       const vv = window.visualViewport?.height ? Math.round(window.visualViewport.height) : "N/A";
       const isStandalone = window.matchMedia("(display-mode: standalone)").matches ||
                            window.navigator.standalone === true;
-      // 讀 CSS 的 env(safe-area-inset-bottom) 需借助 DOM 測量
+      // safe-area-inset-bottom 實測
       const probe = document.createElement("div");
       probe.style.cssText = "position:fixed;bottom:0;height:env(safe-area-inset-bottom,0px);visibility:hidden;";
       document.body.appendChild(probe);
       const safeBottom = Math.round(probe.getBoundingClientRect().height);
       probe.remove();
-      badge.textContent = `v1.0.3 ${isStandalone ? "[PWA]" : "[web]"} vh:${vh} vv:${vv} sb:${safeBottom}`;
+      // .app-container 實測高度 + sidebar 底部 y 座標
+      const container = document.querySelector(".app-container");
+      const sidebar = document.querySelector(".sidebar");
+      const cH = container ? Math.round(container.offsetHeight) : "N/A";
+      const sBot = sidebar ? Math.round(sidebar.getBoundingClientRect().bottom) : "N/A";
+      badge.textContent = `v1.0.4 ${isStandalone ? "[PWA]" : "[web]"} vh:${vh} vv:${vv} sb:${safeBottom} cH:${cH} sBot:${sBot}`;
     }
   };
   syncAppViewportHeight();

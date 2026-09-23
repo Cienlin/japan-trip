@@ -1422,26 +1422,27 @@ body.theme-dark .close-drawer-btn {
 
   .app-container {
     display: block;
-    /* 完全靠 inset 定位,不用 height 單位 — 避免 iOS PWA 100dvh 不含 safe-area 的 bug */
+    /* 用 inset: 0 讓 app-container 撐滿整個 layout viewport,
+       position: fixed 才會有正確參考點給裡面的 absolute 元素 */
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    bottom: auto;
+    bottom: 0;
     width: auto;
-    height: var(--app-height);
+    height: auto;
     overflow: hidden;
   }
 
   .map-section {
-    /* fixed 直接對 viewport 定位,確保填滿整個螢幕含 safe-area */
-    position: fixed;
+    /* absolute 相對 app-container 定位,填滿容器 */
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    bottom: auto;
+    bottom: 0;
     width: auto;
-    height: var(--app-height);
+    height: auto;
     z-index: 1;
     overflow: hidden;
   }
