@@ -81,12 +81,10 @@ document.addEventListener("DOMContentLoaded", () => {
   let isPickingCoords = false;
   let tempPickMarker = null;
 
-  // Map tile configuration
-  const tileUrls = {
-    light: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-    dark: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-  };
-  const tileAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+  // Map tile — 2024 起 CARTO basemaps 開始要 API key + 浮水印,改用 OpenStreetMap
+  // 深色主題透過 CSS filter 反轉,不需第二個 tile source
+  const tileUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+  const tileAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
   let activeTileLayer = null;
 
   // Icons mapping for categories
@@ -251,19 +249,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Apply a theme: swap body class, icons, and map tile layer
+  // Apply a theme: swap body class + icons. 地圖 tile 靠 CSS filter 切換,不重新請求
   function applyTheme(theme) {
     document.body.classList.toggle("theme-dark", theme === 'dark');
     document.body.classList.toggle("theme-light", theme === 'light');
     iconSun.style.display = theme === 'dark' ? "none" : "block";
     iconMoon.style.display = theme === 'dark' ? "block" : "none";
-
-    if (map && activeTileLayer) {
-      map.removeLayer(activeTileLayer);
-      activeTileLayer = L.tileLayer(tileUrls[theme], {
-        attribution: tileAttribution
-      }).addTo(map);
-    }
   }
 
   // Countdown timer
@@ -298,9 +289,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // Place zoom control at top-left
     L.control.zoom({ position: "topleft" }).addTo(map);
 
-    // Add Tile Layer
-    activeTileLayer = L.tileLayer(tileUrls[activeTheme], {
-      attribution: tileAttribution
+    // Add Tile Layer (單一 source,主題切換靠 CSS filter,不用重新請求 tile)
+    activeTileLayer = L.tileLayer(tileUrl, {
+      attribution: tileAttribution,
+      maxZoom: 19
     }).addTo(map);
 
     // Draw all markers

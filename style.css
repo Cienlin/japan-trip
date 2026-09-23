@@ -950,6 +950,16 @@ body.theme-dark .btn-outline:hover {
   z-index: 1;
 }
 
+/* 深色主題:反轉 OSM 亮色底圖成類似 dark map 效果 */
+body.theme-dark .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9) saturate(0.6);
+}
+
+/* 反轉會把 attribution 上的連結顏色也翻掉,反回來 */
+body.theme-dark .leaflet-control-attribution {
+  filter: none;
+}
+
 /* Floating Toolbar */
 .floating-toolbar {
   position: absolute;
