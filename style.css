@@ -240,6 +240,7 @@ body.theme-dark .tab-btn.active {
 .tab-pane {
   display: none;
   padding: 20px;
+  overflow-x: hidden;
 }
 
 .tab-pane.active {
@@ -548,9 +549,11 @@ body.theme-dark .transit-icon-wrapper {
   border: 1px solid var(--border-color);
   background: var(--bg-card);
   color: var(--text-main);
-  font-size: 0.9rem;
+  font-size: 16px; /* iOS Safari: <16px 會觸發自動放大 */
   font-family: inherit;
   outline: none;
+  -webkit-appearance: none;
+  appearance: none;
   transition: all var(--transition-fast);
 }
 
@@ -684,6 +687,7 @@ body.theme-dark .filter-chip:hover {
   margin-bottom: 12px;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 10px;
+  flex-wrap: wrap;
 }
 
 .logistics-icon {
@@ -695,6 +699,9 @@ body.theme-dark .filter-chip:hover {
 .card-header h3 {
   font-size: 0.95rem;
   font-weight: 700;
+  min-width: 0;
+  word-break: break-word;
+  flex: 1;
 }
 
 .flight-route-info {
@@ -889,6 +896,7 @@ body.theme-dark .btn-outline:hover {
   -webkit-backdrop-filter: var(--glass-blur);
   transition: all var(--transition-fast);
   outline: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .float-btn:hover {
@@ -973,26 +981,29 @@ body.theme-dark .btn-outline:hover {
   box-shadow: var(--shadow-lg);
   z-index: 8;
   transform: translateY(105%);
-  transition: transform var(--transition-normal);
+  transition: transform var(--transition-normal), visibility 0s linear var(--transition-normal);
   border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
   max-height: 85dvh;
   overflow-y: auto;
   pointer-events: none;
+  visibility: hidden;
 }
 
 .detail-drawer.open {
   transform: translateY(0);
   pointer-events: auto;
+  visibility: visible;
+  transition: transform var(--transition-normal), visibility 0s linear 0s;
 }
 
 .close-drawer-btn {
   position: absolute;
-  top: 14px;
-  right: 16px;
+  top: 10px;
+  right: 12px;
   background: rgba(0, 0, 0, 0.05);
   border: none;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -1001,6 +1012,7 @@ body.theme-dark .btn-outline:hover {
   color: var(--text-main);
   z-index: 10;
   transition: all var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
 }
 
 body.theme-dark .close-drawer-btn {
@@ -1225,6 +1237,7 @@ body.theme-dark .close-drawer-btn {
 .leaflet-popup-content {
   margin: 0;
   min-width: 220px;
+  max-width: min(260px, 70vw);
 }
 
 .popup-img {
@@ -1290,15 +1303,20 @@ body.theme-dark .close-drawer-btn {
    ========================================== */
 @media (max-width: 768px) {
   html, body {
-    position: fixed;
     width: 100%;
     height: 100%;
     overflow: hidden;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
   }
 
   .app-container {
     display: block;
-    position: relative;
+    position: fixed; /* fixed 移到 app-container,body 保持正常避免 iOS 鍵盤把 viewport 弄亂 */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     width: 100%;
     height: 100dvh;
     overflow: hidden;
@@ -1322,8 +1340,8 @@ body.theme-dark .close-drawer-btn {
   }
 
   .floating-toolbar {
-    top: 14px;
-    right: 14px;
+    top: calc(14px + env(safe-area-inset-top, 0px));
+    right: calc(14px + env(safe-area-inset-right, 0px));
     z-index: 10;
   }
 
@@ -1397,25 +1415,39 @@ body.theme-dark .close-drawer-btn {
     left: 0;
     right: 0;
     width: 100%;
-    max-height: 80dvh;
+    max-height: 75dvh;
     z-index: 30;
     border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
     box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.25);
     transform: translateY(100%);
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.35s;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     pointer-events: none;
+    visibility: hidden;
   }
 
   .detail-drawer.open {
     transform: translateY(0);
     pointer-events: auto;
+    visibility: visible;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0s;
   }
 
   .drawer-content {
     padding: 20px 16px;
     padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* 手機直立時,圖片 carousel 縮小,騰出空間給描述和交通 */
+  .image-carousel {
+    height: 180px;
+  }
+}
+
+@media (max-width: 400px) {
+  .image-carousel {
+    height: 160px;
   }
 }
 
@@ -1436,13 +1468,16 @@ body.theme-dark .close-drawer-btn {
   justify-content: center;
   z-index: 999;
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, visibility 0s linear 0.3s;
 }
 
 .modal-overlay.show {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
+  transition: opacity 0.3s ease, visibility 0s linear 0s;
 }
 
 .modal-card {
@@ -1483,12 +1518,18 @@ body.theme-dark .close-drawer-btn {
 .modal-close-btn {
   background: none;
   border: none;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 300;
   cursor: pointer;
   color: var(--text-muted);
   line-height: 1;
   transition: color var(--transition-fast);
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .modal-close-btn:hover {
@@ -1529,10 +1570,12 @@ body.theme-dark .close-drawer-btn {
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-sm);
   padding: 10px 12px;
-  font-size: 0.88rem;
+  font-size: 16px; /* iOS Safari: <16px 會觸發自動放大 */
   color: var(--text-main);
   font-family: inherit;
   outline: none;
+  -webkit-appearance: none;
+  appearance: none;
   transition: all var(--transition-fast);
 }
 
@@ -1555,22 +1598,25 @@ body.theme-dark .close-drawer-btn {
 /* Map Picker Banner overlaying the map */
 .map-picker-banner {
   position: fixed;
-  top: 20px;
+  top: calc(20px + env(safe-area-inset-top, 0px));
   left: 50%;
-  transform: translateX(-50%) translateY(-150px);
+  transform: translateX(-50%) translateY(-200px);
   z-index: 1000;
   background: var(--bg-sidebar);
   border: 2px solid var(--accent-gold);
   box-shadow: var(--shadow-lg);
   border-radius: 30px;
   padding: 10px 24px;
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  visibility: hidden;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), visibility 0s linear 0.4s;
   pointer-events: none;
 }
 
 .map-picker-banner.active {
   transform: translateX(-50%) translateY(0);
+  visibility: visible;
   pointer-events: auto;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), visibility 0s linear 0s;
 }
 
 .picker-banner-content {
@@ -1589,13 +1635,16 @@ body.theme-dark .close-drawer-btn {
   color: #ef4444;
   opacity: 0.4;
   cursor: pointer;
-  padding: 6px;
+  padding: 10px;
+  min-width: 36px;
+  min-height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all var(--transition-fast);
-  margin-left: 8px;
+  margin-left: 4px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .place-card:hover .delete-place-btn,
@@ -1647,11 +1696,13 @@ body.theme-dark .close-drawer-btn {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-sm);
-  padding: 8px 12px;
-  font-size: 0.9rem;
+  padding: 10px 12px;
+  font-size: 16px; /* iOS Safari: <16px 會觸發自動放大 */
   color: var(--text-main);
   outline: none;
   font-family: inherit;
+  -webkit-appearance: none;
+  appearance: none;
   transition: all var(--transition-fast);
 }
 
@@ -1796,5 +1847,20 @@ body.theme-dark .calc-results {
   .calc-row {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+
+  /* 手機上 modal 表單改單欄,避免 input 擠成 130px */
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .form-group.full-width {
+    grid-column: span 1;
+  }
+
+  .modal-card {
+    width: calc(100% - 24px);
+    padding: 20px 18px;
   }
 }
