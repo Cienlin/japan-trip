@@ -1427,16 +1427,18 @@ body.theme-dark .close-drawer-btn {
     z-index: 10;
   }
 
-  /* Bottom Navigation Sheet (Sidebar) */
+  /* Bottom Navigation Sheet (Sidebar) — 浮在 iOS safe-area 上方,
+     Home 指示器區域直接顯示地圖,避免 PWA 底部有塊白色空白 */
   .sidebar {
     position: fixed;
-    bottom: 0;
+    bottom: env(safe-area-inset-bottom, 0px);
     left: 0;
     right: 0;
     width: 100%;
-    height: calc(64px + env(safe-area-inset-bottom, 0px));
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    height: 64px;
+    padding-bottom: 0;
     border-top: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
     box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
     z-index: 20;
     transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1444,11 +1446,9 @@ body.theme-dark .close-drawer-btn {
     flex-direction: column;
     overflow: hidden;
   }
-  
+
   .sidebar.expanded {
-    height: 75dvh;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+    height: calc(75dvh - env(safe-area-inset-bottom, 0px));
   }
   
   .brand-header {
