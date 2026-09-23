@@ -1423,7 +1423,7 @@ body.theme-dark .close-drawer-btn {
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: auto;
     width: auto;
     height: var(--app-height);
     overflow: hidden;
@@ -1462,7 +1462,8 @@ body.theme-dark .close-drawer-btn {
      但只有 tab-navigation 有 glass 背景,safe-area padding 區域透明,
      可以直接看到地圖 → Home 指示器懸浮於地圖上,無白色空白 */
   .sidebar {
-    position: fixed;
+    /* Anchor to the measured app container instead of Safari's PWA viewport. */
+    position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
@@ -1482,7 +1483,7 @@ body.theme-dark .close-drawer-btn {
   }
 
   .sidebar.expanded {
-    height: 75dvh;
+    height: 75%;
     background: var(--bg-sidebar);
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
