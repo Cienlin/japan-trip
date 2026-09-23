@@ -1,6 +1,16 @@
 // Tokyo Trip Map & Itinerary Application Engine (Updated with Custom Places)
 
 document.addEventListener("DOMContentLoaded", () => {
+  // iOS standalone/PWA can report different values for 100vh, 100dvh and the
+  // fixed-position viewport. Use one measured height for every full-screen layer.
+  const syncAppViewportHeight = () => {
+    const viewportHeight = window.visualViewport?.height || window.innerHeight;
+    document.documentElement.style.setProperty("--app-height", `${viewportHeight}px`);
+  };
+  syncAppViewportHeight();
+  window.addEventListener("resize", syncAppViewportHeight, { passive: true });
+  window.visualViewport?.addEventListener("resize", syncAppViewportHeight, { passive: true });
+
   // 1. Initialize State
   const STORAGE_KEYS = {
     theme: "tokyo_trip_theme",

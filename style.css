@@ -1,6 +1,8 @@
 /* Style sheet for Tokyo Travel Map Application */
 
 :root {
+  /* Filled by app.js on mobile/PWA; keeps all fixed layers on one viewport. */
+  --app-height: 100dvh;
   /* Common Core Tokens */
   --font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-chinese: 'Noto Sans TC', sans-serif;
@@ -93,9 +95,8 @@ body {
   color: var(--text-main);
   background-color: var(--bg-app);
   overflow: hidden;
-  height: 100dvh;
-  /* iOS PWA fallback:某些 iOS 版本 100dvh 不含 safe-area,這行確保 body 撐滿螢幕 */
-  min-height: -webkit-fill-available;
+  height: var(--app-height);
+  min-height: var(--app-height);
   transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
@@ -103,7 +104,7 @@ body {
 .app-container {
   display: grid;
   grid-template-columns: 420px 1fr;
-  height: 100dvh;
+  height: var(--app-height);
   width: 100vw;
   position: relative;
 }
@@ -118,7 +119,7 @@ body {
   border-right: var(--glass-border);
   display: flex;
   flex-direction: column;
-  height: 100dvh;
+  height: var(--app-height);
   overflow: hidden;
   box-shadow: var(--shadow-md);
   z-index: 10;
@@ -932,7 +933,7 @@ body.theme-dark .btn-outline:hover {
    ========================================== */
 .map-section {
   position: relative;
-  height: 100dvh;
+  height: var(--app-height);
   width: 100%;
   overflow: hidden;
 }
@@ -1388,7 +1389,8 @@ body.theme-dark .close-drawer-btn {
 @media (max-width: 768px) {
   html, body {
     width: 100%;
-    height: 100%;
+    height: var(--app-height);
+    min-height: 0;
     overflow: hidden;
     overscroll-behavior: none;
     -webkit-overflow-scrolling: touch;
@@ -1403,7 +1405,7 @@ body.theme-dark .close-drawer-btn {
     right: 0;
     bottom: 0;
     width: auto;
-    height: auto;
+    height: var(--app-height);
     overflow: hidden;
   }
 
@@ -1413,9 +1415,9 @@ body.theme-dark .close-drawer-btn {
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: auto;
     width: auto;
-    height: auto;
+    height: var(--app-height);
     z-index: 1;
     overflow: hidden;
   }
