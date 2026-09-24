@@ -47,14 +47,14 @@ const PLACES = [
   // ==================== DAY 1 (12/9 週三) — 抵達日 ====================
   {
     id: "sensoji_night",
-    name: "淺草寺 (夜間點燈)",
+    name: "淺草寺",
     englishName: "Senso-ji Temple (浅草寺) — Night Visit",
     category: "sightseeing",
     lat: 35.7148,
     lng: 139.7967,
     day: 1,
     time: "19:30",
-    desc: "第一天傍晚放完行李，搭 2 站到淺草。夜晚的雷門與五重塔在燈光下超美，白天觀光人潮全散、拍照零壓力，是東京第一晚最有儀式感的開場。走完仲見世通再回押上剛剛好。",
+    desc: "可以看看第一天晚上要去看看還是有去淺草在順便去",
     images: ["sensoji_1.jpg", "sensoji_2.jpg"],
     gmaps: "https://maps.google.com/?q=Sensoji+Temple",
     transitInfo: {
@@ -74,7 +74,7 @@ const PLACES = [
     lng: 139.8138,
     day: 1,
     time: "21:30",
-    desc: "第一晚回押上前的必訪儀式！Lawson 招牌 Karaage-kun（からあげクン）炸雞塊、脆皮熱狗、明太子飯糰、Premium Roll Cake，配一瓶 Asahi Super Dry 回房間開趴，養精蓄銳。",
+    desc: "必吃炸機跟炸熱狗，可以買回去房間吃",
     images: ["lawson_1.jpg"],
     gmaps: "https://maps.google.com/?q=Lawson+Oshiage",
     transitInfo: {
@@ -567,7 +567,7 @@ const PLACES = [
     lng: 139.8120,
     day: 1,
     time: "18:00",
-    desc: "晴空塔 Solamachi 3F 的吉伊卡哇專賣店！離住宿 SYLA HOTEL 走路只要 3 分鐘。第一天抵達押上放好行李後，可以在去淺草前或晚餐後直接來逛，買齊東京晴空塔限定與熱門周邊！",
+    desc: "去晃一下晴空塔，然後我要買及掰卡哇",
     images: ["uniqlo_1.jpg"],
     gmaps: "https://maps.google.com/?q=Chiikawa+Land+Tokyo+Solamachi",
     transitInfo: {
@@ -629,20 +629,6 @@ const PLACES = [
     transitInfo: null
   },
   {
-    id: "shibuya_sky",
-    name: "SHIBUYA SKY 展望台 (推薦景點)",
-    englishName: "Shibuya Sky Observation Deck",
-    category: "sightseeing",
-    lat: 35.6580,
-    lng: 139.7016,
-    day: null,
-    time: null,
-    desc: "🌟 **推薦候補**：澀谷 Scramble Square 頂樓 229 米高露天展望台，360 度俯瞰整個東京 + 富士山。12 月日落約 16:30，訂 16:00 場能看金光西下 + 夜景。**必須網路預約**。若 D4 澀谷想加碼，可安排在 Harbs 前後。",
-    images: ["subway_1.jpg"],
-    gmaps: "https://maps.google.com/?q=Shibuya+Sky",
-    transitInfo: null
-  },
-  {
     id: "akihabara",
     name: "秋葉原電器街 (推薦景點)",
     englishName: "Akihabara Electric Town",
@@ -654,20 +640,6 @@ const PLACES = [
     desc: "🌟 **推薦候補**：你們興趣裡的動漫電玩男子聖地！Yodobashi Camera 9 層、GiGO 遊戲中心、Super Potato 二手電玩、扭蛋機殿堂。若想加碼可用半天，離 D5 上野只有 2 站。",
     images: ["subway_1.jpg"],
     gmaps: "https://maps.google.com/?q=Akihabara+Electric+Town",
-    transitInfo: null
-  },
-  {
-    id: "nakano_broadway",
-    name: "中野百老匯 (推薦景點)",
-    englishName: "Nakano Broadway",
-    category: "shopping",
-    lat: 35.7089,
-    lng: 139.6666,
-    day: null,
-    time: null,
-    desc: "🌟 **推薦候補**：動漫宅心中的聖地！4 層商場塞滿 Mandarake（まんだらけ）二手動漫店、卡片店、絕版模型店。若 D3 新宿加碼可搭 JR 中央線 1 站到中野。",
-    images: ["subway_1.jpg"],
-    gmaps: "https://maps.google.com/?q=Nakano+Broadway",
     transitInfo: null
   },
   {
@@ -684,60 +656,4 @@ const PLACES = [
     gmaps: "https://maps.google.com/?q=Tokyo+Skytree",
     transitInfo: null
   },
-  {
-    id: "marunouchi_illumination",
-    name: "丸之內仲通り 聖誕點燈 (推薦景點)",
-    englishName: "Marunouchi Naka-dori Illumination",
-    category: "sightseeing",
-    lat: 35.6796,
-    lng: 139.7639,
-    day: null,
-    time: null,
-    desc: "🌟 **推薦候補**：東京冬季必看點燈之一。東京車站到有樂町 1.2 公里長行道樹掛滿香檳金 LED（17:00 ~ 23:00）。D2 從花山烏冬走去東京車站順路穿越即可看到，不用特別排。",
-    images: ["subway_1.jpg"],
-    gmaps: "https://maps.google.com/?q=Marunouchi+Naka-dori+Illumination",
-    transitInfo: null
-  },
-  {
-    id: "caretta_illumination",
-    name: "Caretta 汐留 聖誕點燈 (推薦景點)",
-    englishName: "Caretta Shiodome Illumination",
-    category: "sightseeing",
-    lat: 35.6654,
-    lng: 139.7617,
-    day: null,
-    time: null,
-    desc: "🌟 **推薦候補**：東京冬季 TOP3 聖誕點燈！Caretta 汐留廣場的『Canyon d'Azur』藍色點燈秀，每 20 分鐘一次配樂燈光秀（17:00 ~ 23:00）。若某晚想追加浪漫感行程可安排。",
-    images: ["subway_1.jpg"],
-    gmaps: "https://maps.google.com/?q=Caretta+Shiodome",
-    transitInfo: null
-  },
-  {
-    id: "roppongi_illumination",
-    name: "六本木聖誕點燈 (推薦景點)",
-    englishName: "Roppongi Hills / Midtown Illumination",
-    category: "sightseeing",
-    lat: 35.6604,
-    lng: 139.7292,
-    day: null,
-    time: null,
-    desc: "🌟 **推薦候補**：東京冬季 TOP3 之三！Roppongi Hills 櫸木坂道藍白 LED + Midtown 花園草坪星空點燈。若 D4 澀谷結束後想加碼可延伸過來看（點燈到 23:00）。",
-    images: ["subway_1.jpg"],
-    gmaps: "https://maps.google.com/?q=Roppongi+Hills+Illumination",
-    transitInfo: null
-  },
-  {
-    id: "teamlab_planets",
-    name: "teamLab Planets 豐洲 (推薦景點)",
-    englishName: "teamLab Planets TOKYO DMM",
-    category: "sightseeing",
-    lat: 35.6488,
-    lng: 139.7902,
-    day: null,
-    time: null,
-    desc: "🌟 **推薦候補**：數位藝術沉浸式展場，脫鞋涉水穿越無限鏡像空間，男生團體去也超上相。離押上只 15 分鐘車程。**必須網路預約時段票**。若想插入行程可取代其他半天。",
-    images: ["subway_1.jpg"],
-    gmaps: "https://maps.google.com/?q=teamLab+Planets+Toyosu",
-    transitInfo: null
-  }
 ];
