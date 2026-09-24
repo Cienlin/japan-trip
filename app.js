@@ -193,11 +193,12 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // 每一站的前一站 id,當天第一站的前一站是飯店。{ [placeId]: prevPlaceId }
+  // dayStart 的地點 (例如抵達日的機場) 是當天起點,沒有前一站
   const buildPrevStopMap = (places) => {
     const prevStop = {};
     const lastStopOfDay = {};
     places.filter(p => p.day !== null && p.day !== undefined).sort(sortByDayTime).forEach(p => {
-      prevStop[p.id] = lastStopOfDay[p.day] ?? HOTEL_ID;
+      prevStop[p.id] = p.dayStart ? null : (lastStopOfDay[p.day] ?? HOTEL_ID);
       lastStopOfDay[p.day] = p.id;
     });
     return prevStop;
@@ -298,6 +299,14 @@ document.addEventListener("DOMContentLoaded", () => {
     customPlaces = readJson(STORAGE_KEYS.customPlaces, []);
     placeOverrides = readJson(STORAGE_KEYS.placeOverrides, {});
     if (pruneRedundantOverrides()) savePlaceOverrides();
+
+    // 自訂地點已經加進共用行程 (data.js 有同名、同座標的地點) 時自動移除,避免重複
+    const isInSharedItinerary = (custom) => defaultPlaces.some(p =>
+      p.name === custom.name && Math.abs(p.lat - custom.lat) < 1e-5 && Math.abs(p.lng - custom.lng) < 1e-5);
+    if (customPlaces.some(isInSharedItinerary)) {
+      customPlaces = customPlaces.filter(c => !isInSharedItinerary(c));
+      saveCustomPlaces();
+    }
 
     const editedDefaults = defaultPlaces
       .filter(p => !placeOverrides[p.id]?.deleted)
@@ -1182,10 +1191,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const daySpots = allPlaces.filter(p => p.day === dayNum).sort(sortByDayTime);
 
       // Construct route: Start at Hotel -> visit day spots -> return to Hotel (except Day 6)
+      // 當天第一站是 dayStart (例如機場) 時,路線從那裡開始,不從飯店出發
       const hotel = allPlaces.find(p => p.id === HOTEL_ID);
       const pathCoordinates = [];
 
-      if (hotel) {
+      if (hotel && !daySpots[0]?.dayStart) {
         pathCoordinates.push([hotel.lat, hotel.lng]); // Start at hotel
       }
       

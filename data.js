@@ -46,6 +46,22 @@ const PLACES = [
 
   // ==================== DAY 1 (12/9 週三) — 抵達日 ====================
   {
+    id: "narita_airport",
+    name: "成田國際機場",
+    englishName: "成田国際空港",
+    category: "sightseeing",
+    lat: 35.770761,
+    lng: 140.387137,
+    day: 1,
+    time: "16:50",
+    // 當天從這裡出發 (不是飯店):時間軸不顯示前一段交通,地圖路線從這裡開始畫
+    dayStart: true,
+    desc: "機場",
+    imageFolder: "成田國際機場",
+    gmaps: "https://maps.app.goo.gl/QwbjzmpN7jsnnofv8",
+    transitInfo: null
+  },
+  {
     id: "sensoji_night",
     name: "淺草寺",
     englishName: "Senso-ji Temple (浅草寺) — Night Visit",
@@ -53,7 +69,7 @@ const PLACES = [
     lat: 35.7148,
     lng: 139.7967,
     day: 1,
-    time: "19:30",
+    time: "20:45",
     desc: "可以看看第一天晚上要去看看還是有去淺草在順便去",
     imageFolder: "淺草寺",
     gmaps: "https://maps.google.com/?q=Sensoji+Temple",
@@ -62,7 +78,7 @@ const PLACES = [
       method: "subway",
       line: "都營淺草線 (押上 → 淺草)",
       duration: 10,
-      details: "逛完 Solamachi，18:30 押上站搭都營淺草線 2 站至淺草站（3 分鐘），A4 出口步行 5 分鐘抵達雷門。"
+      details: "逛完 Solamachi，約 20:30 押上站搭都營淺草線 2 站至淺草站（3 分鐘），A4 出口步行 5 分鐘抵達雷門。"
     }
   },
   {
@@ -73,7 +89,7 @@ const PLACES = [
     lat: 35.7115,
     lng: 139.8138,
     day: 1,
-    time: "21:30",
+    time: "21:45",
     desc: "必吃炸機跟炸熱狗，可以買回去房間吃",
     imageFolder: "Lawson 押上店",
     gmaps: "https://maps.google.com/?q=Lawson+Oshiage",
@@ -546,16 +562,16 @@ const PLACES = [
     lat: 35.7100,
     lng: 139.8120,
     day: 1,
-    time: "18:00",
+    time: "19:30",
     desc: "去晃一下晴空塔，然後我要買及掰卡哇",
     imageFolder: "Chiikawa 晴空塔店",
     gmaps: "https://maps.app.goo.gl/M3JUiBgcyr4PSaEt6",
     transitInfo: {
-      from: "SYLA HOTEL Oshiage",
-      method: "walk",
-      line: "徒步 (Walk 300m)",
-      duration: 4,
-      details: "從飯店步行 3 分鐘直達 Tokyo Solamachi 3 樓 East Yard 12 番地。"
+      from: "成田國際機場",
+      method: "train",
+      line: "京成 Access 特急 (成田機場 → 押上)",
+      duration: 55,
+      details: "入境、領行李約 1 小時，約 18:00 搭京成 Access 特急直達押上（約 55 分鐘、¥1,270）。先到飯店 check-in 放行李，再步行 3 分鐘到 Tokyo Solamachi 3 樓 East Yard 12 番地。"
     }
   },
   {
