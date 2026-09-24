@@ -7,7 +7,7 @@
 //   - 其他跨源 (Leaflet CDN、Google Fonts):stale-while-revalidate
 //   圖片 / 圖磚 / CDN 快取名稱固定,改版不會被清掉
 
-const VERSION = 'v1.1.2';
+const VERSION = 'v1.1.3';
 const SHELL_CACHE = `tokyo-shell-${VERSION}`;
 const IMAGE_CACHE = 'tokyo-images';
 const TILE_CACHE = 'tokyo-tiles';
@@ -32,7 +32,8 @@ const SHELL_ASSETS = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(SHELL_CACHE)
-      .then((cache) => cache.addAll(SHELL_ASSETS))
+      // cache: 'reload' 跳過瀏覽器 HTTP 快取 (GitHub Pages 為 max-age=600),確保存進新版快取的是新檔
+      .then((cache) => cache.addAll(SHELL_ASSETS.map((url) => new Request(url, { cache: 'reload' }))))
       .then(() => self.skipWaiting())
   );
 });
@@ -104,7 +105,9 @@ async function networkFirst(event) {
   const request = event.request;
   const cache = await caches.open(SHELL_CACHE);
 
-  const network = fetch(request).then((response) => {
+  // cache: 'no-cache' 每次都向伺服器確認 (沒變只回 304),
+  // 否則 fetch 會直接用瀏覽器 HTTP 快取,GitHub Pages 的 max-age=600 會讓新版晚 10 分鐘才出現
+  const network = fetch(request, { cache: 'no-cache' }).then((response) => {
     if (response && response.ok) {
       return cache.put(request, response.clone()).then(() => response);
     }
