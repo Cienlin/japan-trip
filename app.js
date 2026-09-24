@@ -157,6 +157,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const transitEmojiOf = (info) => transitEmojis[info?.method] || "🚃";
 
+  // 時間統一成 HH:MM (例如 "9:30" → "09:30"),字串排序才會正確;格式不符回傳 null
+  const normalizeTime = (time) => {
+    const m = /^(\d{1,2}):(\d{2})$/.exec(String(time ?? "").trim());
+    return m ? `${m[1].padStart(2, "0")}:${m[2]}` : null;
+  };
+
+  // 行程排序:先依天數,再依時間,沒有時間的排在當天最後。時間軸與地圖路線共用,確保順序一致
+  const sortByDayTime = (a, b) => {
+    if (a.day !== b.day) return (a.day ?? 0) - (b.day ?? 0);
+    const ta = normalizeTime(a.time) || "99:99";
+    const tb = normalizeTime(b.time) || "99:99";
+    return ta.localeCompare(tb);
+  };
+
   // Escape HTML to prevent XSS from user-added custom places (name/desc/etc.)
   const escapeHtml = (str) => {
     if (str === null || str === undefined) return "";
@@ -360,13 +374,7 @@ document.addEventListener("DOMContentLoaded", () => {
     daySelectorContainer.addEventListener("click", (e) => {
       const btn = e.target.closest(".day-btn");
       if (!btn) return;
-      
-      document.querySelectorAll(".day-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      
-      activeDay = btn.getAttribute("data-day");
-      renderItinerary();
-      updateMapMarkers();
+      setActiveDay(btn.getAttribute("data-day"));
     });
 
     // 3. Category Chip filtering (Directory Tab)
@@ -505,7 +513,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const category = document.getElementById("new-place-category").value;
       const dayVal = document.getElementById("new-place-day").value;
       const day = dayVal === "" ? null : parseInt(dayVal);
-      const time = document.getElementById("new-place-time").value.trim() || null;
+      const time = normalizeTime(document.getElementById("new-place-time").value);
       const lat = parseFloat(document.getElementById("new-place-lat").value);
       const lng = parseFloat(document.getElementById("new-place-lng").value);
       const desc = document.getElementById("new-place-desc").value.trim() || "自訂新增的地點。";
@@ -582,14 +590,6 @@ document.addEventListener("DOMContentLoaded", () => {
     timelineContainer.innerHTML = "";
     if (allPlaces.length === 0) return;
 
-    // Sort helper: order by (day, time). Places without `time` keep insertion order via stable sort.
-    const sortByDayTime = (a, b) => {
-      if (a.day !== b.day) return a.day - b.day;
-      const ta = a.time || "";
-      const tb = b.time || "";
-      return ta.localeCompare(tb);
-    };
-
     // Filter places by selected day
     let filteredPlaces = [];
     if (activeDay === "all") {
@@ -633,7 +633,7 @@ document.addEventListener("DOMContentLoaded", () => {
       itemEl.setAttribute("data-id", place.id);
 
       // Time comes from data.js `place.time` field
-      const timeText = place.time || "";
+      const timeText = normalizeTime(place.time) || place.time || "";
 
       const isCustom = place.id.startsWith("custom_");
       const deleteBtnHtml = isCustom ? deleteButtonMarkup() : '';
@@ -848,17 +848,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // 3. Draw colored routing polylines if a activeDay is selected
     if (activeDay !== "all") {
       const dayNum = parseInt(activeDay);
-      // Sort day spots in timeline sequence
-      let daySpots = allPlaces.filter(p => p.day === dayNum);
-      
-      // Dynamic chronological sorting by time. 
-      // Places with time are sorted chronologically, places without time are pushed to the end (using weight 99:99).
-      daySpots.sort((a, b) => {
-        const ta = a.time || "99:99";
-        const tb = b.time || "99:99";
-        if (ta !== tb) return ta.localeCompare(tb);
-        return a.id.localeCompare(b.id);
-      });
+      // Sort day spots in timeline sequence (same comparator as the timeline)
+      const daySpots = allPlaces.filter(p => p.day === dayNum).sort(sortByDayTime);
 
       // Construct route: Start at Hotel -> visit day spots -> return to Hotel (except Day 6)
       const hotel = allPlaces.find(p => p.id === "syla_hotel");
@@ -917,10 +908,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // 切換天數篩選:同步按鈕狀態、時間軸與地圖 marker
+  function setActiveDay(day) {
+    activeDay = String(day);
+    document.querySelectorAll(".day-btn").forEach(b => {
+      b.classList.toggle("active", b.getAttribute("data-day") === activeDay);
+    });
+    renderItinerary();
+    updateMapMarkers();
+  }
+
   // Map Locate and Zoom on a place
   function locatePlace(placeId) {
     const place = allPlaces.find(p => p.id === placeId);
     if (!place) return;
+
+    // 地點不在目前的天數篩選裡 (地圖上沒有它的 marker) → 切到它的天數;沒排天數的候補景點切到「全部」
+    if (!mapMarkers.some(m => m.placeId === placeId)) {
+      setActiveDay(place.day ?? "all");
+    }
 
     map.setView([place.lat, place.lng], 15, {
       animate: true,
