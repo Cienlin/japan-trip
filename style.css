@@ -1525,11 +1525,13 @@ body.theme-dark .close-drawer-btn {
     display: block;
   }
   
-  /* Place Detail Drawer — 浮在底部 sidebar (nav) 之上,兩者互不遮擋 */
+  /* Place Detail Drawer — 浮在底部 sidebar (nav) 之上,兩者互不遮擋
+     用 absolute (相對 .map-section,與 sidebar 同樣填滿 --app-height 容器) 而非 fixed,
+     避免 iOS PWA 的 fixed viewport 與 --app-height 不一致造成錯位 */
   .detail-drawer {
-    position: fixed;
-    /* 貼在 sidebar 上緣,不會蓋到 tab 列 */
-    bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+    position: absolute;
+    /* 貼齊 sidebar 上緣 (sidebar 固定 64px、不含 safe-area),中間不露出地圖 */
+    bottom: 64px;
     left: 0;
     right: 0;
     width: 100%;
@@ -1556,7 +1558,7 @@ body.theme-dark .close-drawer-btn {
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0s;
   }
 
-  /* sidebar 已經處理 safe-area,drawer 不用再加底部 padding */
+  /* drawer 在 sidebar 之上,不碰到 Home 指示條,不用加 safe-area 底部 padding */
   .drawer-content {
     padding: 20px 16px 24px;
   }
