@@ -90,6 +90,11 @@ body.theme-dark {
   padding: 0;
 }
 
+/* hidden 屬性一律隱藏 (.btn 等有 display 設定的元素,否則會蓋過 hidden) */
+[hidden] {
+  display: none !important;
+}
+
 body {
   font-family: var(--font-primary), var(--font-chinese);
   color: var(--text-main);
@@ -532,6 +537,67 @@ body.theme-dark .transit-icon-wrapper {
 .transit-duration {
   font-weight: 700;
   color: var(--accent-gold);
+}
+
+/* 🧭 Google Maps 路線連結 (時間軸與抽屜的交通區塊共用) */
+.transit-nav-link {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .transit-nav-link:hover {
+    text-decoration: underline;
+  }
+}
+
+.detail-transit-block .transit-nav-link {
+  align-self: flex-start;
+  margin-top: 0;
+}
+
+/* 本機修改提示列 */
+.local-changes-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border-radius: var(--border-radius-md);
+  background: var(--accent-gold-bg);
+  border: 1px solid var(--border-color);
+}
+
+.local-changes-text {
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--text-main);
+}
+
+.local-changes-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* 卡片上的「已修改」/「自訂」標籤 */
+.local-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(249, 115, 22, 0.14);
+  color: #c2410c;
+  white-space: nowrap;
+}
+
+body.theme-dark .local-tag {
+  background: rgba(251, 146, 60, 0.18);
+  color: #fdba74;
 }
 
 /* ==========================================
@@ -1763,6 +1829,57 @@ body.theme-dark .close-drawer-btn {
   margin-top: 20px;
   border-top: 1px solid var(--border-color);
   padding-top: 16px;
+}
+
+/* 編輯模式:左側放刪除 / 還原,右側放取消 / 儲存 */
+.form-actions-left {
+  display: flex;
+  gap: 10px;
+  margin-right: auto;
+}
+
+.btn-danger {
+  background: transparent;
+  color: #dc2626;
+  border: 1px solid rgba(220, 38, 38, 0.4);
+}
+
+@media (hover: hover) {
+  .btn-danger:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: #dc2626;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-actions {
+    flex-wrap: wrap;
+  }
+
+  .form-actions-left {
+    width: 100%;
+  }
+}
+
+/* Export changes modal */
+.export-hint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.export-textarea {
+  width: 100%;
+  min-height: 220px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  background: var(--bg-card);
+  color: var(--text-main);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 16px; /* iOS Safari: <16px 會觸發自動放大 */
+  line-height: 1.5;
+  resize: vertical;
 }
 
 /* Confirm dialog — smaller card, no border-top on actions */

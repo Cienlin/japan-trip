@@ -36,9 +36,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const STORAGE_KEYS = {
     theme: "tokyo_trip_theme",
     customPlaces: "tokyo_trip_custom_places",
+    placeOverrides: "tokyo_trip_place_overrides",
     checklist: "tokyo_trip_checklist_state",
     budget: "tokyo_trip_budget_inputs"
   };
+
+  const HOTEL_ID = "syla_hotel";
+  // 內建地點 (data.js) 可在本機修改的欄位;修改存成 override,不動 data.js
+  const EDITABLE_FIELDS = ["name", "englishName", "day", "time", "desc", "gmaps"];
 
   let map = null;
   let activeTheme = localStorage.getItem(STORAGE_KEYS.theme) || 'light';
@@ -53,7 +58,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // Custom Places Data Lists
   let defaultPlaces = typeof PLACES !== "undefined" ? [...PLACES] : [];
   let customPlaces = [];
+  // 內建地點的本機修改:{ [placeId]: { 有改動的欄位..., deleted?: true } }
+  let placeOverrides = {};
   let allPlaces = [];
+  // 原始行程 (data.js) 中每一站的前一站,用來判斷交通說明是否仍然適用
+  let originalPrevStop = {};
+
+  // 編輯中的地點 id;null 代表表單是「新增」模式
+  let editingPlaceId = null;
 
   // Active slide index for current open drawer carousel
   let currentSlideIndex = 0;
@@ -108,6 +120,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const mapPickCoordsBtn = document.getElementById("map-pick-coords-btn");
   const mapPickerBanner = document.getElementById("map-picker-banner");
   const cancelMapPickBtn = document.getElementById("cancel-map-pick-btn");
+
+  // Local edits: 提示列與匯出視窗
+  const localChangesBanner = document.getElementById("local-changes-banner");
+  const localChangesText = document.getElementById("local-changes-text");
+  const restoreAllBtn = document.getElementById("restore-all-btn");
+  const exportModal = document.getElementById("export-modal");
+  const exportTextarea = document.getElementById("export-textarea");
+  const exportCopyBtn = document.getElementById("export-copy-btn");
 
   let isPickingCoords = false;
   let tempPickMarker = null;
@@ -169,6 +189,34 @@ document.addEventListener("DOMContentLoaded", () => {
     return ta.localeCompare(tb);
   };
 
+  // 每一站的前一站 id,當天第一站的前一站是飯店。{ [placeId]: prevPlaceId }
+  const buildPrevStopMap = (places) => {
+    const prevStop = {};
+    const lastStopOfDay = {};
+    places.filter(p => p.day !== null && p.day !== undefined).sort(sortByDayTime).forEach(p => {
+      prevStop[p.id] = lastStopOfDay[p.day] ?? HOTEL_ID;
+      lastStopOfDay[p.day] = p.id;
+    });
+    return prevStop;
+  };
+
+  // Google Maps 路線 (用座標,不受店名翻譯影響);walk 用步行,其餘用大眾運輸
+  const directionsUrl = (from, to, method) => {
+    const mode = method === "walk" ? "walking" : "transit";
+    return `https://www.google.com/maps/dir/?api=1&origin=${from.lat},${from.lng}` +
+           `&destination=${to.lat},${to.lng}&travelmode=${mode}`;
+  };
+
+  const readJson = (key, fallback) => {
+    try {
+      const stored = localStorage.getItem(key);
+      return stored ? JSON.parse(stored) : fallback;
+    } catch (e) {
+      console.error(`Failed to read ${key}:`, e);
+      return fallback;
+    }
+  };
+
   // Escape HTML to prevent XSS from user-added custom places (name/desc/etc.)
   const escapeHtml = (str) => {
     if (str === null || str === undefined) return "";
@@ -207,8 +255,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Apply persisted theme before anything else so no flash
     applyTheme(activeTheme);
 
-    // Load persisted custom places
+    // Load persisted custom places & local edits
     refreshAllPlaces();
+    originalPrevStop = buildPrevStopMap(defaultPlaces);
 
     // A. Render metadata
     if (typeof TRIP_METADATA !== "undefined") {
@@ -241,20 +290,42 @@ document.addEventListener("DOMContentLoaded", () => {
     initBudgetCalculator();
   }
 
-  // Load custom places from local storage and merge
+  // 讀取本機的自訂地點與內建地點修改,合併成 allPlaces
   function refreshAllPlaces() {
-    const stored = localStorage.getItem("tokyo_trip_custom_places");
-    if (stored) {
-      try {
-        customPlaces = JSON.parse(stored);
-      } catch (e) {
-        console.error("Failed to parse custom places:", e);
-        customPlaces = [];
-      }
-    } else {
-      customPlaces = [];
-    }
-    allPlaces = [...defaultPlaces, ...customPlaces];
+    customPlaces = readJson(STORAGE_KEYS.customPlaces, []);
+    placeOverrides = readJson(STORAGE_KEYS.placeOverrides, {});
+
+    const editedDefaults = defaultPlaces
+      .filter(p => !placeOverrides[p.id]?.deleted)
+      .map(p => {
+        const override = placeOverrides[p.id];
+        if (!override) return p;
+        const merged = { ...p };
+        EDITABLE_FIELDS.forEach(field => {
+          if (field in override) merged[field] = override[field];
+        });
+        return merged;
+      });
+    allPlaces = [...editedDefaults, ...customPlaces];
+  }
+
+  const isCustomPlace = (placeId) => String(placeId).startsWith("custom_");
+  const isModifiedPlace = (placeId) => !isCustomPlace(placeId) && Boolean(placeOverrides[placeId]);
+
+  function saveCustomPlaces() {
+    localStorage.setItem(STORAGE_KEYS.customPlaces, JSON.stringify(customPlaces));
+  }
+
+  function savePlaceOverrides() {
+    localStorage.setItem(STORAGE_KEYS.placeOverrides, JSON.stringify(placeOverrides));
+  }
+
+  // 資料變動後重新整理所有畫面
+  function refreshAndRenderAll() {
+    refreshAllPlaces();
+    renderItinerary();
+    renderDirectory();
+    updateMapMarkers();
   }
 
   // Reusable confirm dialog — replaces native window.confirm() which is ugly and blocks UI on mobile
@@ -457,31 +528,37 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // 10. Add Custom Place Modal triggers
-    openAddModalBtn.addEventListener("click", () => {
-      addPlaceModal.classList.add("show");
+    // 10. Add / Edit Place Modal triggers
+    openAddModalBtn.addEventListener("click", () => openPlaceModal(null));
+
+    modalCloseBtn.addEventListener("click", closePlaceModal);
+    modalCancelBtn.addEventListener("click", closePlaceModal);
+    document.getElementById("modal-delete-btn").addEventListener("click", () => {
+      if (editingPlaceId) deletePlace(editingPlaceId);
     });
-
-    const closeAddModal = () => {
-      addPlaceModal.classList.remove("show");
-      addPlaceForm.reset();
-      if (tempPickMarker) {
-        map.removeLayer(tempPickMarker);
-        tempPickMarker = null;
-      }
-    };
-
-    modalCloseBtn.addEventListener("click", closeAddModal);
-    modalCancelBtn.addEventListener("click", closeAddModal);
+    document.getElementById("modal-restore-btn").addEventListener("click", () => {
+      if (editingPlaceId) restorePlace(editingPlaceId);
+    });
 
     // Close add-place modal via Escape or overlay click
     addPlaceModal.addEventListener("click", (e) => {
-      if (e.target === addPlaceModal) closeAddModal();
+      if (e.target === addPlaceModal) closePlaceModal();
     });
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && addPlaceModal.classList.contains("show")) {
-        closeAddModal();
-      }
+      if (e.key !== "Escape") return;
+      if (addPlaceModal.classList.contains("show")) closePlaceModal();
+      if (exportModal.classList.contains("show")) exportModal.classList.remove("show");
+    });
+
+    // 10b. 本機修改提示列:複製變更內容 / 全部還原
+    document.getElementById("export-changes-btn").addEventListener("click", openExportModal);
+    document.getElementById("restore-all-btn").addEventListener("click", restoreAllPlaces);
+    document.getElementById("export-copy-btn").addEventListener("click", copyExportText);
+    ["export-close-btn", "export-cancel-btn"].forEach(id => {
+      document.getElementById(id).addEventListener("click", () => exportModal.classList.remove("show"));
+    });
+    exportModal.addEventListener("click", (e) => {
+      if (e.target === exportModal) exportModal.classList.remove("show");
     });
 
     // Coordinate picker button click
@@ -501,70 +578,257 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Submit Custom Place
+    // Submit:新增自訂地點 / 儲存編輯
     addPlaceForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      
-      const name = document.getElementById("new-place-name").value.trim();
-      const englishName = document.getElementById("new-place-english").value.trim() || "";
-      const category = document.getElementById("new-place-category").value;
+
       const dayVal = document.getElementById("new-place-day").value;
-      const day = dayVal === "" ? null : parseInt(dayVal);
-      const time = normalizeTime(document.getElementById("new-place-time").value);
+      const values = {
+        name: document.getElementById("new-place-name").value.trim(),
+        englishName: document.getElementById("new-place-english").value.trim(),
+        day: dayVal === "" ? null : parseInt(dayVal, 10),
+        time: normalizeTime(document.getElementById("new-place-time").value),
+        desc: document.getElementById("new-place-desc").value.trim(),
+        gmaps: safeUrl(document.getElementById("new-place-gmaps").value.trim())
+      };
+      const category = document.getElementById("new-place-category").value;
       const lat = parseFloat(document.getElementById("new-place-lat").value);
       const lng = parseFloat(document.getElementById("new-place-lng").value);
-      const desc = document.getElementById("new-place-desc").value.trim() || "自訂新增的地點。";
-      
-      let gmaps = document.getElementById("new-place-gmaps").value.trim();
-      if (!gmaps) {
-        gmaps = `https://maps.google.com/?q=${encodeURIComponent(name)}`;
-      }
-
       const imageVal = safeUrl(document.getElementById("new-place-image").value.trim());
-      const images = imageVal ? [imageVal] : [categoryDefaultImage[category] || "hotel_1.jpg"];
 
-      const newPlace = {
-        id: `custom_${Date.now()}`,
-        name,
-        englishName,
-        category,
-        lat,
-        lng,
-        day,
-        time,
-        desc,
-        images,
-        gmaps,
-        transitInfo: null
-      };
+      const placeId = editingPlaceId;
 
-      // Set standard template transit helper for custom items
-      if (day !== null) {
-        newPlace.transitInfo = {
-          from: "前一站",
-          method: "subway",
-          line: "搭乘地鐵或步行",
-          duration: "自選",
-          details: "自訂新增景點，交通細節與搭乘線路請點擊 Google Maps 查詢最佳方案。"
+      if (placeId && !isCustomPlace(placeId)) {
+        saveDefaultPlaceEdit(placeId, values);
+      } else {
+        const customFields = {
+          ...values,
+          category,
+          lat,
+          lng,
+          desc: values.desc || "自訂新增的地點。",
+          gmaps: values.gmaps || `https://maps.google.com/?q=${encodeURIComponent(values.name)}`,
+          images: imageVal ? [imageVal] : [categoryDefaultImage[category] || "hotel_1.jpg"]
         };
+        const target = placeId && customPlaces.find(p => p.id === placeId);
+        if (target) {
+          Object.assign(target, customFields);
+        } else {
+          // 交通資訊由 getTransitView 依前一站自動產生 Google Maps 路線
+          customPlaces.push({ id: `custom_${Date.now()}`, ...customFields, transitInfo: null });
+        }
+        saveCustomPlaces();
       }
 
-      // Store in localStorage
-      customPlaces.push(newPlace);
-      localStorage.setItem("tokyo_trip_custom_places", JSON.stringify(customPlaces));
-
-      // Refresh layout data
-      refreshAllPlaces();
-      renderItinerary();
-      renderDirectory();
-      updateMapMarkers();
-      
-      // Close modal
-      closeAddModal();
-      
-      // Select the newly added place
-      locatePlace(newPlace.id);
+      const savedId = placeId || customPlaces[customPlaces.length - 1].id;
+      closePlaceModal();
+      refreshAndRenderAll();
+      locatePlace(savedId);
+      // 編輯後重新顯示更新過的詳細資訊;新增的地點則照舊只在地圖上標示
+      if (placeId) openDrawer(savedId);
     });
+  }
+
+  // ==========================================
+  // PLACE EDITING (本機修改,不影響 data.js 與其他人)
+  // ==========================================
+
+  // 開啟地點表單:placeId 為 null 是新增自訂地點,否則是編輯
+  function openPlaceModal(placeId) {
+    const place = placeId ? allPlaces.find(p => p.id === placeId) : null;
+    editingPlaceId = place ? placeId : null;
+    const isEdit = Boolean(place);
+    const isCustom = !isEdit || isCustomPlace(placeId);
+
+    addPlaceForm.reset();
+    document.getElementById("add-place-modal-title").textContent = isEdit ? "編輯地點" : "新增自訂地點";
+    document.getElementById("modal-submit-btn").textContent = isEdit ? "儲存修改" : "儲存地點";
+    // 內建地點只能改名稱、天數時間、介紹與連結;類別、座標、照片維持 data.js 的設定
+    addPlaceForm.querySelectorAll("[data-custom-only]").forEach(el => { el.hidden = !isCustom; });
+    document.getElementById("modal-delete-btn").hidden = !isEdit;
+    document.getElementById("modal-restore-btn").hidden = !(isEdit && isModifiedPlace(placeId));
+
+    if (place) {
+      const setValue = (id, value) => { document.getElementById(id).value = value ?? ""; };
+      const firstImage = place.images?.[0] || "";
+      setValue("new-place-name", place.name);
+      setValue("new-place-english", place.englishName);
+      setValue("new-place-category", place.category);
+      setValue("new-place-day", place.day ?? "");
+      setValue("new-place-time", normalizeTime(place.time) || "");
+      setValue("new-place-lat", place.lat);
+      setValue("new-place-lng", place.lng);
+      setValue("new-place-desc", place.desc);
+      setValue("new-place-gmaps", place.gmaps);
+      setValue("new-place-image", /^https?:\/\//.test(firstImage) ? firstImage : "");
+    }
+
+    addPlaceModal.classList.add("show");
+  }
+
+  function closePlaceModal() {
+    addPlaceModal.classList.remove("show");
+    addPlaceForm.reset();
+    editingPlaceId = null;
+    if (tempPickMarker) {
+      map.removeLayer(tempPickMarker);
+      tempPickMarker = null;
+    }
+  }
+
+  // 內建地點:只記錄跟 data.js 不同的欄位;留空的文字欄位視為沿用原始資料
+  function saveDefaultPlaceEdit(placeId, values) {
+    const base = defaultPlaces.find(p => p.id === placeId);
+    if (!base) return;
+
+    const override = {};
+    EDITABLE_FIELDS.forEach(field => {
+      let value = values[field] ?? null;
+      if (value === "") value = base[field] ?? "";
+      const baseValue = field === "time" ? normalizeTime(base.time) : (base[field] ?? null);
+      if (value !== baseValue) override[field] = value;
+    });
+
+    if (Object.keys(override).length > 0) {
+      placeOverrides[placeId] = override;
+    } else {
+      delete placeOverrides[placeId];
+    }
+    savePlaceOverrides();
+  }
+
+  // 刪除:自訂地點直接移除;內建地點標記為已刪除 (可用「全部還原」復原)
+  function deletePlace(placeId) {
+    const message = isCustomPlace(placeId)
+      ? "確定要刪除此自訂地點嗎？"
+      : "確定要刪除此地點嗎？只會從這支手機的行程移除，之後可以用「全部還原」復原。";
+    confirmDialog(message).then(ok => {
+      if (!ok) return;
+      if (isCustomPlace(placeId)) {
+        customPlaces = customPlaces.filter(p => p.id !== placeId);
+        saveCustomPlaces();
+      } else {
+        placeOverrides[placeId] = { deleted: true };
+        savePlaceOverrides();
+      }
+      closePlaceModal();
+      closeDrawer();
+      refreshAndRenderAll();
+    });
+  }
+
+  function restorePlace(placeId) {
+    confirmDialog("確定要把這個地點還原成原始資料嗎？").then(ok => {
+      if (!ok) return;
+      delete placeOverrides[placeId];
+      savePlaceOverrides();
+      closePlaceModal();
+      refreshAndRenderAll();
+      locatePlace(placeId);
+      openDrawer(placeId);
+    });
+  }
+
+  function restoreAllPlaces() {
+    confirmDialog("確定要把所有修改還原成原始行程嗎？（自訂地點不受影響）").then(ok => {
+      if (!ok) return;
+      placeOverrides = {};
+      savePlaceOverrides();
+      closeDrawer();
+      refreshAndRenderAll();
+    });
+  }
+
+  // 行程頁上方的提示列:有本機修改或自訂地點才顯示
+  function renderLocalChangesBanner() {
+    const modifiedCount = defaultPlaces.filter(p => placeOverrides[p.id]).length;
+    const customCount = customPlaces.length;
+
+    localChangesBanner.hidden = modifiedCount + customCount === 0;
+    restoreAllBtn.hidden = modifiedCount === 0;
+
+    const parts = [];
+    if (modifiedCount > 0) parts.push(`修改了 ${modifiedCount} 個地點`);
+    if (customCount > 0) parts.push(`新增了 ${customCount} 個自訂地點`);
+    localChangesText.textContent = `📝 這支手機上${parts.join("、")}（其他人看不到）`;
+  }
+
+  // 把本機修改整理成 docs/行程變更範本.md 的格式,貼給 Claude 即可改成 5 人共用
+  function buildChangeReport() {
+    const slotText = (day, time) => `第 ${day} 天 ${normalizeTime(time) || "（未定時間）"}`;
+    const fieldLabels = { name: "名稱", englishName: "日文／英文名稱", desc: "介紹", gmaps: "Google Maps 連結" };
+    const sections = [];
+    const addSection = (title, lines) => {
+      sections.push(`### ${title}\n${lines.map(line => `- ${line}`).join("\n")}`);
+    };
+
+    defaultPlaces.forEach(base => {
+      const override = placeOverrides[base.id];
+      if (!override) return;
+
+      if (override.deleted) {
+        addSection("6. 刪除地點", [`地點：${base.name}`]);
+        return;
+      }
+
+      const current = allPlaces.find(p => p.id === base.id);
+      if ("day" in override || "time" in override) {
+        if (base.day === null && current.day !== null) {
+          addSection("2. 候補景點排入行程", [`地點：${base.name}`, `排到：${slotText(current.day, current.time)}`]);
+        } else if (base.day !== null && current.day === null) {
+          addSection("3. 移出行程（改回候補，不刪除）", [`地點：${base.name}`]);
+        } else {
+          addSection("1. 移動地點（改天數或時間）", [`地點：${base.name}`, `改到：${slotText(current.day, current.time)}`]);
+        }
+      }
+
+      Object.entries(fieldLabels).forEach(([field, label]) => {
+        if (!(field in override)) return;
+        addSection("5. 修改說明或備註", [`地點：${base.name}`, `要改的內容：${label}`, `新的內容：${override[field]}`]);
+      });
+    });
+
+    customPlaces.forEach(p => {
+      addSection("4. 新增地點", [
+        `名稱：${p.name}`,
+        `日文／英文名稱（選填）：${p.englishName || ""}`,
+        `類別：${getCategoryChinese(p.category)}`,
+        `排到：${p.day ? slotText(p.day, p.time) : "候補"}`,
+        `座標：${p.lat}, ${p.lng}`,
+        `Google Maps 連結（選填）：${p.gmaps || ""}`,
+        `介紹：${p.desc || ""}`
+      ]);
+    });
+
+    return sections.length > 0 ? `## 本次變更\n\n${sections.join("\n\n")}\n` : "（目前沒有任何修改）";
+  }
+
+  function openExportModal() {
+    exportTextarea.value = buildChangeReport();
+    exportCopyBtn.textContent = "複製";
+    exportModal.classList.add("show");
+  }
+
+  function copyExportText() {
+    const markCopied = () => { exportCopyBtn.textContent = "已複製 ✓"; };
+    const fallbackCopy = () => {
+      // Clipboard API 不可用時:選取文字後用 execCommand,再不行就請使用者手動複製
+      exportTextarea.focus();
+      exportTextarea.setSelectionRange(0, exportTextarea.value.length);
+      let copied = false;
+      try {
+        copied = document.execCommand("copy");
+      } catch (e) {
+        copied = false;
+      }
+      exportCopyBtn.textContent = copied ? "已複製 ✓" : "請手動全選複製";
+    };
+
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(exportTextarea.value).then(markCopied, fallbackCopy);
+    } else {
+      fallbackCopy();
+    }
   }
 
   // Switch Tab
@@ -584,6 +848,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Render Itinerary Timeline
   function renderItinerary() {
+    renderLocalChangesBanner();
     timelineContainer.innerHTML = "";
     if (allPlaces.length === 0) return;
 
@@ -601,28 +866,13 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    const prevStopMap = buildPrevStopMap(allPlaces);
+
     // Build timeline elements
     filteredPlaces.forEach(place => {
-      // transitInfo 描述「如何抵達此地點」(from = 前一站),所以畫在卡片之前
-      if (place.transitInfo) {
-        const transitEl = document.createElement("div");
-        transitEl.className = "transit-log";
-
-        const transitEmoji = transitEmojiOf(place.transitInfo);
-
-        transitEl.innerHTML = `
-          <div class="transit-icon-wrapper">
-            <span class="transit-icon">${transitEmoji}</span>
-          </div>
-          <div>
-            ${escapeHtml(place.transitInfo.line)} - <span class="transit-duration">${escapeHtml(place.transitInfo.duration)} 分鐘</span>
-            <div class="transit-details">
-              ${escapeHtml(place.transitInfo.details)}
-            </div>
-          </div>
-        `;
-        timelineContainer.appendChild(transitEl);
-      }
+      // 交通資訊描述「如何抵達此地點」,所以畫在卡片之前
+      const transitView = getTransitView(place, prevStopMap);
+      if (transitView) timelineContainer.appendChild(buildTransitLog(transitView));
 
       const itemEl = document.createElement("div");
       itemEl.className = "timeline-item";
@@ -641,6 +891,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="timeline-card-header">
             <span class="timeline-time-badge">${escapeHtml(timeText || "自訂行程")}</span>
             <div class="timeline-card-header-right">
+              ${localTagMarkup(place.id)}
               <span class="timeline-day-tag">Day ${escapeHtml(place.day)}</span>
               ${deleteBtnHtml}
             </div>
@@ -654,7 +905,7 @@ document.addEventListener("DOMContentLoaded", () => {
       itemEl.addEventListener("click", (e) => {
         if (e.target.closest('[data-action="delete-place"]')) {
           e.stopPropagation();
-          deleteCustomPlace(place.id);
+          deletePlace(place.id);
           return;
         }
         locatePlace(place.id);
@@ -708,7 +959,8 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
           <div class="place-card-meta">
             <span class="place-card-category" data-cat="${escapeHtml(place.category)}">${categoryEmojis[place.category] || ''} ${escapeHtml(getCategoryChinese(place.category))}</span>
-            <span class="place-card-day">${place.day ? `Day ${escapeHtml(place.day)}` : '自訂'}</span>
+            ${localTagMarkup(place.id)}
+            <span class="place-card-day">${place.day ? `Day ${escapeHtml(place.day)}` : '候補'}</span>
           </div>
         </div>
       `;
@@ -719,7 +971,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cardEl.addEventListener("click", (e) => {
         if (e.target.closest('[data-action="delete-place"]')) {
           e.stopPropagation();
-          deleteCustomPlace(place.id);
+          deletePlace(place.id);
           return;
         }
         switchTab("itinerary"); // Sync tab
@@ -739,24 +991,66 @@ document.addEventListener("DOMContentLoaded", () => {
     return "";
   }
 
-  // Delete a custom place by id (called via event delegation from card / timeline click handlers)
-  function deleteCustomPlace(id) {
-    confirmDialog("確定要刪除此自訂地點嗎？").then(ok => {
-      if (!ok) return;
+  // 決定某一站要顯示的交通資訊 (時間軸與抽屜共用):
+  // - 前一站跟原始行程 (data.js) 一樣 → 沿用原本的交通說明
+  // - 行程調整過 (自己或前面的站被移動) 或自訂地點 → 只顯示「從〇〇出發」與 Google Maps 路線
+  function getTransitView(place, prevStopMap) {
+    if (place.day === null || place.day === undefined) return null;
+    const fromPlace = allPlaces.find(p => p.id === prevStopMap[place.id]);
+    if (!fromPlace) return null;
 
-      const target = customPlaces.find(p => p.id === id);
-      const filtered = customPlaces.filter(p => p.id !== id);
-      localStorage.setItem(STORAGE_KEYS.customPlaces, JSON.stringify(filtered));
+    const isCustom = isCustomPlace(place.id);
+    const useOriginal = !isCustom && Boolean(place.transitInfo) &&
+                        originalPrevStop[place.id] === prevStopMap[place.id];
+    const info = useOriginal ? place.transitInfo : null;
 
-      closeDrawer();
-      refreshAllPlaces();
-      renderItinerary();
-      renderDirectory();
-      updateMapMarkers();
+    return {
+      info,
+      fromPlace,
+      navUrl: directionsUrl(fromPlace, place, info?.method),
+      note: isCustom
+        ? "自訂地點，交通方式請用 Google Maps 查詢"
+        : "行程調整過，原本的交通說明不適用，請用 Google Maps 查詢"
+    };
+  }
 
-      // Keep target reference so tests / debug can log if needed
-      void target;
-    });
+  const transitNavLinkMarkup = (view) =>
+    `<a class="transit-nav-link" href="${escapeHtml(view.navUrl)}" target="_blank" rel="noopener noreferrer">🧭 Google Maps 路線</a>`;
+
+  function buildTransitLog(view) {
+    const el = document.createElement("div");
+    el.className = "transit-log";
+    if (view.info) {
+      el.innerHTML = `
+        <div class="transit-icon-wrapper">
+          <span class="transit-icon">${transitEmojiOf(view.info)}</span>
+        </div>
+        <div>
+          ${escapeHtml(view.info.line)} - <span class="transit-duration">${escapeHtml(view.info.duration)} 分鐘</span>
+          <div class="transit-details">${escapeHtml(view.info.details)}</div>
+          ${transitNavLinkMarkup(view)}
+        </div>
+      `;
+    } else {
+      el.innerHTML = `
+        <div class="transit-icon-wrapper">
+          <span class="transit-icon">🧭</span>
+        </div>
+        <div>
+          從「${escapeHtml(view.fromPlace.name)}」出發
+          <div class="transit-details">${escapeHtml(view.note)}</div>
+          ${transitNavLinkMarkup(view)}
+        </div>
+      `;
+    }
+    return el;
+  }
+
+  // 卡片上的本機修改標籤
+  function localTagMarkup(placeId) {
+    if (isCustomPlace(placeId)) return `<span class="local-tag">自訂</span>`;
+    if (isModifiedPlace(placeId)) return `<span class="local-tag">已修改</span>`;
+    return "";
   }
 
   // ==========================================
@@ -972,25 +1266,37 @@ document.addEventListener("DOMContentLoaded", () => {
       indicatorsHtml += `<span class="indicator ${idx === 0 ? 'active' : ''}" data-idx="${idx}"></span>`;
     });
 
-    // Build Transit details in drawer
+    // Build Transit details in drawer (與時間軸同一套判斷)
     let drawerTransitHtml = "";
-    if (place.transitInfo) {
-      const tEmoji = transitEmojiOf(place.transitInfo);
-      
+    const transitView = getTransitView(place, buildPrevStopMap(allPlaces));
+    if (transitView?.info) {
+      const info = transitView.info;
       drawerTransitHtml = `
         <div class="detail-transit-block">
-          <div class="transit-header-text">交通路線 (起點: ${escapeHtml(place.transitInfo.from)})</div>
+          <div class="transit-header-text">交通路線 (起點: ${escapeHtml(info.from)})</div>
           <div class="transit-step-body">
-            <span class="transit-step-emoji">${tEmoji}</span>
+            <span class="transit-step-emoji">${transitEmojiOf(info)}</span>
             <div>
-              <div class="transit-desc-text">${escapeHtml(place.transitInfo.line)}</div>
-              <div class="transit-step-details">${escapeHtml(place.transitInfo.details)}</div>
+              <div class="transit-desc-text">${escapeHtml(info.line)}</div>
+              <div class="transit-step-details">${escapeHtml(info.details)}</div>
             </div>
             <div class="transit-step-duration">
-              <span class="transit-duration transit-duration-lg">${escapeHtml(place.transitInfo.duration)}</span>
+              <span class="transit-duration transit-duration-lg">${escapeHtml(info.duration)}</span>
               <span class="transit-step-unit">分鐘</span>
             </div>
           </div>
+          ${transitNavLinkMarkup(transitView)}
+        </div>
+      `;
+    } else if (transitView) {
+      drawerTransitHtml = `
+        <div class="detail-transit-block">
+          <div class="transit-header-text">交通路線 (起點: ${escapeHtml(transitView.fromPlace.name)})</div>
+          <div class="transit-step-body">
+            <span class="transit-step-emoji">🧭</span>
+            <div class="transit-step-details">${escapeHtml(transitView.note)}</div>
+          </div>
+          ${transitNavLinkMarkup(transitView)}
         </div>
       `;
     }
@@ -1023,6 +1329,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <div class="detail-badges">
                 <span class="tag-badge" data-cat="${escapeHtml(place.category)}">${categoryEmojis[place.category] || ''} ${escapeHtml(getCategoryChinese(place.category))}</span>
                 ${place.day ? `<span class="tag-badge tag-badge-day">Day ${escapeHtml(place.day)}</span>` : ''}
+                ${localTagMarkup(place.id)}
               </div>
             </div>
             <div class="detail-english">${escapeHtml(place.englishName)}</div>
@@ -1043,6 +1350,11 @@ document.addEventListener("DOMContentLoaded", () => {
               <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
               定位地圖
             </button>
+            ${place.id !== HOTEL_ID ? `
+            <button class="btn btn-outline" id="drawer-edit-btn">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              編輯
+            </button>` : ''}
           </div>
         </div>
         
@@ -1099,6 +1411,9 @@ document.addEventListener("DOMContentLoaded", () => {
         closeDrawer(); // Close on mobile to show zoom
       }
     });
+
+    // 飯店是每天路線的起點,不開放編輯
+    document.getElementById("drawer-edit-btn")?.addEventListener("click", () => openPlaceModal(placeId));
   }
 
   function closeDrawer() {

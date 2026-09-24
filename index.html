@@ -90,6 +90,14 @@
         
         <!-- Tab 1: Itinerary Planner -->
         <section class="tab-pane active" id="pane-itinerary">
+          <!-- 本機修改提示:只在這支手機有修改 / 自訂地點時顯示 (app.js renderLocalChangesBanner) -->
+          <div class="local-changes-banner" id="local-changes-banner" hidden>
+            <p class="local-changes-text" id="local-changes-text"></p>
+            <div class="local-changes-actions">
+              <button type="button" class="btn btn-outline btn-sm" id="export-changes-btn">複製變更內容</button>
+              <button type="button" class="btn btn-outline btn-sm" id="restore-all-btn">全部還原</button>
+            </div>
+          </div>
           <!-- Days Filter Bar -->
           <div class="day-selector-wrapper">
             <div class="day-selector" id="day-selector-container">
@@ -338,7 +346,7 @@
       <div id="map"></div>
 
       <!-- Version + Viewport Debug Badge (方便診斷 iOS PWA viewport bug) -->
-      <div class="version-badge" id="version-badge">v1.1.5</div>
+      <div class="version-badge" id="version-badge">v1.2.0</div>
       
       <!-- Theme & Action Floating Toolbar -->
       <div class="floating-toolbar">
@@ -392,7 +400,7 @@
             <input type="text" id="new-place-english" placeholder="例如：Ichiran Asakusa">
           </div>
           
-          <div class="form-group full-width">
+          <div class="form-group full-width" data-custom-only>
             <label for="new-place-category">類別分類 <span class="required">*</span></label>
             <select id="new-place-category" required>
               <option value="food">🍔 美食</option>
@@ -405,7 +413,7 @@
           <div class="form-group">
             <label for="new-place-day">分配至行程天數</label>
             <select id="new-place-day">
-              <option value="">（僅加至地圖與總清單）</option>
+              <option value="">候補（不排入行程）</option>
               <option value="1">第一天 Day 1</option>
               <option value="2">第二天 Day 2</option>
               <option value="3">第三天 Day 3</option>
@@ -420,17 +428,17 @@
             <input type="text" id="new-place-time" placeholder="例如：14:30" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" title="請輸入 24 小時制時間，例如 14:30">
           </div>
           
-          <div class="form-group">
+          <div class="form-group" data-custom-only>
             <label for="new-place-lat">緯度 (Latitude) <span class="required">*</span></label>
             <input type="number" step="any" id="new-place-lat" placeholder="例如：35.7118" required>
           </div>
           
-          <div class="form-group">
+          <div class="form-group" data-custom-only>
             <label for="new-place-lng">經度 (Longitude) <span class="required">*</span></label>
             <input type="number" step="any" id="new-place-lng" placeholder="例如：139.7909" required>
           </div>
           
-          <div class="form-group full-width">
+          <div class="form-group full-width" data-custom-only>
             <button type="button" class="btn btn-outline btn-full" id="map-pick-coords-btn">
               <svg class="btn-icon btn-icon-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
               在地圖上點選座標 (點我後在地圖上點擊)
@@ -447,7 +455,7 @@
             <input type="url" id="new-place-gmaps" placeholder="https://maps.app.goo.gl/...">
           </div>
           
-          <div class="form-group full-width">
+          <div class="form-group full-width" data-custom-only>
             <label for="new-place-image">自訂照片網址 (可留空，會自動載入分類預設圖)</label>
             <input type="url" id="new-place-image" placeholder="https://images.unsplash.com/...">
           </div>
@@ -455,8 +463,13 @@
         </div>
         
         <div class="form-actions">
+          <!-- 編輯模式才顯示 -->
+          <div class="form-actions-left">
+            <button type="button" class="btn btn-danger" id="modal-delete-btn" hidden>刪除此地點</button>
+            <button type="button" class="btn btn-outline" id="modal-restore-btn" hidden>還原此地點</button>
+          </div>
           <button type="button" class="btn btn-outline" id="modal-cancel-btn">取消</button>
-          <button type="submit" class="btn btn-primary">儲存地點</button>
+          <button type="submit" class="btn btn-primary" id="modal-submit-btn">儲存地點</button>
         </div>
       </form>
     </div>
@@ -469,6 +482,22 @@
       <div class="form-actions">
         <button type="button" class="btn btn-outline" id="confirm-modal-cancel">取消</button>
         <button type="button" class="btn btn-primary" id="confirm-modal-ok">確定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export Changes Modal:把本機修改整理成行程變更範本格式 -->
+  <div class="modal-overlay" id="export-modal" role="dialog" aria-modal="true" aria-labelledby="export-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="export-modal-title">複製變更內容</h3>
+        <button class="modal-close-btn" id="export-close-btn" aria-label="關閉">&times;</button>
+      </div>
+      <p class="export-hint">把下面的內容貼給 Claude，就能改成 5 人共用的行程。</p>
+      <textarea class="export-textarea" id="export-textarea" readonly rows="12"></textarea>
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline" id="export-cancel-btn">關閉</button>
+        <button type="button" class="btn btn-primary" id="export-copy-btn">複製</button>
       </div>
     </div>
   </div>
