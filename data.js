@@ -36,12 +36,18 @@ const PLACES = [
     category: "lodging",
     lat: 35.7108,
     lng: 139.8150,
-    day: null,
-    time: null,
-    desc: "本次旅程的住宿大本營。位於墨田區押上，走 5 分鐘就是東京晴空塔與押上地鐵站。押上站同時擁有 4 條線 — 半藏門線（直達澀谷、清澄白河）、都營淺草線（直達淺草、銀座、機場）、京成押上線與東武伊勢崎線，機場往返都不用轉車。",
+    day: 1,
+    time: "19:00",
+    desc: "本次旅程的住宿大本營。位於墨田區押上，走 5 分鐘就是東京晴空塔與押上地鐵站。押上站同時擁有 4 條線 — 半藏門線（直達澀谷、清澄白河）、都營淺草線（直達淺草、銀座、機場）、京成押上線與東武伊勢崎線，機場往返都不用轉車。第一天約 19:00 抵達 check-in、放行李。",
     imageFolder: "SYLA 飯店",
     gmaps: "https://maps.google.com/?q=SYLA+HOTEL+Oshiage",
-    transitInfo: null
+    transitInfo: {
+      from: "成田國際機場",
+      method: "train",
+      line: "京成 Access 特急 (成田機場 → 押上)",
+      duration: 55,
+      details: "入境、領行李約 1 小時，約 18:00 搭京成 Access 特急直達押上（約 55 分鐘、¥1,270），押上站步行約 5 分鐘到飯店。"
+    }
   },
 
   // ==================== DAY 1 (12/9 週三) — 抵達日 ====================
@@ -587,11 +593,11 @@ const PLACES = [
     imageFolder: "Chiikawa 晴空塔店",
     gmaps: "https://maps.app.goo.gl/M3JUiBgcyr4PSaEt6",
     transitInfo: {
-      from: "成田國際機場",
-      method: "train",
-      line: "京成 Access 特急 (成田機場 → 押上)",
-      duration: 55,
-      details: "入境、領行李約 1 小時，約 18:00 搭京成 Access 特急直達押上（約 55 分鐘、¥1,270）。先到飯店 check-in 放行李，再步行 3 分鐘到 Tokyo Solamachi 3 樓 East Yard 12 番地。"
+      from: "SYLA HOTEL Oshiage",
+      method: "walk",
+      line: "徒步 (Walk 300m)",
+      duration: 4,
+      details: "放好行李後從飯店步行 3 分鐘到 Tokyo Solamachi 3 樓 East Yard 12 番地。"
     }
   },
   {
