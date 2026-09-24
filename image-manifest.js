@@ -1,7 +1,7 @@
 // 自動產生,請勿手動修改。更新方式:node tools/sync-images.js
 // 每個地點的圖片 = images/<data.js 的 imageFolder>/ 裡以數字命名的檔案,依數字排序
 const PLACE_IMAGES = {
-  "syla_hotel": ["SYLA 飯店/1.jpg?v=6e333dbe","SYLA 飯店/2.jpg?v=c20a7fa5"],
+  "syla_hotel": ["SYLA 飯店/1.jpg?v=3e27d816","SYLA 飯店/2.jpg?v=7993cd1f","SYLA 飯店/3.jpg?v=c2ff7a62","SYLA 飯店/4.jpg?v=90a70c49","SYLA 飯店/5.jpg?v=74a4b47e","SYLA 飯店/6.jpg?v=f7ddec42","SYLA 飯店/7.jpg?v=639a7840","SYLA 飯店/8.jpg?v=c0f44cb4","SYLA 飯店/9.jpg?v=598222bd","SYLA 飯店/10.jpg?v=3d4bd94a","SYLA 飯店/11.jpg?v=29f25b4d"],
   "sensoji_night": ["淺草寺/1.jpg?v=4386852e","淺草寺/2.jpg?v=45e8a87e","淺草寺/3.png?v=84c46c0f"],
   "lawson_oshiage": ["Lawson 押上店/1.jpg?v=b33138f2"],
   "bongen_coffee": ["BONGEN COFFEE 銀座/1.jpg?v=948d51a6"],
