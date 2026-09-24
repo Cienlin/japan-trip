@@ -58,11 +58,11 @@ const PLACES = [
     images: ["sensoji_1.jpg", "sensoji_2.jpg"],
     gmaps: "https://maps.google.com/?q=Sensoji+Temple",
     transitInfo: {
-      from: "SYLA HOTEL Oshiage (放行李後)",
+      from: "Chiikawa Land 晴空塔店 (Solamachi)",
       method: "subway",
       line: "都營淺草線 (押上 → 淺草)",
       duration: 10,
-      details: "18:30 押上站搭都營淺草線 2 站至淺草站（3 分鐘），A4 出口步行 5 分鐘抵達雷門。"
+      details: "逛完 Solamachi，18:30 押上站搭都營淺草線 2 站至淺草站（3 分鐘），A4 出口步行 5 分鐘抵達雷門。"
     }
   },
   {
@@ -200,11 +200,11 @@ const PLACES = [
     images: ["subway_1.jpg"],
     gmaps: "https://maps.google.com/?q=Tokyo+Station+First+Avenue",
     transitInfo: {
-      from: "花山烏冬",
-      method: "subway",
-      line: "東京 Metro 丸之內線 (銀座 → 東京)",
-      duration: 8,
-      details: "銀座站搭丸之內線 1 站至東京站，出站直通東京車站一番街 B1F。逛完可搭東京 Metro 半藏門線於大手町轉車直達押上。"
+      from: "Chiikawa Land 東京車站店",
+      method: "walk",
+      line: "徒步 (一番街站內)",
+      duration: 2,
+      details: "同在東京車站一番街 B1F，逛完角色街直接移動到伴手禮區。逛完可搭東京 Metro 半藏門線於大手町轉車直達押上。"
     }
   },
 
@@ -258,7 +258,7 @@ const PLACES = [
     lng: 139.7038,
     day: 3,
     time: "13:45",
-    desc: "夢幻的主題專賣店「まじかるちいかわストア」！位於新宿 Marui 本館 (新宿丸井 1F)。**安排在平日前來，比起週末更能輕鬆進店與選購！**",
+    desc: "夢幻的主題專賣店「まじかるちいかわストア」！位於新宿 Marui 本館 (新宿丸井 1F)。全店以魔法少女風格打造，是吉伊卡哇粉必朝聖之地。**安排在平日前來，比起週末更能輕鬆進店與選購！** (熱門時段需注意是否有現場整理券或預約制)",
     images: ["sports_1.jpg"],
     gmaps: "https://maps.google.com/?q=Shinjuku+Marui+Main+Building",
     transitInfo: {
@@ -598,46 +598,6 @@ const PLACES = [
       details: "銀座站搭丸之內線 1 站至東京站，出站直通東京車站一番街 B1F 角色街。"
     }
   },
-  {
-    id: "chiikawa_harajuku",
-    name: "Chiikawa Land 原宿店",
-    englishName: "Chiikawa Land Harajuku (Kiddy Land 1F)",
-    category: "shopping",
-    lat: 35.6675,
-    lng: 139.7058,
-    day: 3,
-    time: "14:30",
-    desc: "位於原宿 Kiddy Land 1 樓的旗艦級吉伊卡哇專賣店！周邊款式極齊全，還有獨家的打卡牆與原宿限定紀念品。D3 吃完原宿大阪燒或逛表參道時順路安排最流暢。",
-    images: ["uniqlo_1.jpg"],
-    gmaps: "https://maps.google.com/?q=Kiddy+Land+Harajuku",
-    transitInfo: {
-      from: "原宿大阪燒 やいやい",
-      method: "walk",
-      line: "徒步 (Walk 250m)",
-      duration: 3,
-      details: "從裏原宿やいやい大阪燒出來往明治通り/表參道方向步行 3 分鐘至 Kiddy Land 原宿店 1F。"
-    }
-  },
-  {
-    id: "magical_chiikawa_shinjuku",
-    name: "魔法少女吉伊卡哇專賣店 新宿店",
-    englishName: "Magical Chiikawa Store Shinjuku (まじかるちいかわストア)",
-    category: "shopping",
-    lat: 35.6917,
-    lng: 139.7038,
-    day: 4,
-    time: "13:45",
-    desc: "夢幻的主題專賣店「まじかるちいかわストア」！位於新宿 Marui 本館 (新宿丸井 1F)。全店以魔法少女風格打造，裝潢與周邊都充滿變身魔法小可愛的超萌造型，是吉伊卡哇粉必朝聖之地！(熱門時段需注意是否有現場整理券或預約制)",
-    images: ["sports_1.jpg"],
-    gmaps: "https://maps.google.com/?q=Shinjuku+Marui+Main+Building",
-    transitInfo: {
-      from: "Alpen Tokyo",
-      method: "walk",
-      line: "徒步 (Walk 300m)",
-      duration: 4,
-      details: "從 Alpen Tokyo 出來沿新宿三丁目方向步行 4 分鐘即可抵達新宿 Marui 本館 1F。"
-    }
-  },
 
   // ==================== 未排入行程的候補地點（地圖上可見，隨時可加入行程） ====================
   {
@@ -663,7 +623,7 @@ const PLACES = [
     lng: 139.6993,
     day: null,
     time: null,
-    desc: "🌟 **推薦候補**：東京市中心的巨型森林神社，鳥居下拍照極美。若 D3 想在原宿多留 1 小時，走 15 分鐘就到，五人拍團體照的絕佳場所。",
+    desc: "🌟 **推薦候補**：東京市中心的巨型森林神社，鳥居下拍照極美。若 D4 想在原宿多留 1 小時，走 15 分鐘就到，五人拍團體照的絕佳場所。",
     images: ["sensoji_1.jpg"],
     gmaps: "https://maps.google.com/?q=Meiji+Jingu",
     transitInfo: null
@@ -677,7 +637,7 @@ const PLACES = [
     lng: 139.7016,
     day: null,
     time: null,
-    desc: "🌟 **推薦候補**：澀谷 Scramble Square 頂樓 229 米高露天展望台，360 度俯瞰整個東京 + 富士山。12 月日落約 16:30，訂 16:00 場能看金光西下 + 夜景。**必須網路預約**。若 D3 澀谷想加碼，可安排在 Harbs 前後。",
+    desc: "🌟 **推薦候補**：澀谷 Scramble Square 頂樓 229 米高露天展望台，360 度俯瞰整個東京 + 富士山。12 月日落約 16:30，訂 16:00 場能看金光西下 + 夜景。**必須網路預約**。若 D4 澀谷想加碼，可安排在 Harbs 前後。",
     images: ["subway_1.jpg"],
     gmaps: "https://maps.google.com/?q=Shibuya+Sky",
     transitInfo: null
@@ -705,7 +665,7 @@ const PLACES = [
     lng: 139.6666,
     day: null,
     time: null,
-    desc: "🌟 **推薦候補**：動漫宅心中的聖地！4 層商場塞滿 Mandarake（まんだらけ）二手動漫店、卡片店、絕版模型店。若 D4 新宿加碼可搭 JR 中央線 1 站到中野。",
+    desc: "🌟 **推薦候補**：動漫宅心中的聖地！4 層商場塞滿 Mandarake（まんだらけ）二手動漫店、卡片店、絕版模型店。若 D3 新宿加碼可搭 JR 中央線 1 站到中野。",
     images: ["subway_1.jpg"],
     gmaps: "https://maps.google.com/?q=Nakano+Broadway",
     transitInfo: null
@@ -761,7 +721,7 @@ const PLACES = [
     lng: 139.7292,
     day: null,
     time: null,
-    desc: "🌟 **推薦候補**：東京冬季 TOP3 之三！Roppongi Hills 櫸木坂道藍白 LED + Midtown 花園草坪星空點燈。若 D3 澀谷結束後想加碼可延伸過來看（點燈到 23:00）。",
+    desc: "🌟 **推薦候補**：東京冬季 TOP3 之三！Roppongi Hills 櫸木坂道藍白 LED + Midtown 花園草坪星空點燈。若 D4 澀谷結束後想加碼可延伸過來看（點燈到 23:00）。",
     images: ["subway_1.jpg"],
     gmaps: "https://maps.google.com/?q=Roppongi+Hills+Illumination",
     transitInfo: null

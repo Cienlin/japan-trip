@@ -3,16 +3,29 @@
 document.addEventListener("DOMContentLoaded", () => {
   // iOS standalone/PWA can report different values for 100vh, 100dvh and the
   // fixed-position viewport. Use one measured height for every full-screen layer.
+  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+                (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+
   const syncAppViewportHeight = () => {
     const isStandalone = window.matchMedia("(display-mode: standalone)").matches ||
                          window.navigator.standalone === true;
 
-    // PWA 模式下用最大值(含 screen.height 涵蓋 iOS PWA 錯報 viewport)
     // 瀏覽器模式下用 visualViewport (排除 URL bar)
     const vv = window.visualViewport?.height || window.innerHeight;
-    const viewportHeight = isStandalone
-      ? Math.max(vv, window.innerHeight || 0, window.screen.height || 0)
-      : vv;
+    let viewportHeight = isStandalone ? Math.max(vv, window.innerHeight || 0) : vv;
+
+    // iOS PWA 會把 viewport 錯報得比物理螢幕短 (少了 safe-area),改用螢幕高度補滿。
+    // - iOS 的 screen.width/height 固定是直立尺寸,橫放時要取短邊
+    // - 只在差距是 safe-area 等級時才補,避免 iPad 分割畫面等視窗被撐出螢幕
+    // - Android 的 screen.height 含系統列,不適用
+    if (isStandalone && isIOS) {
+      const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+      const { width: sw, height: sh } = window.screen;
+      const physicalHeight = isLandscape ? Math.min(sw, sh) : Math.max(sw, sh);
+      const gap = physicalHeight - viewportHeight;
+      if (gap > 0 && gap <= 120) viewportHeight = physicalHeight;
+    }
+
     document.documentElement.style.setProperty("--app-height", `${viewportHeight}px`);
   };
   syncAppViewportHeight();
@@ -590,7 +603,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Build timeline elements
-    filteredPlaces.forEach((place, index) => {
+    filteredPlaces.forEach(place => {
+      // transitInfo 描述「如何抵達此地點」(from = 前一站),所以畫在卡片之前
+      if (place.transitInfo) {
+        const transitEl = document.createElement("div");
+        transitEl.className = "transit-log";
+
+        const transitEmoji = transitEmojiOf(place.transitInfo);
+
+        transitEl.innerHTML = `
+          <div class="transit-icon-wrapper">
+            <span class="transit-icon">${transitEmoji}</span>
+          </div>
+          <div>
+            ${escapeHtml(place.transitInfo.line)} - <span class="transit-duration">${escapeHtml(place.transitInfo.duration)} 分鐘</span>
+            <div class="transit-details">
+              ${escapeHtml(place.transitInfo.details)}
+            </div>
+          </div>
+        `;
+        timelineContainer.appendChild(transitEl);
+      }
+
       const itemEl = document.createElement("div");
       itemEl.className = "timeline-item";
       itemEl.setAttribute("data-cat", place.category);
@@ -629,27 +663,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       timelineContainer.appendChild(itemEl);
-
-      // Add a Transit Connection Line if there is transit info AND we are not on the last item of the day
-      if (place.transitInfo && (activeDay !== "all" || (index < filteredPlaces.length - 1 && filteredPlaces[index + 1].day === place.day))) {
-        const transitEl = document.createElement("div");
-        transitEl.className = "transit-log";
-        
-        const transitEmoji = transitEmojiOf(place.transitInfo);
-
-        transitEl.innerHTML = `
-          <div class="transit-icon-wrapper">
-            <span class="transit-icon">${transitEmoji}</span>
-          </div>
-          <div>
-            ${escapeHtml(place.transitInfo.line)} - <span class="transit-duration">${escapeHtml(place.transitInfo.duration)} 分鐘</span>
-            <div class="transit-details">
-              ${escapeHtml(place.transitInfo.details)}
-            </div>
-          </div>
-        `;
-        timelineContainer.appendChild(transitEl);
-      }
     });
   }
 

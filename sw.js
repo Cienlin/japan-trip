@@ -4,7 +4,7 @@
 //   - 圖片 & 地圖 tile & CDN:runtime 快取,stale-while-revalidate
 //   - 離線 fallback:回傳快取版 index.html
 
-const VERSION = 'v1.0.8';
+const VERSION = 'v1.0.9';
 const SHELL_CACHE = `tokyo-shell-${VERSION}`;
 const RUNTIME_CACHE = `tokyo-runtime-${VERSION}`;
 
