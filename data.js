@@ -238,7 +238,7 @@ const PLACES = [
     lng: 139.7007,
     day: 3,
     time: "12:30",
-    desc: "**清單上「一定要去」的點！** 新宿最狂運動用品大樓，地下 1 至 8 樓共 9 層。**特意排在平日(週五)來逛，避開週末可怕的結帳與試穿人潮！**",
+    desc: "真的要去爆買了",
     imageFolder: "Alpen Tokyo",
     gmaps: "https://maps.google.com/?q=Alpen+Tokyo+Shinjuku",
     transitInfo: {
@@ -258,9 +258,9 @@ const PLACES = [
     lng: 139.7038,
     day: 3,
     time: "13:45",
-    desc: "夢幻的主題專賣店「まじかるちいかわストア」！位於新宿 Marui 本館 (新宿丸井 1F)。全店以魔法少女風格打造，是吉伊卡哇粉必朝聖之地。**安排在平日前來，比起週末更能輕鬆進店與選購！** (熱門時段需注意是否有現場整理券或預約制)",
+    desc: "夢幻的主題專賣店「まじかるちいかわストア」！位於新宿 Marui 本館 (新宿丸井 1F)。這我要爆買，但好像假日會要整理券才能進去，到時候再看看",
     imageFolder: "魔法少女吉伊卡哇 新宿",
-    gmaps: "https://maps.google.com/?q=Shinjuku+Marui+Main+Building",
+    gmaps: "https://maps.app.goo.gl/7rK9parQbRVMiUM68",
     transitInfo: {
       from: "Alpen Tokyo",
       method: "walk",
@@ -278,7 +278,7 @@ const PLACES = [
     lng: 139.7005,
     day: 3,
     time: "14:30",
-    desc: "紐約潮流漢堡東京店。你清單上的『shake shake』就是這家！新宿南口小田急塔 2F，經典 ShackBurger + 東京限定黑芝麻奶昔，平日午段內用位子更充裕。",
+    desc: "新宿南口小田急塔 2F，吃一下",
     imageFolder: "Shake Shack 新宿",
     gmaps: "https://maps.google.com/?q=Shake+Shack+Shinjuku+Southern+Terrace",
     transitInfo: {
@@ -290,26 +290,6 @@ const PLACES = [
     }
   },
   {
-    id: "azuki_to_kouri",
-    name: "あずきとこおり 精緻刨冰",
-    englishName: "Azuki to Kouri (あずきとこおり)",
-    category: "food",
-    lat: 35.6823,
-    lng: 139.6972,
-    day: 3,
-    time: "16:30",
-    desc: "米其林二星 Florilège 前甜點主廚開的預約制刨冰店。平日時段預約更容易成功！**強烈建議一週前官網預約 5 位**。",
-    imageFolder: "あずきとこおり 刨冰",
-    gmaps: "https://maps.google.com/?q=Azuki+to+Kouri",
-    transitInfo: {
-      from: "Shake Shack 新宿",
-      method: "walk",
-      line: "徒步 (Walk 1.2km)",
-      duration: 15,
-      details: "從新宿南口沿代代木方向往東南步行約 1.2 公里至千駄谷區。"
-    }
-  },
-  {
     id: "omoide_yokocho",
     name: "新宿回憶橫丁 居酒屋",
     englishName: "Omoide Yokocho (思い出横丁)",
@@ -318,15 +298,15 @@ const PLACES = [
     lng: 139.6997,
     day: 3,
     time: "19:30",
-    desc: "昭和風情極濃的窄巷居酒屋群！週五夜晚正是下班上班族聚會氣氛最棒的時候，炭火烤雞肉串 + Highball 收尾大男生日最對味。想跑酒吧餐後再走 5 分鐘到黃金街分組體驗。",
+    desc: "其實隨便居酒屋就可以了，到時候再看看要吃哪間",
     imageFolder: "新宿回憶橫丁",
     gmaps: "https://maps.google.com/?q=Omoide+Yokocho+Shinjuku",
     transitInfo: {
-      from: "あずきとこおり",
+      from: "Shake Shack 新宿",
       method: "walk",
-      line: "徒步 (Walk 1.0km) 回新宿西口",
-      duration: 13,
-      details: "從千駄谷步行返回新宿西口出站，思い出橫丁就在西口斜對面。玩到 24:00 前趕末班車押上線回飯店。"
+      line: "徒步 (Walk 約 900m) 到新宿西口",
+      duration: 12,
+      details: "從新宿南口往北沿西口方向步行約 12 分鐘，思い出橫丁就在西口斜對面。玩到 24:00 前趕末班車押上線回飯店。"
     }
   },
 
@@ -380,7 +360,7 @@ const PLACES = [
     lng: 139.7058,
     day: 4,
     time: "14:30",
-    desc: "位於原宿 Kiddy Land 1 樓的旗艦級吉伊卡哇專賣店！周邊款式極齊全，還有獨家的打卡牆與原宿限定紀念品。吃完原宿大阪燒順路逛極流暢。",
+    desc: "前面如果買夠了就不看",
     imageFolder: "Chiikawa 原宿店",
     gmaps: "https://maps.google.com/?q=Kiddy+Land+Harajuku",
     transitInfo: {
@@ -400,7 +380,7 @@ const PLACES = [
     lng: 139.7045,
     day: 4,
     time: "16:00",
-    desc: "招牌「水果千層蛋糕 Mille-crepes」層次分明，鮮草莓、奇異果、香蕉、哈密瓜配鮮奶油與可麗餅皮，是東京女生（和五個大男生）都愛的下午茶。逛完 Hikarie 直接半藏門線回押上超方便。",
+    desc: "好像很猛的千層蛋糕",
     imageFolder: "HARBS 澀谷",
     gmaps: "https://maps.google.com/?q=HARBS+Shibuya+Hikarie",
     transitInfo: {
@@ -420,7 +400,7 @@ const PLACES = [
     lng: 139.7110,
     day: 4,
     time: "19:00",
-    desc: "主打「一人一鍋」的高質感壽喜燒/涮涮鍋，圓弧吧台各人獨立銅鍋，選頂級山形和牛。⚠️ **老闆不吃牛可點豬肉套餐（黑豚 or SPF 豚，一樣鮮嫩）**。強烈建議一週前 Tabelog 或電話預約 5 人吧台位。",
+    desc: "好像要訂位，他們都吃牛我只吃豬",
     imageFolder: "山笑ふ 壽喜燒",
     gmaps: "https://maps.google.com/?q=Yamawarau+Omotesando",
     transitInfo: {
@@ -462,7 +442,7 @@ const PLACES = [
     lng: 139.7947,
     day: 5,
     time: "12:00",
-    desc: "淺草 1-32-11 的章魚燒新店，招牌是「章魚燒仙貝三明治」— 兩顆現烤章魚燒夾在章魚燒仙貝之間淋醬 & 美乃滋，創意十足！仲見世通逛完順路吃。",
+    desc: "一樣隨便一家章魚燒店就好了",
     imageFolder: "淺草章魚燒 蛸兄弟",
     gmaps: "https://maps.google.com/?q=浅草蛸たこ×ころも兄弟",
     transitInfo: {
@@ -482,7 +462,7 @@ const PLACES = [
     lng: 139.7959,
     day: 5,
     time: "12:30",
-    desc: "1854 年創業、170 年歷史的和菓子老店！你清單的『大福』就靠這家。招牌粟善哉、麻糬紅豆湯、季節限定豆大福，是仲見世通必吃甜點。",
+    desc: "這個大幅好像不是我要的那間，我看過的是奇哥影片的",
     imageFolder: "梅園 淺草",
     gmaps: "https://maps.google.com/?q=Umezono+Asakusa",
     transitInfo: {
@@ -502,7 +482,7 @@ const PLACES = [
     lng: 139.7814,
     day: 5,
     time: "14:00",
-    desc: "入谷小巷內的美式復古 diner，粗絞牛肉漢堡排鐵板現壓、爆汁淋滿起司醬。美式搖滾裝潢很有味道。⚠️ **不吃牛的老闆可點雞肉漢堡或熱狗替代**。",
+    desc: "看起來很猛的漢堡",
     imageFolder: "American Diner Andra",
     gmaps: "https://maps.app.goo.gl/uhuaHdVNmjzKpiri8",
     transitInfo: {
@@ -542,7 +522,7 @@ const PLACES = [
     lng: 139.7915,
     day: 5,
     time: "21:00",
-    desc: "1915 年創業的東京最古老關東煮名店，滿足你清單上的『關東煮』。湯頭每日慢火熬煮，30 多種食材燉煮入味，冬天吃一碗超暖胃。⚠️ 單價偏高（人均 ¥5,000），建議先電話預約。",
+    desc: "這是名店，但好像也可以隨便找一家",
     imageFolder: "大多福 關東煮",
     gmaps: "https://maps.google.com/?q=Asakusa+Oden+Otafuku",
     transitInfo: {
@@ -569,7 +549,7 @@ const PLACES = [
     time: "18:00",
     desc: "去晃一下晴空塔，然後我要買及掰卡哇",
     imageFolder: "Chiikawa 晴空塔店",
-    gmaps: "https://maps.google.com/?q=Chiikawa+Land+Tokyo+Solamachi",
+    gmaps: "https://maps.app.goo.gl/M3JUiBgcyr4PSaEt6",
     transitInfo: {
       from: "SYLA HOTEL Oshiage",
       method: "walk",
@@ -587,7 +567,7 @@ const PLACES = [
     lng: 139.7671,
     day: 2,
     time: "19:00",
-    desc: "位於東京車站一番街 B1F「東京動漫人物街 (Tokyo Character Street)」內的超人氣吉伊卡哇專賣店。有許多東京車站限定的站長系列、鐵道主題吉伊卡哇周邊，適合在 D2 買伴手禮時一併血拼！",
+    desc: "賣伴手禮如果有順便經過的話可以在逛一下",
     imageFolder: "Chiikawa 東京車站店",
     gmaps: "https://maps.google.com/?q=Chiikawa+Land+TOKYO+Station",
     transitInfo: {
