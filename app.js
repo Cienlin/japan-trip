@@ -146,6 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Icons mapping for categories
   const categoryEmojis = {
     lodging: "🏨",
+    transport: "✈️",
     food: "🍔",
     shopping: "🛍️",
     sightseeing: "🗼"
@@ -1034,6 +1035,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (cat === "shopping") return "購物";
     if (cat === "sightseeing") return "景點";
     if (cat === "lodging") return "住宿";
+    if (cat === "transport") return "交通";
     return "";
   }
 

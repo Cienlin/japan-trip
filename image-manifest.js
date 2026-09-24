@@ -27,6 +27,7 @@ const PLACE_IMAGES = {
   "american_diner_andra": ["American Diner Andra/1.jpg?v=e7438c8b","American Diner Andra/2.jpg?v=a299f70e"],
   "cuiyun_ueno": ["翠雲 上野/1.jpg?v=a57610a0"],
   "otafuku_oden": ["大多福 關東煮/1.jpg?v=2d2abeaf"],
+  "narita_airport_return": ["成田國際機場/1.jpg?v=55fcc2c9","成田國際機場/2.jpg?v=78dfaa12","成田國際機場/3.png?v=ce725019"],
   "chiikawa_solamachi": ["Chiikawa 晴空塔店/1.jpg?v=b7adcb3a","Chiikawa 晴空塔店/2.jpg?v=3c422122"],
   "chiikawa_tokyo_station": ["Chiikawa 東京車站店/1.jpg?v=49c2462a"],
   "yamada_unagi": ["山田的鰻/1.jpg?v=c57b531e"],

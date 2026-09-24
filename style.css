@@ -21,6 +21,8 @@
   /* Category Colors */
   --color-lodging: #0a4269; /* Primary deep blue */
   --color-lodging-bg: #e0f2fe;
+  --color-transport: #0f766e; /* Teal:機場等交通據點 */
+  --color-transport-bg: #ccfbf1;
   --color-food: #735c00; /* Secondary mustard yellow */
   --color-food-bg: #ffe088;
   --color-shopping: #830523; /* Tertiary deep red */
@@ -433,6 +435,9 @@ body.theme-dark .day-btn.active {
 
 .timeline-item[data-cat="lodging"] .timeline-marker { border-color: var(--color-lodging); }
 .timeline-item[data-cat="lodging"].active .timeline-marker { background: var(--color-lodging); box-shadow: 0 0 0 4px var(--color-lodging-bg); }
+
+.timeline-item[data-cat="transport"] .timeline-marker { border-color: var(--color-transport); }
+.timeline-item[data-cat="transport"].active .timeline-marker { background: var(--color-transport); box-shadow: 0 0 0 4px var(--color-transport-bg); }
 
 /* Timeline Card */
 .timeline-card {
@@ -865,6 +870,7 @@ body.theme-dark .local-tag {
 .place-card-category[data-cat="shopping"] { background: var(--color-shopping-bg); color: var(--color-shopping); }
 .place-card-category[data-cat="sightseeing"] { background: var(--color-sightseeing-bg); color: var(--color-sightseeing); }
 .place-card-category[data-cat="lodging"] { background: var(--color-lodging-bg); color: var(--color-lodging); }
+.place-card-category[data-cat="transport"] { background: var(--color-transport-bg); color: var(--color-transport); }
 
 .place-card-day {
   font-size: 0.75rem;
@@ -1222,6 +1228,7 @@ body.theme-dark .icon-moon {
 .marker-pin[data-cat="shopping"] { background: var(--color-shopping); }
 .marker-pin[data-cat="sightseeing"] { background: var(--color-sightseeing); }
 .marker-pin[data-cat="lodging"] { background: var(--color-lodging); }
+.marker-pin[data-cat="transport"] { background: var(--color-transport); }
 
 /* ==========================================
    DETAIL DRAWER & CAROUSEL
@@ -1432,6 +1439,7 @@ body.theme-dark .close-drawer-btn {
 .tag-badge[data-cat="shopping"] { background: var(--color-shopping-bg); color: var(--color-shopping); }
 .tag-badge[data-cat="sightseeing"] { background: var(--color-sightseeing-bg); color: var(--color-sightseeing); }
 .tag-badge[data-cat="lodging"] { background: var(--color-lodging-bg); color: var(--color-lodging); }
+.tag-badge[data-cat="transport"] { background: var(--color-transport-bg); color: var(--color-transport); }
 
 .tag-badge-day {
   background: var(--accent-gold-bg);

@@ -49,7 +49,7 @@ const PLACES = [
     id: "narita_airport",
     name: "成田國際機場",
     englishName: "成田国際空港",
-    category: "sightseeing",
+    category: "transport",
     lat: 35.770761,
     lng: 140.387137,
     day: 1,
@@ -551,7 +551,27 @@ const PLACES = [
   },
 
   // ==================== DAY 6 (12/14 週一) — 打包 + 回程 ====================
-  // 無排定行程 — 09:00 起床打包，12:30 押上站搭京成 Access 特急直達成田機場
+  // 09:00 起床打包，12:30 押上站搭京成 Access 特急直達成田機場
+  {
+    id: "narita_airport_return",
+    name: "成田機場（回程）",
+    englishName: "成田国際空港",
+    category: "transport",
+    lat: 35.770761,
+    lng: 140.387137,
+    day: 6,
+    time: "13:30",
+    desc: "回程 15:30 起飛，約 13:30 抵達機場辦理報到、托運行李。",
+    imageFolder: "成田國際機場",
+    gmaps: "https://maps.app.goo.gl/QwbjzmpN7jsnnofv8",
+    transitInfo: {
+      from: "SYLA HOTEL Oshiage",
+      method: "train",
+      line: "京成 Access 特急 (押上 → 成田機場)",
+      duration: 55,
+      details: "12:30 押上站搭京成 Access 特急直達成田機場（約 55 分鐘、¥1,270），約 13:30 抵達，起飛前 2 小時到機場。"
+    }
+  },
 
   // ==================== 吉伊卡哇專賣店 (Chiikawa Stores) ====================
   {
