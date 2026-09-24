@@ -90,8 +90,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const resetViewBtn = document.getElementById("reset-view-btn");
   const zoomInBtn = document.getElementById("zoom-in-btn");
   const zoomOutBtn = document.getElementById("zoom-out-btn");
-  const iconSun = themeToggleBtn.querySelector(".icon-sun");
-  const iconMoon = themeToggleBtn.querySelector(".icon-moon");
   
   // Drawer Elements
   const detailDrawer = document.getElementById("detail-drawer");
@@ -296,12 +294,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Apply a theme: swap body class + icons. 地圖 tile 靠 CSS filter 切換,不重新請求
+  // Apply a theme: swap body class (太陽/月亮圖示與地圖 tile 都靠 CSS 依 class 切換,不重新請求)
+  // 首次繪製前 index.html 開頭的 inline script 已先套好 class,這裡負責之後的切換
   function applyTheme(theme) {
     document.body.classList.toggle("theme-dark", theme === 'dark');
     document.body.classList.toggle("theme-light", theme === 'light');
-    iconSun.style.display = theme === 'dark' ? "none" : "block";
-    iconMoon.style.display = theme === 'dark' ? "block" : "none";
   }
 
   // Countdown timer
@@ -830,10 +827,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      marker.bindPopup(popupEl, {
+      // popup 不綁在 marker 上 (bindPopup 會在點 marker 時自動打開,跟抽屜重疊)。
+      // 只有 locatePlace 在抽屜沒開時才顯示,例如「在地圖上標示」飯店、定位地圖
+      marker.detailPopup = L.popup({
         closeButton: true,
         offset: L.point(0, -26)
-      });
+      }).setLatLng([place.lat, place.lng]).setContent(popupEl);
 
       marker.on("click", (ev) => {
         // 防止事件冒泡到 map.on("click"),否則 iOS Safari 上會馬上觸發 closeDrawer
@@ -937,7 +936,10 @@ document.addEventListener("DOMContentLoaded", () => {
     
     const marker = mapMarkers.find(m => m.placeId === placeId);
     if (marker) {
-      setTimeout(() => marker.openPopup(), 600);
+      setTimeout(() => {
+        // 詳細資訊抽屜開著時不顯示 popup,兩者內容重複又會互相遮擋
+        if (!detailDrawer.classList.contains("open")) map.openPopup(marker.detailPopup);
+      }, 600);
     }
 
     highlightMarkerPin(placeId);
@@ -950,6 +952,9 @@ document.addEventListener("DOMContentLoaded", () => {
   function openDrawer(placeId) {
     const place = allPlaces.find(p => p.id === placeId);
     if (!place) return;
+
+    // 抽屜與 popup 不同時出現 (例如從 popup 的「查看詳細資訊」點進來)
+    map.closePopup();
 
     // Automatically collapse sidebar on mobile when opening detail drawer so they never overlap (Google Maps style)
     if (window.innerWidth <= 768) {
