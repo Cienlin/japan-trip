@@ -1,4 +1,4 @@
-// Tokyo Trip Map & Itinerary Application Engine (Updated with Custom Places)
+// 東京行程地圖 app:地圖、時間軸、美食景點、行前指南、本機編輯
 
 document.addEventListener("DOMContentLoaded", () => {
   // iOS standalone/PWA can report different values for 100vh, 100dvh and the
@@ -74,6 +74,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Active slide index for current open drawer carousel
   let currentSlideIndex = 0;
 
+  // 最後選取的地點 (地圖 marker 與時間軸都會標示)
+  let selectedPlaceId = null;
+
   // DOM Elements
   const tripTitleEl = document.getElementById("trip-title");
   const tripDatesEl = document.getElementById("trip-dates");
@@ -89,7 +92,6 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Directory Search / Filters
   const searchInput = document.getElementById("place-search");
-  const filterChips = document.querySelectorAll(".filter-chip");
   const placesListContainer = document.getElementById("places-list-container");
   
   // Logistics Info
@@ -140,7 +142,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // 深色主題透過 CSS filter 反轉,不需第二個 tile source
   const tileUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
   const tileAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-  let activeTileLayer = null;
 
   // Icons mapping for categories
   const categoryEmojis = {
@@ -254,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   
   function init() {
-    // Apply persisted theme before anything else so no flash
+    // 首次繪製前的主題已由 index.html 開頭的 inline script 套用,這裡同步 body class
     applyTheme(activeTheme);
 
     // Load persisted custom places & local edits
@@ -405,7 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Add Tile Layer (單一 source,主題切換靠 CSS filter,不用重新請求 tile)
     // crossOrigin:用 CORS 載入 tile,Service Worker 才拿得到可快取的回應 (no-cors 的 opaque 回應無法判斷成功與否)
-    activeTileLayer = L.tileLayer(tileUrl, {
+    L.tileLayer(tileUrl, {
       attribution: tileAttribution,
       maxZoom: 19,
       crossOrigin: true
@@ -488,7 +489,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 7. Locate Hotel button in Logistics
     hotelLocateBtn.addEventListener("click", () => {
-      locatePlace("syla_hotel");
+      locatePlace(HOTEL_ID);
     });
 
     // 8. Close Drawer
@@ -509,7 +510,7 @@ document.addEventListener("DOMContentLoaded", () => {
           tempPickMarker.setLatLng(e.latlng);
         } else {
           tempPickMarker = L.marker(e.latlng, { draggable: true }).addTo(map);
-          tempPickMarker.on("dragend", (dEvent) => {
+          tempPickMarker.on("dragend", () => {
             const pos = tempPickMarker.getLatLng();
             document.getElementById("new-place-lat").value = pos.lat.toFixed(6);
             document.getElementById("new-place-lng").value = pos.lng.toFixed(6);
@@ -916,6 +917,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       timelineContainer.appendChild(itemEl);
     });
+
+    highlightTimelineItem();
   }
 
   // Render Places Directory
@@ -1076,7 +1079,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       const dayNum = parseInt(activeDay);
       // Always include hotel (home base) and the current day's spots
-      placesToShow = allPlaces.filter(p => p.day === dayNum || p.id === "syla_hotel");
+      placesToShow = allPlaces.filter(p => p.day === dayNum || p.id === HOTEL_ID);
     }
 
     // 2. Create Leaflet Markers
@@ -1147,7 +1150,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const daySpots = allPlaces.filter(p => p.day === dayNum).sort(sortByDayTime);
 
       // Construct route: Start at Hotel -> visit day spots -> return to Hotel (except Day 6)
-      const hotel = allPlaces.find(p => p.id === "syla_hotel");
+      const hotel = allPlaces.find(p => p.id === HOTEL_ID);
       const pathCoordinates = [];
 
       if (hotel) {
@@ -1173,7 +1176,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       const routePolyline = L.polyline(pathCoordinates, {
-        color: dayColors[dayNum] || "#c5a059",
+        color: dayColors[dayNum],
         weight: 4,
         opacity: 0.8,
         dashArray: "8, 8",
@@ -1194,13 +1197,23 @@ document.addEventListener("DOMContentLoaded", () => {
     map.fitBounds(group.getBounds().pad(0.15));
   }
 
-  // Highlight a marker pin visually on map
+  // Highlight a marker pin visually on map (同時標示時間軸上的同一個地點)
   function highlightMarkerPin(placeId) {
     document.querySelectorAll(".marker-pin").forEach(pin => pin.classList.remove("active"));
     const element = document.getElementById(`pin-${placeId}`);
     if (element) {
       element.classList.add("active");
     }
+    selectedPlaceId = placeId;
+    highlightTimelineItem();
+  }
+
+  // 時間軸上標示最後選取的地點。關閉抽屜時不清除:手機上要切回「行程規劃」分頁
+  // 才看得到時間軸,而切換分頁會關閉抽屜,清掉的話就看不到標示了
+  function highlightTimelineItem() {
+    timelineContainer.querySelectorAll(".timeline-item").forEach(item => {
+      item.classList.toggle("active", item.getAttribute("data-id") === selectedPlaceId);
+    });
   }
 
   // 切換天數篩選:同步按鈕狀態、時間軸與地圖 marker
@@ -1432,15 +1445,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!checklistContainer) return;
 
     // Load saved checklist states
-    let savedStates = {};
-    const stored = localStorage.getItem("tokyo_trip_checklist_state");
-    if (stored) {
-      try {
-        savedStates = JSON.parse(stored);
-      } catch (e) {
-        console.error("Failed to parse checklist states:", e);
-      }
-    }
+    const savedStates = readJson(STORAGE_KEYS.checklist, {}) || {};
 
     const checkboxes = checklistContainer.querySelectorAll('input[type="checkbox"]');
     checkboxes.forEach(cb => {
@@ -1452,7 +1457,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Add event listener to save state when changed
       cb.addEventListener("change", () => {
         savedStates[cb.id] = cb.checked;
-        localStorage.setItem("tokyo_trip_checklist_state", JSON.stringify(savedStates));
+        localStorage.setItem(STORAGE_KEYS.checklist, JSON.stringify(savedStates));
       });
     });
   }
@@ -1473,17 +1478,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (hotelJpyDisplay) hotelJpyDisplay.textContent = hotelPerPersonJpy.toLocaleString();
 
     // Load saved inputs
-    const stored = localStorage.getItem("tokyo_trip_budget_inputs");
-    if (stored) {
-      try {
-        const savedInputs = JSON.parse(stored);
-        if (savedInputs.rate !== undefined) calcRateInput.value = savedInputs.rate;
-        if (savedInputs.flight !== undefined) calcFlightInput.value = savedInputs.flight;
-        if (savedInputs.pocket !== undefined) calcPocketInput.value = savedInputs.pocket;
-      } catch (e) {
-        console.error("Failed to parse budget inputs:", e);
-      }
-    }
+    const savedInputs = readJson(STORAGE_KEYS.budget, {}) || {};
+    if (savedInputs.rate !== undefined) calcRateInput.value = savedInputs.rate;
+    if (savedInputs.flight !== undefined) calcFlightInput.value = savedInputs.flight;
+    if (savedInputs.pocket !== undefined) calcPocketInput.value = savedInputs.pocket;
 
     function calculate() {
       const rate = parseFloat(calcRateInput.value) || 0.22;
@@ -1491,7 +1489,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const pocketJpy = parseFloat(calcPocketInput.value) || 0;
 
       // Save to LocalStorage
-      localStorage.setItem("tokyo_trip_budget_inputs", JSON.stringify({
+      localStorage.setItem(STORAGE_KEYS.budget, JSON.stringify({
         rate,
         flight: flightTwd,
         pocket: pocketJpy

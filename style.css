@@ -51,6 +51,11 @@
   --accent-gold-hover: #0a4269;
   --accent-gold-bg: #e0f2fe;
   
+  /* 狀態文字色:預算充裕 / 接近 / 超支、本機修改標籤 */
+  --status-ok-text: #047857;
+  --status-warn-text: #c2410c;
+  --status-danger-text: #dc2626;
+
   --scrollbar-thumb: #cbd5e1;
   --glass-blur: blur(12px); /* 必須是 filter function,不能只寫 12px,否則 backdrop-filter 整條失效 */
   --glass-border: 1px solid rgba(255, 255, 255, 0.5);
@@ -79,6 +84,10 @@ body.theme-dark {
   --accent-gold-hover: #cfe5ff;
   --accent-gold-bg: rgba(158, 203, 249, 0.1);
   
+  --status-ok-text: #6ee7b7;
+  --status-warn-text: #fdba74;
+  --status-danger-text: #fca5a5;
+
   --scrollbar-thumb: #475569;
   --glass-border: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -400,6 +409,12 @@ body.theme-dark .day-btn.active {
   }
 }
 
+/* 最後選取的地點:卡片加上強調色邊框 (圓點顏色見下方各類別) */
+.timeline-item.active .timeline-card {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 1px var(--accent-gold);
+}
+
 .timeline-item.active .timeline-marker {
   background: var(--accent-gold);
   border-color: var(--accent-gold);
@@ -591,13 +606,12 @@ body.theme-dark .transit-icon-wrapper {
   padding: 1px 6px;
   border-radius: 4px;
   background: rgba(249, 115, 22, 0.14);
-  color: #c2410c;
+  color: var(--status-warn-text);
   white-space: nowrap;
 }
 
 body.theme-dark .local-tag {
   background: rgba(251, 146, 60, 0.18);
-  color: #fdba74;
 }
 
 /* ==========================================
@@ -680,6 +694,26 @@ body.theme-dark .local-tag {
   background: var(--text-main);
   color: var(--bg-app);
   border-color: var(--text-main);
+}
+
+/* 沒有內容時的提示 (D6 沒有排行程、搜尋沒有結果) */
+.empty-state {
+  padding: 28px 16px;
+  text-align: center;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--border-radius-md);
+}
+
+/* 時間軸沒有地點時:提示框佔滿寬度,不畫左側的時間線 */
+.itinerary-timeline .empty-state {
+  margin-left: -24px;
+}
+
+.itinerary-timeline:has(.empty-state)::before {
+  display: none;
 }
 
 /* Places List */
@@ -953,7 +987,7 @@ body.theme-dark .local-tag {
 @media (hover: hover) {
   .btn-primary:hover {
     background: var(--accent-gold-hover);
-    box-shadow: 0 4px 12px rgba(197, 160, 89, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 94, 184, 0.25);
   }
 }
 
@@ -983,6 +1017,20 @@ body.theme-dark .local-tag {
 
 .subway-advice p {
   margin-bottom: 8px;
+}
+
+/* 行前指南「旅遊建議」裡的各段標題與補充說明 */
+.subway-advice .tips-heading {
+  margin-top: 14px;
+}
+
+.subway-advice .tips-note {
+  margin-top: 10px;
+}
+
+.text-link {
+  color: var(--accent-gold);
+  text-decoration: underline;
 }
 
 .subway-advice ul {
@@ -2118,12 +2166,13 @@ body.theme-dark .calc-results {
   transition: width var(--transition-normal), background-color var(--transition-normal);
 }
 
+/* 預算狀態:充裕 = 綠、接近 = 橘、超支 = 紅 (進度條與提示訊息同一色系) */
 .budget-progress-fill.under-budget {
-  background: var(--color-sightseeing);
+  background: #10b981;
 }
 
 .budget-progress-fill.near-budget {
-  background: var(--color-food);
+  background: #f97316;
 }
 
 .budget-progress-fill.over-budget {
@@ -2138,25 +2187,25 @@ body.theme-dark .calc-results {
   border-radius: var(--border-radius-sm);
   background: var(--accent-gold-bg);
   color: var(--accent-gold);
-  border: 1px solid rgba(197, 160, 89, 0.2);
+  border: 1px solid var(--border-color);
 }
 
 .budget-status-msg.under {
   background: rgba(16, 185, 129, 0.1);
-  color: var(--color-sightseeing);
-  border-color: rgba(16, 185, 129, 0.2);
+  color: var(--status-ok-text);
+  border-color: rgba(16, 185, 129, 0.25);
 }
 
 .budget-status-msg.warn {
   background: rgba(249, 115, 22, 0.1);
-  color: var(--color-food);
-  border-color: rgba(249, 115, 22, 0.2);
+  color: var(--status-warn-text);
+  border-color: rgba(249, 115, 22, 0.25);
 }
 
 .budget-status-msg.danger {
   background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
-  border-color: rgba(239, 68, 68, 0.2);
+  color: var(--status-danger-text);
+  border-color: rgba(239, 68, 68, 0.25);
 }
 
 @media (max-width: 600px) {
