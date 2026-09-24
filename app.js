@@ -56,7 +56,11 @@ document.addEventListener("DOMContentLoaded", () => {
   let mapPolylines = [];
   
   // Custom Places Data Lists
-  let defaultPlaces = typeof PLACES !== "undefined" ? [...PLACES] : [];
+  // 內建地點的圖片來自 image-manifest.js (images/<imageFolder>/ 裡的數字檔名,由 tools/sync-images.js 產生)
+  const placeImages = typeof PLACE_IMAGES !== "undefined" ? PLACE_IMAGES : {};
+  let defaultPlaces = typeof PLACES !== "undefined"
+    ? PLACES.map(p => ({ ...p, images: placeImages[p.id] || [] }))
+    : [];
   let customPlaces = [];
   // 內建地點的本機修改:{ [placeId]: { 有改動的欄位..., deleted?: true } }
   let placeOverrides = {};
@@ -154,18 +158,16 @@ document.addEventListener("DOMContentLoaded", () => {
     train: "🚆"
   };
 
-  // Category → default fallback image
-  const categoryDefaultImage = {
-    food: "tonkatsu_1.jpg",
-    shopping: "uniqlo_1.jpg",
-    sightseeing: "sensoji_1.jpg",
-    lodging: "hotel_1.jpg"
-  };
+  // 沒有圖片時顯示的預設圖
+  const PLACEHOLDER_IMAGE = "images/placeholder.svg";
 
   // Helpers
-  const resolveImageUrl = (img, fallback = "subway_1.jpg") => {
-    if (!img) return `images/${fallback}`;
-    return (img.startsWith("http://") || img.startsWith("https://")) ? img : `images/${img}`;
+  const resolveImageUrl = (img) => {
+    if (!img) return PLACEHOLDER_IMAGE;
+    if (/^https?:\/\//.test(img)) return img;
+    // 舊版自訂地點存的是已移除的根目錄預設圖 (例如 "tonkatsu_1.jpg"),改顯示預設圖
+    if (!img.includes("/")) return PLACEHOLDER_IMAGE;
+    return `images/${img}`;
   };
 
   const firstImageOf = (place) => {
@@ -608,7 +610,7 @@ document.addEventListener("DOMContentLoaded", () => {
           lng,
           desc: values.desc || "自訂新增的地點。",
           gmaps: values.gmaps || `https://maps.google.com/?q=${encodeURIComponent(values.name)}`,
-          images: imageVal ? [imageVal] : [categoryDefaultImage[category] || "hotel_1.jpg"]
+          images: imageVal ? [imageVal] : []
         };
         const target = placeId && customPlaces.find(p => p.id === placeId);
         if (target) {
@@ -1259,7 +1261,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Build Image Slider HTML — slide background images are applied via DOM below to avoid CSS injection
     let indicatorsHtml = "";
-    const imageList = place.images && place.images.length > 0 ? place.images : ["subway_1.jpg"];
+    const imageList = place.images && place.images.length > 0 ? place.images : [null];
     const resolvedImageUrls = imageList.map(img => resolveImageUrl(img));
     const imageSlidesHtml = imageList.map((_, idx) => `<div class="carousel-slide" data-slide-idx="${idx}"></div>`).join("");
     imageList.forEach((_, idx) => {
@@ -1573,12 +1575,11 @@ if ('serviceWorker' in navigator) {
       console.warn('Service Worker 註冊失敗:', err);
     });
 
-    // 預先快取所有景點圖片,旅途中離線也看得到 (SW 只會補抓還沒快取的)
+    // 預先快取所有景點圖片,旅途中離線也看得到 (SW 只會補抓還沒快取的,並清掉已不再使用的舊圖)
     navigator.serviceWorker.ready.then((registration) => {
-      if (!registration.active || typeof PLACES === "undefined") return;
-      const imageFiles = new Set(PLACES.flatMap((p) => p.images || []));
-      const urls = [...imageFiles]
-        .filter((img) => !/^https?:\/\//.test(img))
+      if (!registration.active || typeof PLACE_IMAGES === "undefined") return;
+      const imageFiles = new Set(Object.values(PLACE_IMAGES).flat());
+      const urls = [...imageFiles, "placeholder.svg"]
         .map((img) => new URL(`images/${img}`, location.href).href);
       registration.active.postMessage({ type: "precache-images", urls });
     });

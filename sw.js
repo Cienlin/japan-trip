@@ -7,7 +7,7 @@
 //   - 其他跨源 (Leaflet CDN、Google Fonts):stale-while-revalidate
 //   圖片 / 圖磚 / CDN 快取名稱固定,改版不會被清掉
 
-const VERSION = 'v1.2.1';
+const VERSION = 'v1.3.0';
 const SHELL_CACHE = `tokyo-shell-${VERSION}`;
 const IMAGE_CACHE = 'tokyo-images';
 const TILE_CACHE = 'tokyo-tiles';
@@ -24,6 +24,7 @@ const SHELL_ASSETS = [
   './style.css',
   './app.js',
   './data.js',
+  './image-manifest.js',
   './manifest.json',
   './icon.svg'
 ];
@@ -58,13 +59,22 @@ self.addEventListener('message', (event) => {
   event.waitUntil(precacheImages(data.urls));
 });
 
+// urls 是目前所有景點圖片的完整清單 (網址含 ?v= 內容指紋)
 async function precacheImages(urls) {
   const cache = await caches.open(IMAGE_CACHE);
-  await Promise.allSettled(urls.map(async (url) => {
-    if (new URL(url, self.location.href).origin !== self.location.origin) return;
+  const wanted = new Set(urls.map((url) => new URL(url, self.location.href).href));
+
+  await Promise.allSettled([...wanted].map(async (url) => {
+    if (new URL(url).origin !== self.location.origin) return;
     if (await cache.match(url)) return;
     await cache.add(url);
   }));
+
+  // 換過的圖片 (?v= 不同) 或已刪除的地點,舊檔從快取移除
+  const cachedRequests = await cache.keys();
+  await Promise.all(cachedRequests
+    .filter((request) => !wanted.has(request.url))
+    .map((request) => cache.delete(request)));
 }
 
 // 讓背景的快取寫入在回應送出後也能跑完;

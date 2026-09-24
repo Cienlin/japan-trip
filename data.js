@@ -39,7 +39,7 @@ const PLACES = [
     day: null,
     time: null,
     desc: "本次旅程的住宿大本營。位於墨田區押上，走 5 分鐘就是東京晴空塔與押上地鐵站。押上站同時擁有 4 條線 — 半藏門線（直達澀谷、清澄白河）、都營淺草線（直達淺草、銀座、機場）、京成押上線與東武伊勢崎線，機場往返都不用轉車。",
-    images: ["hotel_1.jpg", "hotel_2.jpg"],
+    imageFolder: "SYLA 飯店",
     gmaps: "https://maps.google.com/?q=SYLA+HOTEL+Oshiage",
     transitInfo: null
   },
@@ -55,7 +55,7 @@ const PLACES = [
     day: 1,
     time: "19:30",
     desc: "可以看看第一天晚上要去看看還是有去淺草在順便去",
-    images: ["sensoji_1.jpg", "sensoji_2.jpg"],
+    imageFolder: "淺草寺",
     gmaps: "https://maps.google.com/?q=Sensoji+Temple",
     transitInfo: {
       from: "Chiikawa Land 晴空塔店 (Solamachi)",
@@ -75,7 +75,7 @@ const PLACES = [
     day: 1,
     time: "21:30",
     desc: "必吃炸機跟炸熱狗，可以買回去房間吃",
-    images: ["lawson_1.jpg"],
+    imageFolder: "Lawson 押上店",
     gmaps: "https://maps.google.com/?q=Lawson+Oshiage",
     transitInfo: {
       from: "淺草寺",
@@ -97,7 +97,7 @@ const PLACES = [
     day: 2,
     time: "10:00",
     desc: "10:00 悠閒出門開啟銀座日。位於銀座小巷的精品咖啡店，店內擺著百年盆栽，招牌是手沖精品咖啡與濃縮拿鐵，搭配日式和菓子點心。店小人多，可能要外帶去逛。",
-    images: ["bongen_1.jpg"],
+    imageFolder: "BONGEN COFFEE 銀座",
     gmaps: "https://maps.google.com/?q=BONGEN+COFFEE+Ginza",
     transitInfo: {
       from: "SYLA HOTEL Oshiage",
@@ -117,7 +117,7 @@ const PLACES = [
     day: 2,
     time: "11:15",
     desc: "東京炸豬排前三強！選用高品質林 SPF 豬肉，外皮金黃酥脆、切面粉嫩多汁。桌上有多款高級岩鹽，搭鹽吃能吃出豬肉甘甜。11:00 開店，建議 11:15 前到店排隊，不然要排 1 小時起跳。",
-    images: ["tonkatsu_1.jpg", "tonkatsu_2.jpg"],
+    imageFolder: "とんかつ檍 銀座",
     gmaps: "https://maps.google.com/?q=Tonkatsu+Aoki+Ginza+8-chome",
     transitInfo: {
       from: "BONGEN COFFEE",
@@ -137,7 +137,7 @@ const PLACES = [
     day: 2,
     time: "13:30",
     desc: "你們清單裡「一定要去」的點！全球最大 Uniqlo 旗艦店，12 層樓。特別聯名款、UT 客製化專區、頂樓 Uniqlo Coffee。留 1.5 ~ 2 小時慢慢挑冬裝。",
-    images: ["uniqlo_1.jpg"],
+    imageFolder: "Uniqlo 銀座",
     gmaps: "https://maps.google.com/?q=UNIQLO+Ginza",
     transitInfo: {
       from: "Tonkatsu Aoki",
@@ -157,7 +157,7 @@ const PLACES = [
     day: 2,
     time: "16:00",
     desc: "有樂町高架橋下的精緻咖啡酒吧，外帶「可麗露 Canelé」外皮酥脆、內裡溫潤，被譽為東京可麗露天花板。可以坐下喝杯咖啡休息，也可買 5 個可麗露帶著走。",
-    images: ["canele_1.jpg"],
+    imageFolder: "THE STAND 可麗露",
     gmaps: "https://maps.google.com/?q=THE+STAND+Yurakucho",
     transitInfo: {
       from: "Uniqlo 銀座旗艦店",
@@ -177,7 +177,7 @@ const PLACES = [
     day: 2,
     time: "17:30",
     desc: "來自群馬的百年老店，招牌「鬼紐川寬烏龍麵」寬達 5 公分，麵條 Q 彈超有嚼勁，搭特製芝麻沾醬。17:30 傍晚場開店，避開午餐排隊。是烏龍麵愛好者的朝聖店。",
-    images: ["udon_1.jpg"],
+    imageFolder: "花山烏冬 銀座",
     gmaps: "https://maps.google.com/?q=Godaime+Hanayama+Udon+Ginza",
     transitInfo: {
       from: "THE STAND 可麗露",
@@ -197,7 +197,7 @@ const PLACES = [
     day: 2,
     time: "19:30",
     desc: "東京最強伴手禮大本營。Tokyo Banana、Press Butter Sand 焦糖奶油餅、NY Perfect Cheese 起司條、Calbee+ 現炸薯條、寶可夢中心、寶可夢角色街、拉麵激戰區全在這一棟。5 人分頭掃貨最快。",
-    images: ["subway_1.jpg"],
+    imageFolder: "東京車站一番街",
     gmaps: "https://maps.google.com/?q=Tokyo+Station+First+Avenue",
     transitInfo: {
       from: "Chiikawa Land 東京車站店",
@@ -219,7 +219,7 @@ const PLACES = [
     day: 3,
     time: "10:00",
     desc: "隱身代代木八幡的法式小餐館，招牌「Dutch Baby 荷蘭烤鬆餅」現點現烤，鬆軟餅皮上鋪滿生火腿、布拉塔起司、淋楓糖。08:00 開店、14:00 打烊，平日早去更容易有位。5 人可能要拆桌坐。",
-    images: ["path_1.jpg"],
+    imageFolder: "PATH 荷蘭鬆餅",
     gmaps: "https://maps.google.com/?q=PATH+Yoyogihachiman",
     transitInfo: {
       from: "SYLA HOTEL Oshiage",
@@ -239,7 +239,7 @@ const PLACES = [
     day: 3,
     time: "12:30",
     desc: "**清單上「一定要去」的點！** 新宿最狂運動用品大樓，地下 1 至 8 樓共 9 層。**特意排在平日(週五)來逛，避開週末可怕的結帳與試穿人潮！**",
-    images: ["sports_1.jpg"],
+    imageFolder: "Alpen Tokyo",
     gmaps: "https://maps.google.com/?q=Alpen+Tokyo+Shinjuku",
     transitInfo: {
       from: "PATH 荷蘭鬆餅",
@@ -259,7 +259,7 @@ const PLACES = [
     day: 3,
     time: "13:45",
     desc: "夢幻的主題專賣店「まじかるちいかわストア」！位於新宿 Marui 本館 (新宿丸井 1F)。全店以魔法少女風格打造，是吉伊卡哇粉必朝聖之地。**安排在平日前來，比起週末更能輕鬆進店與選購！** (熱門時段需注意是否有現場整理券或預約制)",
-    images: ["sports_1.jpg"],
+    imageFolder: "魔法少女吉伊卡哇 新宿",
     gmaps: "https://maps.google.com/?q=Shinjuku+Marui+Main+Building",
     transitInfo: {
       from: "Alpen Tokyo",
@@ -279,7 +279,7 @@ const PLACES = [
     day: 3,
     time: "14:30",
     desc: "紐約潮流漢堡東京店。你清單上的『shake shake』就是這家！新宿南口小田急塔 2F，經典 ShackBurger + 東京限定黑芝麻奶昔，平日午段內用位子更充裕。",
-    images: ["burger_1.jpg"],
+    imageFolder: "Shake Shack 新宿",
     gmaps: "https://maps.google.com/?q=Shake+Shack+Shinjuku+Southern+Terrace",
     transitInfo: {
       from: "魔法少女吉伊卡哇專賣店 新宿店",
@@ -299,7 +299,7 @@ const PLACES = [
     day: 3,
     time: "16:30",
     desc: "米其林二星 Florilège 前甜點主廚開的預約制刨冰店。平日時段預約更容易成功！**強烈建議一週前官網預約 5 位**。",
-    images: ["ice_1.jpg"],
+    imageFolder: "あずきとこおり 刨冰",
     gmaps: "https://maps.google.com/?q=Azuki+to+Kouri",
     transitInfo: {
       from: "Shake Shack 新宿",
@@ -319,7 +319,7 @@ const PLACES = [
     day: 3,
     time: "19:30",
     desc: "昭和風情極濃的窄巷居酒屋群！週五夜晚正是下班上班族聚會氣氛最棒的時候，炭火烤雞肉串 + Highball 收尾大男生日最對味。想跑酒吧餐後再走 5 分鐘到黃金街分組體驗。",
-    images: ["izakaya_1.jpg"],
+    imageFolder: "新宿回憶橫丁",
     gmaps: "https://maps.google.com/?q=Omoide+Yokocho+Shinjuku",
     transitInfo: {
       from: "あずきとこおり",
@@ -341,7 +341,7 @@ const PLACES = [
     day: 4,
     time: "10:30",
     desc: "法國時尚品牌 Maison Kitsuné 旗下咖啡廳，木造和風竹林裝潢極有質感。點一杯拿鐵配狐狸餅乾，開啟表參道/青山散步日。",
-    images: ["kitsune_1.jpg"],
+    imageFolder: "Cafe Kitsune 青山",
     gmaps: "https://maps.google.com/?q=Cafe+Kitsune+Aoyama",
     transitInfo: {
       from: "SYLA HOTEL Oshiage",
@@ -361,7 +361,7 @@ const PLACES = [
     day: 4,
     time: "13:00",
     desc: "你清單上的『大阪燒』實際位置！原宿裏通鐵板燒老店，客人自己在鐵板前煎大阪燒、廣島燒、文字燒、炒麵。5 個人圍鐵板一起玩最好玩。",
-    images: ["okonomiyaki_1.jpg"],
+    imageFolder: "原宿大阪燒 やいやい",
     gmaps: "https://maps.app.goo.gl/Gh6o8XyB8696pZx78",
     transitInfo: {
       from: "Café Kitsuné 青山",
@@ -381,7 +381,7 @@ const PLACES = [
     day: 4,
     time: "14:30",
     desc: "位於原宿 Kiddy Land 1 樓的旗艦級吉伊卡哇專賣店！周邊款式極齊全，還有獨家的打卡牆與原宿限定紀念品。吃完原宿大阪燒順路逛極流暢。",
-    images: ["uniqlo_1.jpg"],
+    imageFolder: "Chiikawa 原宿店",
     gmaps: "https://maps.google.com/?q=Kiddy+Land+Harajuku",
     transitInfo: {
       from: "原宿大阪燒 やいやい",
@@ -401,7 +401,7 @@ const PLACES = [
     day: 4,
     time: "16:00",
     desc: "招牌「水果千層蛋糕 Mille-crepes」層次分明，鮮草莓、奇異果、香蕉、哈密瓜配鮮奶油與可麗餅皮，是東京女生（和五個大男生）都愛的下午茶。逛完 Hikarie 直接半藏門線回押上超方便。",
-    images: ["harbs_1.jpg"],
+    imageFolder: "HARBS 澀谷",
     gmaps: "https://maps.google.com/?q=HARBS+Shibuya+Hikarie",
     transitInfo: {
       from: "Chiikawa Land 原宿店",
@@ -421,7 +421,7 @@ const PLACES = [
     day: 4,
     time: "19:00",
     desc: "主打「一人一鍋」的高質感壽喜燒/涮涮鍋，圓弧吧台各人獨立銅鍋，選頂級山形和牛。⚠️ **老闆不吃牛可點豬肉套餐（黑豚 or SPF 豚，一樣鮮嫩）**。強烈建議一週前 Tabelog 或電話預約 5 人吧台位。",
-    images: ["sukiyaki_1.jpg", "sukiyaki_2.jpg"],
+    imageFolder: "山笑ふ 壽喜燒",
     gmaps: "https://maps.google.com/?q=Yamawarau+Omotesando",
     transitInfo: {
       from: "HARBS 澀谷 Hikarie",
@@ -443,7 +443,7 @@ const PLACES = [
     day: 5,
     time: "10:00",
     desc: "清澄白河文青區的法式糕點名店。招牌脆皮泡芙外皮酥脆、卡士達內餡現點現灌，配一杯手沖咖啡體驗慢活早晨。從押上搭半藏門線 3 站直達。",
-    images: ["puff_1.jpg"],
+    imageFolder: "PATISSERIE TEN 泡芙",
     gmaps: "https://maps.google.com/?q=PATISSERIE+TEN+Kiyosumi-shirakawa",
     transitInfo: {
       from: "SYLA HOTEL Oshiage",
@@ -463,7 +463,7 @@ const PLACES = [
     day: 5,
     time: "12:00",
     desc: "淺草 1-32-11 的章魚燒新店，招牌是「章魚燒仙貝三明治」— 兩顆現烤章魚燒夾在章魚燒仙貝之間淋醬 & 美乃滋，創意十足！仲見世通逛完順路吃。",
-    images: ["okonomiyaki_1.jpg"],
+    imageFolder: "淺草章魚燒 蛸兄弟",
     gmaps: "https://maps.google.com/?q=浅草蛸たこ×ころも兄弟",
     transitInfo: {
       from: "PATISSERIE TEN&",
@@ -483,7 +483,7 @@ const PLACES = [
     day: 5,
     time: "12:30",
     desc: "1854 年創業、170 年歷史的和菓子老店！你清單的『大福』就靠這家。招牌粟善哉、麻糬紅豆湯、季節限定豆大福，是仲見世通必吃甜點。",
-    images: ["puff_1.jpg"],
+    imageFolder: "梅園 淺草",
     gmaps: "https://maps.google.com/?q=Umezono+Asakusa",
     transitInfo: {
       from: "章魚燒 蛸兄弟",
@@ -503,7 +503,7 @@ const PLACES = [
     day: 5,
     time: "14:00",
     desc: "入谷小巷內的美式復古 diner，粗絞牛肉漢堡排鐵板現壓、爆汁淋滿起司醬。美式搖滾裝潢很有味道。⚠️ **不吃牛的老闆可點雞肉漢堡或熱狗替代**。",
-    images: ["burger_1.jpg"],
+    imageFolder: "American Diner Andra",
     gmaps: "https://maps.app.goo.gl/uhuaHdVNmjzKpiri8",
     transitInfo: {
       from: "梅園 淺草本店",
@@ -523,7 +523,7 @@ const PLACES = [
     day: 5,
     time: "18:30",
     desc: "東京超有名的精緻川菜館，招牌『水煮魚』魚肉滑嫩、紅油花椒噴香，麻辣過癮。⚠️ **老闆不吃牛沒問題，主打魚料理跟豬料理**。5 人聚餐點大盤菜共享超划算。",
-    images: ["cuiyun_1.jpg"],
+    imageFolder: "翠雲 上野",
     gmaps: "https://maps.app.goo.gl/vJZ7t3rMbehgdnHDA",
     transitInfo: {
       from: "American Diner Andra",
@@ -543,7 +543,7 @@ const PLACES = [
     day: 5,
     time: "21:00",
     desc: "1915 年創業的東京最古老關東煮名店，滿足你清單上的『關東煮』。湯頭每日慢火熬煮，30 多種食材燉煮入味，冬天吃一碗超暖胃。⚠️ 單價偏高（人均 ¥5,000），建議先電話預約。",
-    images: ["oden_1.jpg"],
+    imageFolder: "大多福 關東煮",
     gmaps: "https://maps.google.com/?q=Asakusa+Oden+Otafuku",
     transitInfo: {
       from: "翠雲 上野店",
@@ -568,7 +568,7 @@ const PLACES = [
     day: 1,
     time: "18:00",
     desc: "去晃一下晴空塔，然後我要買及掰卡哇",
-    images: ["uniqlo_1.jpg"],
+    imageFolder: "Chiikawa 晴空塔店",
     gmaps: "https://maps.google.com/?q=Chiikawa+Land+Tokyo+Solamachi",
     transitInfo: {
       from: "SYLA HOTEL Oshiage",
@@ -588,7 +588,7 @@ const PLACES = [
     day: 2,
     time: "19:00",
     desc: "位於東京車站一番街 B1F「東京動漫人物街 (Tokyo Character Street)」內的超人氣吉伊卡哇專賣店。有許多東京車站限定的站長系列、鐵道主題吉伊卡哇周邊，適合在 D2 買伴手禮時一併血拼！",
-    images: ["subway_1.jpg"],
+    imageFolder: "Chiikawa 東京車站店",
     gmaps: "https://maps.google.com/?q=Chiikawa+Land+TOKYO+Station",
     transitInfo: {
       from: "花山烏冬",
@@ -610,7 +610,7 @@ const PLACES = [
     day: null,
     time: null,
     desc: "以創新的「鰻魚骨白湯拉麵」聞名的特色拉麵店，湯底使用鹿兒島高品質鰻魚骨熬製，濃郁鮮美且無腥味。推薦點選「拉麵 + 鰻魚飯」套餐，可以同時享用外酥內嫩的蒲燒鰻魚飯，並將飯倒入剩餘的濃郁麵湯中享用，風味絕佳。*週日公休。",
-    images: ["udon_1.jpg"],
+    imageFolder: "山田的鰻",
     gmaps: "https://maps.app.goo.gl/JQu23KQcmjkVXoaf7",
     transitInfo: null
   },
@@ -624,7 +624,7 @@ const PLACES = [
     day: null,
     time: null,
     desc: "🌟 **推薦候補**：東京市中心的巨型森林神社，鳥居下拍照極美。若 D4 想在原宿多留 1 小時，走 15 分鐘就到，五人拍團體照的絕佳場所。",
-    images: ["sensoji_1.jpg"],
+    imageFolder: "明治神宮",
     gmaps: "https://maps.google.com/?q=Meiji+Jingu",
     transitInfo: null
   },
@@ -638,7 +638,7 @@ const PLACES = [
     day: null,
     time: null,
     desc: "🌟 **推薦候補**：你們興趣裡的動漫電玩男子聖地！Yodobashi Camera 9 層、GiGO 遊戲中心、Super Potato 二手電玩、扭蛋機殿堂。若想加碼可用半天，離 D5 上野只有 2 站。",
-    images: ["subway_1.jpg"],
+    imageFolder: "秋葉原",
     gmaps: "https://maps.google.com/?q=Akihabara+Electric+Town",
     transitInfo: null
   },
@@ -652,7 +652,7 @@ const PLACES = [
     day: null,
     time: null,
     desc: "🌟 **推薦候補**：住飯店旁邊，全世界最高的獨立式電波塔（634m）！天望甲板 350m 高，看整個東京 + 富士山。5 分鐘走到，任何早上有空都可以上去。假日建議 9:00 開場前排隊或買 Fast Ticket。",
-    images: ["subway_1.jpg"],
+    imageFolder: "晴空塔展望台",
     gmaps: "https://maps.google.com/?q=Tokyo+Skytree",
     transitInfo: null
   },

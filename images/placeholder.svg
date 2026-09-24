@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 533">
+  <!-- 沒有圖片的地點顯示這張預設圖 -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e0f2fe"/>
+      <stop offset="1" stop-color="#c7d9ea"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="533" fill="url(#bg)"/>
+  <g fill="none" stroke="#5b7a96" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" transform="translate(320 186)">
+    <rect x="0" y="0" width="160" height="120" rx="16"/>
+    <circle cx="52" cy="40" r="14"/>
+    <path d="M0 100 L55 58 L95 88 L125 66 L160 94"/>
+  </g>
+</svg>
