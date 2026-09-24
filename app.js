@@ -1182,23 +1182,23 @@ document.addEventListener("DOMContentLoaded", () => {
       const totalEl = document.getElementById("res-total-twd");
       totalEl.textContent = `NT$ ${totalTwd.toLocaleString()}`;
 
-      // Update progress bar
-      const percentage = Math.min(100, Math.round((totalTwd / targetBudgetTwd) * 100));
+      // Update progress bar — 顯示實際百分比 (可超過 100%),只有進度條寬度封頂 100%
+      const percentage = Math.round((totalTwd / targetBudgetTwd) * 100);
       document.getElementById("budget-percentage").textContent = `已用 ${percentage}%`;
-      
+
       const fillBar = document.getElementById("budget-progress-fill");
-      fillBar.style.width = `${percentage}%`;
+      fillBar.style.width = `${Math.min(100, percentage)}%`;
 
       // Remove previous color classes
       fillBar.classList.remove("under-budget", "near-budget", "over-budget");
       
-      // Update color based on percentage
-      if (percentage < 80) {
-        fillBar.classList.add("under-budget");
-      } else if (percentage <= 100) {
-        fillBar.classList.add("near-budget");
-      } else {
+      // Update color — 超支用金額判斷,避免 100.4% 四捨五入成 100% 時顏色與超支訊息不一致
+      if (totalTwd > targetBudgetTwd) {
         fillBar.classList.add("over-budget");
+      } else if (percentage < 80) {
+        fillBar.classList.add("under-budget");
+      } else {
+        fillBar.classList.add("near-budget");
       }
 
       // Update status message

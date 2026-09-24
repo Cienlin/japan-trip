@@ -21,7 +21,8 @@
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon.svg">
+  <!-- iOS 不支援 SVG 的 apple-touch-icon,必須用 PNG (180x180、直角、不透明) -->
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="東京行">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -331,7 +332,7 @@
       <div id="map"></div>
 
       <!-- Version + Viewport Debug Badge (方便診斷 iOS PWA viewport bug) -->
-      <div class="version-badge" id="version-badge">v1.1.0</div>
+      <div class="version-badge" id="version-badge">v1.1.1</div>
       
       <!-- Theme & Action Floating Toolbar -->
       <div class="floating-toolbar">
