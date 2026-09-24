@@ -297,6 +297,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function refreshAllPlaces() {
     customPlaces = readJson(STORAGE_KEYS.customPlaces, []);
     placeOverrides = readJson(STORAGE_KEYS.placeOverrides, {});
+    if (pruneRedundantOverrides()) savePlaceOverrides();
 
     const editedDefaults = defaultPlaces
       .filter(p => !placeOverrides[p.id]?.deleted)
@@ -310,6 +311,37 @@ document.addEventListener("DOMContentLoaded", () => {
         return merged;
       });
     allPlaces = [...editedDefaults, ...customPlaces];
+  }
+
+  // 本機修改已經跟共用行程 (data.js) 一樣時自動清掉,例如貼給 Claude 改成共用行程之後;
+  // 地點已從 data.js 移除時,它的本機修改也一併清掉。回傳是否有變動
+  function pruneRedundantOverrides() {
+    let changed = false;
+    Object.keys(placeOverrides).forEach(placeId => {
+      const base = defaultPlaces.find(p => p.id === placeId);
+      const override = placeOverrides[placeId];
+      if (!base) {
+        delete placeOverrides[placeId];
+        changed = true;
+        return;
+      }
+      if (override.deleted) return;
+
+      EDITABLE_FIELDS.forEach(field => {
+        if (!(field in override)) return;
+        const baseValue = field === "time" ? normalizeTime(base.time) : (base[field] ?? null);
+        const value = field === "time" ? normalizeTime(override.time) : (override[field] ?? null);
+        if (value === baseValue) {
+          delete override[field];
+          changed = true;
+        }
+      });
+      if (Object.keys(override).length === 0) {
+        delete placeOverrides[placeId];
+        changed = true;
+      }
+    });
+    return changed;
   }
 
   const isCustomPlace = (placeId) => String(placeId).startsWith("custom_");
