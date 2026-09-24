@@ -34,8 +34,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <!-- Google Material Symbols Outlined -->
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <!-- Google Material Symbols Outlined — 只載入用到的圖示 (全套約 4MB → 子集約 3KB)
+       新增圖示時要把名稱加進 icon_names (需依字母排序) -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=account_balance_wallet,event_note,explore,flight_takeoff,hotel,playlist_add_check,subway,tips_and_updates&display=block" rel="stylesheet" />
   
   <!-- Link Stylesheet -->
   <link rel="stylesheet" href="style.css">
@@ -330,7 +331,7 @@
       <div id="map"></div>
 
       <!-- Version + Viewport Debug Badge (方便診斷 iOS PWA viewport bug) -->
-      <div class="version-badge" id="version-badge">v1.0.9</div>
+      <div class="version-badge" id="version-badge">v1.1.0</div>
       
       <!-- Theme & Action Floating Toolbar -->
       <div class="floating-toolbar">

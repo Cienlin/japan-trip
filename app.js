@@ -320,9 +320,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }).setView([35.6895, 139.755], 12);
 
     // Add Tile Layer (單一 source,主題切換靠 CSS filter,不用重新請求 tile)
+    // crossOrigin:用 CORS 載入 tile,Service Worker 才拿得到可快取的回應 (no-cors 的 opaque 回應無法判斷成功與否)
     activeTileLayer = L.tileLayer(tileUrl, {
       attribution: tileAttribution,
-      maxZoom: 19
+      maxZoom: 19,
+      crossOrigin: true
     }).addTo(map);
 
     // Draw all markers
@@ -1243,6 +1245,16 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').catch((err) => {
       console.warn('Service Worker 註冊失敗:', err);
+    });
+
+    // 預先快取所有景點圖片,旅途中離線也看得到 (SW 只會補抓還沒快取的)
+    navigator.serviceWorker.ready.then((registration) => {
+      if (!registration.active || typeof PLACES === "undefined") return;
+      const imageFiles = new Set(PLACES.flatMap((p) => p.images || []));
+      const urls = [...imageFiles]
+        .filter((img) => !/^https?:\/\//.test(img))
+        .map((img) => new URL(`images/${img}`, location.href).href);
+      registration.active.postMessage({ type: "precache-images", urls });
     });
   });
 }
