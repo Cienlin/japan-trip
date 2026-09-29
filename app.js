@@ -309,7 +309,7 @@ document.addEventListener("DOMContentLoaded", () => {
       hotelCostEl.textContent = `費用總額：${TRIP_METADATA.accommodation.cost}`;
       hotelAgodaLink.href = TRIP_METADATA.accommodation.link;
     }
-    updateTripStatus();
+    tickTripStatus();
 
     // 旅行期間打開 app 直接顯示今天的行程 (在畫地圖與時間軸之前設定,不用重畫)
     const today = getTripNow().day;
@@ -333,7 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initChecklist();
     initBudgetCalculator();
 
-    // F. 每分鐘更新標題狀態與「下一站」;手機上的 app 常常整天不重新載入,從背景切回來時也立即更新
+    // F. 每分鐘檢查跨日與「下一站」;手機上的 app 常常整天不重新載入,從背景切回來時也立即更新
     setInterval(onClockTick, 60000);
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "visible") onClockTick();
@@ -469,9 +469,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const diff = new Date(iso) - Date.now();
 
     if (diff > 0) {
-      const days = Math.floor(diff / DAY_MS);
-      const hours = Math.floor((diff % DAY_MS) / (1000 * 60 * 60));
-      countdownTextEl.textContent = `出發倒數 ${days} 天 ${hours} 小時`;
+      // 時分秒各自放在固定寬度的 span,每秒跳動時徽章寬度不會跟著抖 (內容只有數字,可直接用 innerHTML)
+      // 無條件進位:12:40:05 顯示剩 9 分 55 秒,跟用時鐘心算的結果一致
+      const totalSeconds = Math.ceil(diff / 1000);
+      const num = (n) => `<span class="countdown-num">${String(n).padStart(2, "0")}</span>`;
+      countdownTextEl.innerHTML = `出發倒數 ${Math.floor(totalSeconds / 86400)} 天 ` +
+        `${num(Math.floor((totalSeconds % 86400) / 3600))} 時 ` +
+        `${num(Math.floor((totalSeconds % 3600) / 60))} 分 ${num(totalSeconds % 60)} 秒`;
       return;
     }
 
@@ -497,9 +501,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return next ? next.id : null;
   }
 
-  // 每分鐘與切回 app 時執行
-  function onClockTick() {
+  // 標題狀態每秒更新 (倒數到秒);排在每一秒開頭之後一點點,秒數才不會重複或跳號
+  function tickTripStatus() {
     updateTripStatus();
+    setTimeout(tickTripStatus, 1000 - (Date.now() % 1000) + 20);
+  }
+
+  // 每分鐘與切回 app 時執行:旅行中跨日切換天數、更新「下一站」
+  function onClockTick() {
     const today = getTripNow().day;
     if (isTripDay(today) && today !== autoSelectedDay) {
       // 旅行中跨日 (或隔天才從背景切回來):切到新的一天。同一天內不再切換,尊重手動選的天數

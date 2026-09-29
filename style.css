@@ -199,6 +199,14 @@ body {
   font-size: 0.8rem;
   font-weight: 600;
   text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 倒數的時分秒:固定寬度,數字跳動時整個徽章不會左右抖 */
+.countdown-num {
+  display: inline-block;
+  min-width: 2ch;
+  text-align: center;
 }
 
 /* 出發後 (旅行中顯示今天是 Day 幾、回國後顯示旅程結束) 改用綠色 */
