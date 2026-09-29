@@ -328,6 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // D. Render Itinerary and Directory initial lists
     renderItinerary();
     renderDirectory();
+    renderGuideDayTags();
 
     // E. Initialize Persistence & Calculators
     initChecklist();
@@ -415,7 +416,16 @@ document.addEventListener("DOMContentLoaded", () => {
     refreshAllPlaces();
     renderItinerary();
     renderDirectory();
+    renderGuideDayTags();
     updateMapMarkers();
+  }
+
+  // 行前指南裡的天數標籤 (<span data-day-of="地點 id">):依目前行程 (含這支手機的修改) 填入
+  function renderGuideDayTags() {
+    document.querySelectorAll("[data-day-of]").forEach(el => {
+      const place = allPlaces.find(p => p.id === el.getAttribute("data-day-of"));
+      el.textContent = !place ? "已刪除" : place.day ? `D${place.day}` : "候補";
+    });
   }
 
   // Reusable confirm dialog — replaces native window.confirm() which is ugly and blocks UI on mobile
@@ -1681,37 +1691,55 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Budget & Expense Calculator
+  // 預設值與預算目標都來自 data.js 的 TRIP_METADATA.budget。手機只記住使用者自己改過的欄位,
+  // 沒改過的一律用 data.js 的最新值,之後改機票價格等預設值時大家的手機才會跟著更新
   function initBudgetCalculator() {
-    const calcRateInput = document.getElementById("calc-rate");
-    const calcFlightInput = document.getElementById("calc-flight");
-    const calcPocketInput = document.getElementById("calc-pocket");
-    
-    if (!calcRateInput || !calcFlightInput || !calcPocketInput) return;
+    const inputs = {
+      rate: document.getElementById("calc-rate"),
+      flight: document.getElementById("calc-flight"),
+      pocket: document.getElementById("calc-pocket")
+    };
+    if (!inputs.rate || !inputs.flight || !inputs.pocket) return;
 
-    const hotelPerPersonJpy = TRIP_METADATA?.accommodation?.perPersonJpy ?? 33120;
-    const targetBudgetTwd = 50000;
+    const { budget, accommodation } = TRIP_METADATA;
+    const defaults = { rate: budget.jpyRate, flight: budget.flightTwd, pocket: budget.pocketJpy };
+    const targetBudgetTwd = budget.targetTwd;
+    const hotelPerPersonJpy = accommodation.perPersonJpy;
 
-    // Sync the static "每人分攤住宿" display with the metadata so it can never drift
-    const hotelJpyDisplay = document.getElementById("calc-hotel-jpy");
-    if (hotelJpyDisplay) hotelJpyDisplay.textContent = hotelPerPersonJpy.toLocaleString();
+    document.getElementById("calc-hotel-jpy").textContent = hotelPerPersonJpy.toLocaleString();
+    document.getElementById("budget-target").textContent = targetBudgetTwd.toLocaleString();
 
-    // Load saved inputs
-    const savedInputs = readJson(STORAGE_KEYS.budget, {}) || {};
-    if (savedInputs.rate !== undefined) calcRateInput.value = savedInputs.rate;
-    if (savedInputs.flight !== undefined) calcFlightInput.value = savedInputs.flight;
-    if (savedInputs.pocket !== undefined) calcPocketInput.value = savedInputs.pocket;
+    // v1.4.1 以前一打開就把三個欄位全部存起來 (沒有 v 標記),其中跟當時預設值相同的其實沒人改過,轉換時清掉
+    const LEGACY_DEFAULTS = { rate: 0.22, flight: 14424, pocket: 50000 };
+    const stored = readJson(STORAGE_KEYS.budget, {}) || {};
+    const edits = {};
+    Object.keys(defaults).forEach(key => {
+      const value = stored[key];
+      if (typeof value !== "number" || value === defaults[key]) return;
+      if (stored.v !== 2 && value === LEGACY_DEFAULTS[key]) return;
+      edits[key] = value;
+    });
+    const saveEdits = () => {
+      localStorage.setItem(STORAGE_KEYS.budget, JSON.stringify({ v: 2, ...edits }));
+    };
+    saveEdits();
+
+    Object.entries(inputs).forEach(([key, input]) => {
+      input.value = edits[key] ?? defaults[key];
+      // 改回預設值或清空的欄位不記,下次打開用 data.js 的值
+      input.addEventListener("input", () => {
+        const value = parseFloat(input.value);
+        if (Number.isFinite(value) && value !== defaults[key]) edits[key] = value;
+        else delete edits[key];
+        saveEdits();
+        calculate();
+      });
+    });
 
     function calculate() {
-      const rate = parseFloat(calcRateInput.value) || 0.22;
-      const flightTwd = parseFloat(calcFlightInput.value) || 0;
-      const pocketJpy = parseFloat(calcPocketInput.value) || 0;
-
-      // Save to LocalStorage
-      localStorage.setItem(STORAGE_KEYS.budget, JSON.stringify({
-        rate,
-        flight: flightTwd,
-        pocket: pocketJpy
-      }));
+      const rate = parseFloat(inputs.rate.value) || defaults.rate;
+      const flightTwd = parseFloat(inputs.flight.value) || 0;
+      const pocketJpy = parseFloat(inputs.pocket.value) || 0;
 
       // Calculate conversions
       const hotelTwd = Math.round(hotelPerPersonJpy * rate);
@@ -1753,24 +1781,19 @@ document.addEventListener("DOMContentLoaded", () => {
       if (diff > 0) {
         if (percentage < 80) {
           statusMsgEl.classList.add("under");
-          statusMsgEl.textContent = `預算非常充裕！距離目標 NT$ 50,000 還剩餘 NT$ ${diff.toLocaleString()}。`;
+          statusMsgEl.textContent = `預算非常充裕！距離目標 NT$ ${targetBudgetTwd.toLocaleString()} 還剩餘 NT$ ${diff.toLocaleString()}。`;
         } else {
           statusMsgEl.classList.add("warn");
           statusMsgEl.textContent = `預算尚在控制範圍內，距離目標還剩餘 NT$ ${diff.toLocaleString()}，請注意後續購物花費。`;
         }
       } else if (diff === 0) {
         statusMsgEl.classList.add("warn");
-        statusMsgEl.textContent = `估計總花費剛好達到 NT$ 50,000 預算目標！`;
+        statusMsgEl.textContent = `估計總花費剛好達到 NT$ ${targetBudgetTwd.toLocaleString()} 預算目標！`;
       } else {
         statusMsgEl.classList.add("danger");
         statusMsgEl.textContent = `⚠️ 注意：估計總花費已超支 NT$ ${Math.abs(diff).toLocaleString()}！建議微調日幣預算或購物計畫。`;
       }
     }
-
-    // Bind event listeners
-    calcRateInput.addEventListener("input", calculate);
-    calcFlightInput.addEventListener("input", calculate);
-    calcPocketInput.addEventListener("input", calculate);
 
     // Initial calculation
     calculate();

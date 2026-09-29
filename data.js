@@ -27,6 +27,14 @@ const TRIP_METADATA = {
     perPersonJpy: 33120,
     link: "https://www.agoda.com/zh-tw/syla-hotel-oshiage/hotel/all/tokyo-jp.html?checkIn=2026-12-9&los=5",
     coordinates: [35.7108, 139.8150]
+  },
+  // 預算計算機 (行前指南) 的預設值,每人計算。
+  // 手機只記住使用者自己改過的欄位,沒改過的一律用這裡的最新值,改了之後大家的手機都會更新
+  budget: {
+    targetTwd: 50000,  // 預算目標 (台幣)
+    flightTwd: 14424,  // 機票 (台幣)
+    jpyRate: 0.22,     // 匯率 (台幣 / 1 日圓)
+    pocketJpy: 50000   // 餐飲、購物零用預算 (日圓)
   }
 };
 

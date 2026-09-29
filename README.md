@@ -35,7 +35,9 @@
 所有人看到的行程都來自 `data.js`，修改後 push 到 GitHub，大家打開 app 就會更新。
 
 - **行程、地點**：照 [`docs/行程變更範本.md`](docs/行程變更範本.md) 填寫，或直接用 app 的「複製變更內容」，交給 Claude 修改
-- **地點照片**：放進 `images/<地點名稱>/`，用數字命名（`1.jpg`、`2.jpg`⋯，第 1 張是封面），再執行 `node tools/sync-images.js` 更新圖片清單
+- **地點照片**：放進 `images/<地點名稱>/`，用數字命名（`1.jpg`、`2.jpg`⋯，第 1 張是封面），再執行 `node tools/sync-images.js` 更新圖片清單（也會提醒不同地點用了同一張照片）
+- **檢查資料**：改完 `data.js` 或 `index.html` 後執行 `node tools/check-data.js`，會檢查交通說明是否對應前一站、時間與天數格式、座標、預算欄位等
+- **預算計算機**：預設值與預算目標在 `data.js` 的 `TRIP_METADATA.budget`，改了之後大家的手機都會更新（自己在手機上改過的欄位除外）
 
 ## 📁 檔案結構
 
@@ -49,6 +51,7 @@
 | `image-manifest.js` | 圖片清單，由 `tools/sync-images.js` 自動產生，不要手動修改 |
 | `sw.js` | Service Worker（離線快取與自動更新） |
 | `manifest.json`、`icon.svg`、`*.png` | PWA 設定與 app 圖示 |
+| `tools/` | `sync-images.js`（產生圖片清單）、`check-data.js`（檢查行程資料） |
 | `docs/` | 行程變更範本與行程筆記 |
 
 ## 🔄 改版注意事項

@@ -189,26 +189,27 @@
               <span class="material-symbols-outlined logistics-icon">account_balance_wallet</span>
               <h3>旅程預算與花費計算機 (5人分攤)</h3>
             </div>
+            <!-- 預設值、預算目標與計算結果都由 app.js 依 data.js 的 TRIP_METADATA 填入 -->
             <div class="budget-calculator">
               <div class="calc-row">
                 <div class="calc-group">
                   <label for="calc-rate">日幣匯率 (台幣/1日圓)</label>
-                  <input type="number" id="calc-rate" value="0.22" step="0.0001" min="0.01">
+                  <input type="number" id="calc-rate" step="0.0001" min="0.01">
                 </div>
                 <div class="calc-group">
                   <label for="calc-flight">個人機票費用 (台幣)</label>
-                  <input type="number" id="calc-flight" value="14424" step="1" min="0">
+                  <input type="number" id="calc-flight" step="1" min="0">
                 </div>
               </div>
               
               <div class="calc-row">
                 <div class="calc-group">
                   <label for="calc-pocket">個人日幣預算 (餐飲/購物)</label>
-                  <input type="number" id="calc-pocket" value="50000" step="1000" min="0">
+                  <input type="number" id="calc-pocket" step="1000" min="0">
                 </div>
                 <div class="calc-group">
                   <label>每人分攤住宿 (日圓)</label>
-                  <div class="calc-static-value"><span id="calc-hotel-jpy">33,120</span> JPY</div>
+                  <div class="calc-static-value"><span id="calc-hotel-jpy"></span> JPY</div>
                 </div>
               </div>
 
@@ -217,33 +218,31 @@
               <div class="calc-results">
                 <div class="result-item">
                   <span>機票花費 (台幣)</span>
-                  <strong id="res-flight-twd">NT$ 14,424</strong>
+                  <strong id="res-flight-twd"></strong>
                 </div>
                 <div class="result-item">
                   <span>住宿分攤 (台幣)</span>
-                  <strong id="res-hotel-twd">NT$ 7,286</strong>
+                  <strong id="res-hotel-twd"></strong>
                 </div>
                 <div class="result-item">
                   <span>零用預算 (台幣)</span>
-                  <strong id="res-pocket-twd">NT$ 11,000</strong>
+                  <strong id="res-pocket-twd"></strong>
                 </div>
                 <div class="result-item total">
                   <span>估計每人總花費</span>
-                  <strong id="res-total-twd">NT$ 32,710</strong>
+                  <strong id="res-total-twd"></strong>
                 </div>
               </div>
 
               <div class="budget-progress-container">
                 <div class="budget-progress-header">
-                  <span>預算目標：NT$ 50,000</span>
-                  <span id="budget-percentage">已用 65%</span>
+                  <span>預算目標：NT$ <span id="budget-target"></span></span>
+                  <span id="budget-percentage"></span>
                 </div>
                 <div class="budget-progress-bar">
                   <div class="budget-progress-fill" id="budget-progress-fill"></div>
                 </div>
-                <div class="budget-status-msg" id="budget-status-msg">
-                  預算非常充裕！還有 NT$ 17,290 可供使用。
-                </div>
+                <div class="budget-status-msg" id="budget-status-msg"></div>
               </div>
             </div>
           </div>
@@ -266,13 +265,14 @@
           </div>
           
           <!-- Trip Recommendations & Notices -->
+          <!-- 天數標籤 (span 的 data-day-of 屬性寫地點 id) 由 app.js 依目前行程自動填入;句子裡提到的天數 (例如「離 D5 上野只 2 站」) 仍要手動更新 -->
           <div class="logistics-card">
             <div class="card-header">
               <span class="material-symbols-outlined logistics-icon">tips_and_updates</span>
               <h3>旅遊建議 & 重要提醒</h3>
             </div>
             <div class="subway-advice">
-              <p><strong>🥩 老闆不吃牛備註</strong>：D4 山笑ふ 壽喜燒可改點豬肉套餐（黑豚或 SPF 豚）；D5 翠雲上野店主打魚 & 豬；D5 American Diner Andra 可改點雞肉漢堡或熱狗。其他餐點都無牛肉相關。</p>
+              <p><strong>🥩 老闆不吃牛備註</strong>：<span data-day-of="yamawarau_omotesando">D4</span> 山笑ふ 壽喜燒可改點豬肉套餐（黑豚或 SPF 豚）；<span data-day-of="cuiyun_ueno">D5</span> 翠雲上野店主打魚 & 豬；<span data-day-of="american_diner_andra">D5</span> American Diner Andra 可改點雞肉漢堡或熱狗。其他餐點都無牛肉相關。</p>
 
               <p class="tips-heading"><strong>🎯 加碼景點推薦 (未排入 timeline、地圖上可見隨時加入)</strong>：</p>
               <ul>
@@ -284,25 +284,25 @@
 
               <p class="tips-heading"><strong>🛍️ 吉伊卡哇 (Chiikawa) 專賣店入場提醒</strong>：</p>
               <ul>
-                <li><strong>晴空塔店 (D1)</strong>：飯店步行 3 分鐘，位於 Solamachi 3F，適合第一天抵達時逛。</li>
-                <li><strong>東京車站店 (D2)</strong>：東京車站一番街 B1F 角色街，可購買站長/鐵道限定款。</li>
-                <li><strong>原宿店 (D4)</strong>：Kiddy Land 1F 旗艦店，與原宿/表參道行程完美串聯。</li>
-                <li><strong>新宿魔法少女店 (D3)</strong>：位於新宿 Marui 本館 1F，為特殊主題限定店。</li>
+                <li><strong>晴空塔店 (<span data-day-of="chiikawa_solamachi">D1</span>)</strong>：飯店步行 3 分鐘，位於 Solamachi 3F，適合第一天抵達時逛。</li>
+                <li><strong>東京車站店 (<span data-day-of="chiikawa_tokyo_station">D2</span>)</strong>：東京車站一番街 B1F 角色街，可購買站長/鐵道限定款。</li>
+                <li><strong>原宿店 (<span data-day-of="chiikawa_harajuku">D4</span>)</strong>：Kiddy Land 1F 旗艦店，與原宿/表參道行程完美串聯。</li>
+                <li><strong>新宿魔法少女店 (<span data-day-of="magical_chiikawa_shinjuku">D3</span>)</strong>：位於新宿 Marui 本館 1F，為特殊主題限定店。</li>
                 <li>⚠️ <strong>熱門商品發售日或週末可能需要事先於 LivePocket 官網抽籤預約或現場領取整理券</strong>，建議出發前至 <a href="https://chiikawa-info.jp/" target="_blank" class="text-link">Chiikawa Info 官網</a> 或 Twitter (@chiikawa_land) 確認當日入場規則。</li>
               </ul>
 
               <p class="tips-heading"><strong>📞 需事前預約的餐廳</strong>：</p>
               <ul>
-                <li><strong>山笑ふ 壽喜燒 (D4)</strong>：一週前 Tabelog 或電話訂 5 人吧台位</li>
-                <li><strong>大多福 關東煮 (D5)</strong>：老店建議打電話訂位，人均約 ¥5,000</li>
+                <li><strong>山笑ふ 壽喜燒 (<span data-day-of="yamawarau_omotesando">D4</span>)</strong>：一週前 Tabelog 或電話訂 5 人吧台位</li>
+                <li><strong>大多福 關東煮 (<span data-day-of="otafuku_oden">D5</span>)</strong>：老店建議打電話訂位，人均約 ¥5,000</li>
               </ul>
 
               <p class="tips-heading"><strong>⏰ 開門時間敏感的店</strong>：</p>
               <ul>
-                <li><strong>Tonkatsu 檍 (D2)</strong>：11:00 開店，11:15 前排到隊，不然要 1 小時起</li>
-                <li><strong>PATH 荷蘭鬆餅 (D3)</strong>：14:00 關午市，最好 10:00 前到</li>
-                <li><strong>五代目花山烏冬 (D2)</strong>：晚市 17:30 開，若想吃午市 10:30 領號碼牌可搶首發</li>
-                <li><strong>PATISSERIE TEN& (D5)</strong>：11:00 開店、19:00 打烊，早去有位子坐</li>
+                <li><strong>Tonkatsu 檍 (<span data-day-of="tonkatsu_aoki">D2</span>)</strong>：11:00 開店，11:15 前排到隊，不然要 1 小時起</li>
+                <li><strong>PATH 荷蘭鬆餅 (<span data-day-of="path_yoyogi">D3</span>)</strong>：14:00 關午市，最好 10:00 前到</li>
+                <li><strong>五代目花山烏冬 (<span data-day-of="hanayama_udon">D2</span>)</strong>：晚市 17:30 開，若想吃午市 10:30 領號碼牌可搶首發</li>
+                <li><strong>PATISSERIE TEN& (<span data-day-of="patisserie_ten">D5</span>)</strong>：11:00 開店、19:00 打烊，早去有位子坐</li>
               </ul>
 
               <p class="tips-heading"><strong>🐟 建議加碼：築地場外市場早市海鮮丼</strong> — 5 人早起殺去築地吃鮪魚丼、玉子燒現烤，若捨得早起可取代 D5 上午的 PATISSERIE TEN。</p>
@@ -340,7 +340,7 @@
       <div id="map"></div>
 
       <!-- Version + Viewport Debug Badge (方便診斷 iOS PWA viewport bug) -->
-      <div class="version-badge" id="version-badge">v1.4.1</div>
+      <div class="version-badge" id="version-badge">v1.4.2</div>
       
       <!-- Theme & Action Floating Toolbar -->
       <div class="floating-toolbar">

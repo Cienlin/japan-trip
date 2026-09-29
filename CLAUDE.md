@@ -13,7 +13,7 @@
 
 ## 行程資料 `data.js`
 
-- `TRIP_METADATA`：機票、飯店、預算用數字
+- `TRIP_METADATA`：機票、飯店、`startDate`（Day 1 的日期，旅行中用來判斷今天是 Day 幾）、`budget`（預算計算機的預設值與預算目標；app.js 與 index.html 不寫死這些數字，改這裡就好）
 - `PLACES`：每個地點的欄位
   - `category`：`food` / `shopping` / `sightseeing` / `lodging` / `transport`
   - `day`：1～6；`null` 代表候補（不排入行程）
@@ -24,13 +24,16 @@
 - **移動、新增、刪除地點時，前後站的 `transitInfo` 都要跟著檢查**：後一站的 `from` 與交通說明要改成新的前一站。App 會比對「前一站」與 data.js 的原始行程，不一致時改顯示 Google Maps 路線，所以 data.js 本身要保持正確
 - 飯店 `syla_hotel`（app.js 的 `HOTEL_ID`）是 Day 1 19:00 的 check-in 站，也是每天路線的起點，Day 6 以外會回到飯店
 - 回程機場 `narita_airport_return` 是 Day 6 的最後一站
+- **改完 `data.js` 或 `index.html` 後執行 `node tools/check-data.js`**：檢查交通說明的 `from` 是否對應實際前一站、時間格式、天數、座標、預算欄位、行前指南的天數標籤等。❌ 錯誤要修好再 commit，⚠️ 提醒要確認
 
 ## 使用者的修改需求
 
 - 使用者會貼上 `## 本次變更`（格式見 `docs/行程變更範本.md`），可能來自範本，也可能來自 app 的「複製變更內容」
 - **使用者寫的名稱與介紹照原樣輸入，不要修正錯字**（使用者明確要求過）
 - 貼上的內容可能包含上次已套用的項目，套用前先比對 data.js，只處理新的部分，並告訴使用者哪些已經套用過
-- **行前指南的文字寫死在 `index.html`**（不在 data.js）：刪除地點或改天數時，要一併檢查並更新 index.html 裡提到它的地方
+- **行前指南的文字寫死在 `index.html`**（不在 data.js）：
+  - 對應到特定地點的天數標籤寫成 `<span data-day-of="地點 id">D2</span>`，app 會依行程自動填入（候補顯示「候補」）；新增這類標籤時照這個寫法
+  - 句子裡提到的天數與內容（例如「離 D5 上野只 2 站」）不會自動更新：刪除地點或改天數時，要一併檢查並更新 index.html 裡提到它的地方
 - 交通說明如果是依地圖推估的，要請使用者用 Google Maps 確認
 
 ## 照片
@@ -44,6 +47,7 @@
 
 - `app.js`：整個 app 包在一個 `DOMContentLoaded` 裡。儲存名稱統一用 `STORAGE_KEYS`，讀取 localStorage 用 `readJson()`，飯店用 `HOTEL_ID`
 - **本機編輯**：內建地點的修改存成 localStorage 的 override（`EDITABLE_FIELDS`），自訂地點存在 `tokyo_trip_custom_places`，都只存在各自的手機。開啟時會自動清掉「已經跟 data.js 相同」的 override，以及「data.js 已有同名同座標地點」的自訂地點
+- 預算計算機只把使用者改過的欄位存進 localStorage（`{ v: 2, ... }`），沒改過的一律用 `TRIP_METADATA.budget` 的最新值
 - 使用者輸入的內容一律經過 `escapeHtml()` / `safeUrl()`，圖片網址用 `cssEscapeUrl()`
 - `sw.js`：頁面檔案採 network-first（`cache: 'no-cache'`，3 秒逾時才用快取）；圖片與地圖圖磚採 cache-first；新增頁面要用到的檔案時，記得加進 `SHELL_ASSETS`
 - CSS：`:hover` 規則要包在 `@media (hover: hover)` 裡（避免手機點擊後 hover 卡住）；顏色用 `:root` 與 `body.theme-dark` 的變數；用 `hidden` 屬性隱藏元素

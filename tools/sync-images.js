@@ -20,6 +20,8 @@ const { PLACES } = new Function(`${dataSrc}; return { PLACES };`)();
 const manifest = {};
 const warnings = [];
 const usedFolders = new Set();
+// 內容指紋 → 檔案路徑:找出不同資料夾裡內容相同的照片 (通常是先放的暫用圖)
+const filesByHash = new Map();
 
 for (const place of PLACES) {
   if (!place.imageFolder) {
@@ -56,8 +58,15 @@ for (const place of PLACES) {
       warnings.push(`檔案偏大 ${sizeKb}KB(建議寬度縮到 1200px):images/${place.imageFolder}/${f}`);
     }
     const hash = crypto.createHash("md5").update(content).digest("hex").slice(0, 8);
+    if (!filesByHash.has(hash)) filesByHash.set(hash, new Set());
+    filesByHash.get(hash).add(`images/${place.imageFolder}/${f}`);
     return `${place.imageFolder}/${f}?v=${hash}`;
   });
+}
+
+// 多個地點共用同一個資料夾不算重複 (同一個檔案只記一次)
+for (const files of filesByHash.values()) {
+  if (files.size > 1) warnings.push(`這幾張照片內容相同(可能是暫用圖):${[...files].join("、")}`);
 }
 
 for (const entry of fs.readdirSync(IMAGE_DIR, { withFileTypes: true })) {
