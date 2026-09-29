@@ -77,6 +77,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // 最後選取的地點 (地圖 marker 與時間軸都會標示)
   let selectedPlaceId = null;
 
+  // 旅行期間:時間軸上標示的「下一站」,以及已經自動切換過的天數 (同一天只自動切一次)
+  let nextStopId = null;
+  let autoSelectedDay = null;
+
+  // 我的位置:最近一次取得的位置、地圖上的藍點與精確度範圍
+  let userLocation = null;
+  let userLocationLayers = null;
+  let isWatchingLocation = false;
+  let centerOnNextFix = false;
+
   // DOM Elements
   const tripTitleEl = document.getElementById("trip-title");
   const tripDatesEl = document.getElementById("trip-dates");
@@ -108,7 +118,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const resetViewBtn = document.getElementById("reset-view-btn");
   const zoomInBtn = document.getElementById("zoom-in-btn");
   const zoomOutBtn = document.getElementById("zoom-out-btn");
-  
+  const locateMeBtn = document.getElementById("locate-me-btn");
+  const mapToastEl = document.getElementById("map-toast");
+
   // Drawer Elements
   const detailDrawer = document.getElementById("detail-drawer");
   const closeDrawerBtn = document.getElementById("close-drawer-btn");
@@ -193,6 +205,27 @@ document.addEventListener("DOMContentLoaded", () => {
     return ta.localeCompare(tb);
   };
 
+  // 旅行期間的「今天」與「下一站」一律用日本時間計算 (手機可能還停在台灣時區)
+  const JST_OFFSET_MS = 9 * 60 * 60 * 1000;
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  const WEEKDAYS = ["日", "一", "二", "三", "四", "五", "六"];
+  const TRIP_START_DATE = (typeof TRIP_METADATA !== "undefined" && TRIP_METADATA.startDate) || "2026-12-09";
+  const LAST_TRIP_DAY = Math.max(1, ...defaultPlaces.map(p => p.day ?? 0));
+
+  // 現在是行程第幾天 (出發前小於 1、回國後大於最後一天),以及日本的日期與時間 "HH:MM"
+  const getTripNow = (now = Date.now()) => {
+    const jst = new Date(now + JST_OFFSET_MS); // 位移後用 UTC getter 讀出來的就是日本時間
+    const jstMidnight = Date.UTC(jst.getUTCFullYear(), jst.getUTCMonth(), jst.getUTCDate());
+    const pad = (n) => String(n).padStart(2, "0");
+    return {
+      day: Math.round((jstMidnight - Date.parse(TRIP_START_DATE)) / DAY_MS) + 1,
+      dateLabel: `${jst.getUTCMonth() + 1}/${jst.getUTCDate()} (${WEEKDAYS[jst.getUTCDay()]})`,
+      time: `${pad(jst.getUTCHours())}:${pad(jst.getUTCMinutes())}`
+    };
+  };
+
+  const isTripDay = (day) => day >= 1 && day <= LAST_TRIP_DAY;
+
   // 每一站的前一站 id,當天第一站的前一站是飯店。{ [placeId]: prevPlaceId }
   // dayStart 的地點 (例如抵達日的機場) 是當天起點,沒有前一站
   const buildPrevStopMap = (places) => {
@@ -275,10 +308,16 @@ document.addEventListener("DOMContentLoaded", () => {
       hotelAddressEl.textContent = TRIP_METADATA.accommodation.address;
       hotelCostEl.textContent = `費用總額：${TRIP_METADATA.accommodation.cost}`;
       hotelAgodaLink.href = TRIP_METADATA.accommodation.link;
-      
-      initCountdown();
-      setInterval(initCountdown, 60000); // Update every minute
     }
+    updateTripStatus();
+
+    // 旅行期間打開 app 直接顯示今天的行程 (在畫地圖與時間軸之前設定,不用重畫)
+    const today = getTripNow().day;
+    if (isTripDay(today)) {
+      autoSelectedDay = today;
+      activeDay = String(today);
+    }
+    syncDayButtons();
 
     // B. Initialize Leaflet Map
     initMap();
@@ -293,6 +332,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // E. Initialize Persistence & Calculators
     initChecklist();
     initBudgetCalculator();
+
+    // F. 每分鐘更新標題狀態與「下一站」;手機上的 app 常常整天不重新載入,從背景切回來時也立即更新
+    setInterval(onClockTick, 60000);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") onClockTick();
+    });
   }
 
   // 讀取本機的自訂地點與內建地點修改,合併成 allPlaces
@@ -417,24 +462,53 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.toggle("theme-light", theme === 'light');
   }
 
-  // Countdown timer
-  function initCountdown() {
+  // 標題的狀態:出發前倒數;旅行中顯示今天是 Day 幾;回國後顯示旅程結束
+  function updateTripStatus() {
     const iso = (typeof TRIP_METADATA !== "undefined" && TRIP_METADATA.departureISO)
-      || "2026-12-09T12:50:00+09:00";
-    const targetDate = new Date(iso);
-    const now = new Date();
-    const diff = targetDate - now;
+      || "2026-12-09T12:50:00+08:00";
+    const diff = new Date(iso) - Date.now();
 
-    if (diff <= 0) {
-      countdownTextEl.textContent = "已出航！✈️";
-      countdownTextEl.style.borderColor = "#10b981";
-      countdownTextEl.style.color = "#10b981";
+    if (diff > 0) {
+      const days = Math.floor(diff / DAY_MS);
+      const hours = Math.floor((diff % DAY_MS) / (1000 * 60 * 60));
+      countdownTextEl.textContent = `出發倒數 ${days} 天 ${hours} 小時`;
       return;
     }
 
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    countdownTextEl.textContent = `出發倒數 ${days} 天 ${hours} 小時`;
+    const { day, dateLabel } = getTripNow();
+    countdownTextEl.closest(".countdown-badge")?.classList.add("is-traveling");
+    if (isTripDay(day)) {
+      countdownTextEl.textContent = `今天 Day ${day}・${dateLabel}`;
+    } else if (day > LAST_TRIP_DAY) {
+      countdownTextEl.textContent = "旅程結束，歡迎回家 🏠";
+    } else {
+      countdownTextEl.textContent = "已出航！✈️";
+    }
+  }
+
+  // 旅行中今天的下一站:今天行程裡時間還沒過的第一站 (今天都走完了就沒有)
+  function getNextStopId() {
+    const { day, time } = getTripNow();
+    if (!isTripDay(day)) return null;
+    const next = allPlaces
+      .filter(p => p.day === day && normalizeTime(p.time))
+      .sort(sortByDayTime)
+      .find(p => normalizeTime(p.time) >= time);
+    return next ? next.id : null;
+  }
+
+  // 每分鐘與切回 app 時執行
+  function onClockTick() {
+    updateTripStatus();
+    const today = getTripNow().day;
+    if (isTripDay(today) && today !== autoSelectedDay) {
+      // 旅行中跨日 (或隔天才從背景切回來):切到新的一天。同一天內不再切換,尊重手動選的天數
+      autoSelectedDay = today;
+      setActiveDay(today);
+    } else {
+      syncDayButtons();
+      if (getNextStopId() !== nextStopId) renderItinerary();
+    }
   }
 
   // Initialize Map
@@ -454,8 +528,88 @@ document.addEventListener("DOMContentLoaded", () => {
       crossOrigin: true
     }).addTo(map);
 
+    // 我的位置:藍點放在自己的 pane,蓋在地點 marker (600) 之上、popup (700) 之下
+    map.createPane("userLocation").style.zIndex = 620;
+    map.on("locationfound", onLocationFound);
+    map.on("locationerror", onLocationError);
+
     // Draw all markers
     updateMapMarkers();
+  }
+
+  // ==========================================
+  // 我的位置 (旅途中在地圖上顯示自己在哪裡)
+  // ==========================================
+
+  // 第一次按:開始持續定位,取得位置後移到那裡;之後再按:移回目前位置
+  function locateMe() {
+    // 手機上收起抽屜與展開的 sidebar,才看得到藍點與提示
+    if (window.innerWidth <= 768) {
+      closeDrawer();
+      sidebar.classList.remove("expanded");
+    }
+
+    if (userLocation) {
+      map.setView(userLocation, Math.max(map.getZoom(), 16), { animate: true });
+    } else {
+      centerOnNextFix = true;
+      locateMeBtn.classList.add("is-locating");
+    }
+    if (!isWatchingLocation) {
+      isWatchingLocation = true;
+      map.locate({ watch: true, enableHighAccuracy: true, timeout: 15000 });
+    }
+  }
+
+  function onLocationFound(e) {
+    userLocation = e.latlng;
+    if (userLocationLayers) {
+      userLocationLayers.accuracy.setLatLng(e.latlng).setRadius(e.accuracy);
+      userLocationLayers.dot.setLatLng(e.latlng);
+    } else {
+      const common = { pane: "userLocation", interactive: false };
+      userLocationLayers = {
+        accuracy: L.circle(e.latlng, { ...common, radius: e.accuracy, className: "user-location-accuracy" }).addTo(map),
+        dot: L.circleMarker(e.latlng, { ...common, radius: 7, className: "user-location-dot" }).addTo(map)
+      };
+    }
+    locateMeBtn.classList.remove("is-locating");
+    locateMeBtn.classList.add("is-active");
+
+    if (centerOnNextFix) {
+      centerOnNextFix = false;
+      map.setView(e.latlng, Math.max(map.getZoom(), 16), { animate: true });
+    }
+  }
+
+  // e.code:0 不支援、1 沒有權限、2 訊號不佳、3 逾時
+  function onLocationError(e) {
+    // 已經有位置時,偶爾的逾時或訊號不佳 (例如在地下街) 不中斷追蹤,保留最後的位置
+    if (userLocation && e.code !== 1) return;
+
+    map.stopLocate();
+    isWatchingLocation = false;
+    centerOnNextFix = false;
+    userLocation = null;
+    if (userLocationLayers) {
+      map.removeLayer(userLocationLayers.accuracy);
+      map.removeLayer(userLocationLayers.dot);
+      userLocationLayers = null;
+    }
+    locateMeBtn.classList.remove("is-locating", "is-active");
+
+    showToast(e.code === 1
+      ? "無法取得位置：請允許這個 app 使用定位（iPhone：設定 → 隱私權與安全性 → 定位服務 → Safari 網站）"
+      : "目前無法取得位置，請稍後再試", 6000);
+  }
+
+  // 地圖上的短暫提示
+  let toastTimer = null;
+  function showToast(message, duration = 4000) {
+    mapToastEl.textContent = message;
+    mapToastEl.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { mapToastEl.hidden = true; }, duration);
   }
 
   // ==========================================
@@ -528,6 +682,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 6b. Custom zoom buttons (取代 Leaflet 預設左上角 zoom control)
     zoomInBtn.addEventListener("click", () => map.zoomIn());
     zoomOutBtn.addEventListener("click", () => map.zoomOut());
+    locateMeBtn.addEventListener("click", locateMe);
 
     // 7. Locate Hotel button in Logistics
     hotelLocateBtn.addEventListener("click", () => {
@@ -894,6 +1049,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Render Itinerary Timeline
   function renderItinerary() {
     renderLocalChangesBanner();
+    nextStopId = getNextStopId();
     timelineContainer.innerHTML = "";
     if (allPlaces.length === 0) return;
 
@@ -936,6 +1092,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="timeline-card-header">
             <span class="timeline-time-badge">${escapeHtml(timeText || "自訂行程")}</span>
             <div class="timeline-card-header-right">
+              ${place.id === nextStopId ? `<span class="next-stop-tag">下一站</span>` : ""}
               ${localTagMarkup(place.id)}
               <span class="timeline-day-tag">Day ${escapeHtml(place.day)}</span>
               ${deleteBtnHtml}
@@ -1263,11 +1420,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // 切換天數篩選:同步按鈕狀態、時間軸與地圖 marker
   function setActiveDay(day) {
     activeDay = String(day);
-    document.querySelectorAll(".day-btn").forEach(b => {
-      b.classList.toggle("active", b.getAttribute("data-day") === activeDay);
-    });
+    syncDayButtons();
     renderItinerary();
     updateMapMarkers();
+  }
+
+  // 天數按鈕:標示目前選取的天數,以及旅行中的今天 (小圓點)
+  function syncDayButtons() {
+    const today = String(getTripNow().day);
+    document.querySelectorAll(".day-btn").forEach(b => {
+      const day = b.getAttribute("data-day");
+      b.classList.toggle("active", day === activeDay);
+      b.classList.toggle("is-today", day === today);
+    });
   }
 
   // Map Locate and Zoom on a place
@@ -1429,37 +1594,37 @@ document.addEventListener("DOMContentLoaded", () => {
     // Open Drawer
     detailDrawer.classList.add("open");
 
-    // Hook Carousel Event Listeners (if multiple images)
+    // 輪播:手指左右滑 (CSS scroll-snap),或點箭頭、圓點切換;圓點跟著捲動位置更新
     if (imageList.length > 1) {
       const slidesContainer = document.getElementById("carousel-slides-container");
-      const indicatorDots = document.querySelectorAll(".indicator");
-      
-      const updateCarousel = (index) => {
-        currentSlideIndex = index;
-        slidesContainer.style.transform = `translateX(-${index * 100}%)`;
-        
-        indicatorDots.forEach((dot, dIdx) => {
-          dot.classList.toggle("active", dIdx === index);
-        });
+      const indicatorDots = drawerContentBody.querySelectorAll(".indicator");
+      const slideCount = imageList.length;
+
+      const goToSlide = (index) => {
+        slidesContainer.scrollTo({ left: index * slidesContainer.clientWidth, behavior: "smooth" });
       };
 
+      slidesContainer.addEventListener("scroll", () => {
+        const width = slidesContainer.clientWidth;
+        if (!width) return;
+        const index = Math.round(slidesContainer.scrollLeft / width);
+        if (index === currentSlideIndex) return;
+        currentSlideIndex = index;
+        indicatorDots.forEach((dot, dIdx) => dot.classList.toggle("active", dIdx === index));
+      }, { passive: true });
+
       document.getElementById("carousel-prev").addEventListener("click", () => {
-        let prevIndex = currentSlideIndex - 1;
-        if (prevIndex < 0) prevIndex = imageList.length - 1;
-        updateCarousel(prevIndex);
+        goToSlide((currentSlideIndex - 1 + slideCount) % slideCount);
       });
 
       document.getElementById("carousel-next").addEventListener("click", () => {
-        let nextIndex = currentSlideIndex + 1;
-        if (nextIndex >= imageList.length) nextIndex = 0;
-        updateCarousel(nextIndex);
+        goToSlide((currentSlideIndex + 1) % slideCount);
       });
 
       document.getElementById("carousel-indicators-container").addEventListener("click", (e) => {
         const dot = e.target.closest(".indicator");
         if (!dot) return;
-        const targetIdx = parseInt(dot.getAttribute("data-idx"));
-        updateCarousel(targetIdx);
+        goToSlide(parseInt(dot.getAttribute("data-idx"), 10));
       });
     }
 

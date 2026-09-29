@@ -340,7 +340,7 @@
       <div id="map"></div>
 
       <!-- Version + Viewport Debug Badge (方便診斷 iOS PWA viewport bug) -->
-      <div class="version-badge" id="version-badge">v1.3.7</div>
+      <div class="version-badge" id="version-badge">v1.4.0</div>
       
       <!-- Theme & Action Floating Toolbar -->
       <div class="floating-toolbar">
@@ -357,7 +357,13 @@
         <button id="zoom-out-btn" class="float-btn" title="縮小" aria-label="縮小地圖">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
+        <button id="locate-me-btn" class="float-btn" title="顯示我的位置" aria-label="顯示我的位置">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/><line x1="12" y1="1" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="1" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="23" y2="12"/></svg>
+        </button>
       </div>
+
+      <!-- 地圖上的短暫提示 (例如無法取得位置),app.js showToast -->
+      <div class="map-toast" id="map-toast" role="status" hidden></div>
       
       <!-- Detail Slide-up/Drawer Panel -->
       <div class="detail-drawer" id="detail-drawer" role="dialog" aria-modal="false" aria-labelledby="drawer-content-body">

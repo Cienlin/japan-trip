@@ -2,8 +2,10 @@ const TRIP_METADATA = {
   title: "東京冬日 5 人行 🇯🇵",
   dates: "2026/12/9 ~ 12/14 (六天五夜)",
   peopleCount: 5,
-  // ISO 起飛時間 — 用於倒數計時,單一資料源
-  departureISO: "2026-12-09T12:50:00+09:00",
+  // ISO 起飛時間 (桃園機場,台灣時間 +08:00) — 用於倒數計時,單一資料源
+  departureISO: "2026-12-09T12:50:00+08:00",
+  // Day 1 的日期 (日本時間):旅行期間用來判斷今天是 Day 幾
+  startDate: "2026-12-09",
   flightDetails: {
     arrival: {
       date: "12/9 (週三)",

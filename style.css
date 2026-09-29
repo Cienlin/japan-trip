@@ -58,6 +58,9 @@
   --status-warn-text: #c2410c;
   --status-danger-text: #dc2626;
 
+  /* 地圖上的我的位置 (藍點) */
+  --user-location: #2563eb;
+
   --scrollbar-thumb: #cbd5e1;
   --glass-blur: blur(12px); /* 必須是 filter function,不能只寫 12px,否則 backdrop-filter 整條失效 */
   --glass-border: 1px solid rgba(255, 255, 255, 0.5);
@@ -89,6 +92,8 @@ body.theme-dark {
   --status-ok-text: #6ee7b7;
   --status-warn-text: #fdba74;
   --status-danger-text: #fca5a5;
+
+  --user-location: #60a5fa;
 
   --scrollbar-thumb: #475569;
   --glass-border: 1px solid rgba(255, 255, 255, 0.08);
@@ -194,6 +199,13 @@ body {
   font-size: 0.8rem;
   font-weight: 600;
   text-align: center;
+}
+
+/* 出發後 (旅行中顯示今天是 Day 幾、回國後顯示旅程結束) 改用綠色 */
+.countdown-badge.is-traveling {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: var(--status-ok-text);
+  color: var(--status-ok-text);
 }
 
 /* Tab Navigation */
@@ -339,6 +351,19 @@ body.theme-dark .tab-btn.active {
   font-weight: 600;
   white-space: nowrap;
   transition: all var(--transition-fast);
+  position: relative;
+}
+
+/* 旅行中的今天:天數按鈕右上角加小圓點 */
+.day-btn.is-today::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--status-ok-text);
 }
 
 @media (hover: hover) {
@@ -617,6 +642,21 @@ body.theme-dark .transit-icon-wrapper {
 
 body.theme-dark .local-tag {
   background: rgba(251, 146, 60, 0.18);
+}
+
+/* 旅行中今天的「下一站」標籤 */
+.next-stop-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(16, 185, 129, 0.14);
+  color: var(--status-ok-text);
+  white-space: nowrap;
+}
+
+body.theme-dark .next-stop-tag {
+  background: rgba(110, 231, 183, 0.16);
 }
 
 /* ==========================================
@@ -1163,6 +1203,55 @@ body.theme-dark .leaflet-control-attribution {
   height: 20px;
 }
 
+/* 我的位置按鈕:定位中閃爍,取得位置後改用藍點的顏色 */
+.float-btn.is-active {
+  color: var(--user-location);
+}
+
+.float-btn.is-locating svg {
+  animation: locating-pulse 1s ease-in-out infinite;
+}
+
+@keyframes locating-pulse {
+  50% { opacity: 0.3; }
+}
+
+/* 地圖上的我的位置:藍點 + 精確度範圍 (Leaflet 畫的 SVG,CSS 會蓋過它設定的顏色屬性) */
+.user-location-dot {
+  fill: var(--user-location);
+  fill-opacity: 1;
+  stroke: #fff;
+  stroke-opacity: 1;
+  stroke-width: 3;
+}
+
+.user-location-accuracy {
+  fill: var(--user-location);
+  fill-opacity: 0.12;
+  stroke: var(--user-location);
+  stroke-opacity: 0.4;
+  stroke-width: 1;
+}
+
+/* 地圖上的短暫提示 (手機版的位置見下方 max-width: 768px) */
+.map-toast {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 10px 16px;
+  border-radius: var(--border-radius-md);
+  background: var(--text-main);
+  color: var(--text-inverse);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  box-shadow: var(--shadow-lg);
+  z-index: 40;
+  pointer-events: none;
+}
+
 /* 主題切換圖示由 body class 決定,不靠 JS inline style,開啟時才不會先閃錯的圖示 */
 .icon-moon,
 body.theme-dark .icon-sun {
@@ -1325,10 +1414,19 @@ body.theme-dark .close-drawer-btn {
   background: #000;
 }
 
+/* 用 scroll-snap 讓手機可以左右滑;箭頭與圓點由 app.js 捲動到指定張數 */
 .carousel-slides {
   display: flex;
   height: 100%;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.carousel-slides::-webkit-scrollbar {
+  display: none;
 }
 
 .carousel-slide {
@@ -1336,6 +1434,8 @@ body.theme-dark .close-drawer-btn {
   height: 100%;
   background-size: cover;
   background-position: center;
+  scroll-snap-align: start;
+  scroll-snap-stop: always; /* 快速滑動也一次只換一張 */
 }
 
 .carousel-control {
@@ -1621,6 +1721,11 @@ body.theme-dark .close-drawer-btn {
   .version-badge {
     top: calc(14px + env(safe-area-inset-top, 0px));
     left: calc(14px + env(safe-area-inset-left, 0px));
+  }
+
+  /* 提示放在底部 sidebar (64px) 上方 */
+  .map-toast {
+    bottom: calc(64px + 16px);
   }
 
   /* Bottom Navigation Sheet (Sidebar) — 錨定到 .app-container 底部
