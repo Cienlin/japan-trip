@@ -134,3 +134,6 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Claude Code 本機設定（各台電腦不同，不進 repo）
+.claude/settings.local.json
