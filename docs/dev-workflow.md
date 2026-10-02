@@ -12,7 +12,7 @@
 ## 0. 開工前 (每次 session 開頭)
 
 - [ ] **`git pull`** — 使用者在公司與家裡兩台電腦輪流修改 <!-- 本專案 -->
-- [ ] 載入專案記憶 / 背景資訊（`CLAUDE.md` 會自動載入；上次進度看 `openspec/changes/` 與 `git log --oneline -10`） <!-- 本專案 -->
+- [ ] 載入專案記憶 / 背景資訊（`CLAUDE.md` 會自動載入；上次進度看 `docs/roadmap.md`、`openspec/changes/` 與 `git log --oneline -10`；待改善項目看 `docs/backlog.md`；名詞看 `GLOSSARY.md`） <!-- 本專案 -->
 - [ ] **讀完這份 workflow** (你正在做的事)
 - [ ] `git status` 看有無 uncommitted
 - [ ] `ls openspec/changes/` 看有無 in-flight change (只該有 archive/、若有其他資料夾表示未完成的 change)
@@ -57,7 +57,9 @@
 - 拍板結果進 Stage 1 explore 當輸入
 
 <!-- 本專案 -->
-本專案的「舊 code」是 `app.js`、`data.js`、`sw.js`、`tools/check-data.js`；拍板後的結果寫成 `openspec/specs/` 的基準規格。
+本專案的「舊 code」是 `app.js`、`data.js`、`sw.js`、`tools/check-data.js`；拍板後的結果寫成 `openspec/specs/` 的基準規格（2026-10-01 已完成）。
+- 規格寫「應該怎麼運作」的刻意規則；程式跟規格不一致的地方，在規格裡註明並記在 `docs/backlog.md`
+- 重構時先維持現在的行為，要修正某一項時再依 backlog 處理
 
 ---
 
@@ -138,7 +140,7 @@
 - Security / authz / data migration → 至少 xhigh 或 ultra
 - 一般 refactor → medium 夠
 - Findings 要 **verify premise 再套用**:reviewer 的判斷本身可能錯 — 套用或拒絕前，先分清楚它是根據實際 code / baseline 查證過的、還是推測
-- **All findings triaged (fixed / rejected with reason / deferred to backlog)** 再進 Stage 5
+- **All findings triaged (fixed / rejected with reason / deferred to backlog)** 再進 Stage 5（本專案的 backlog 是 `docs/backlog.md`） <!-- 本專案 -->
 
 ---
 

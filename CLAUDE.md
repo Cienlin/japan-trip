@@ -11,6 +11,7 @@
 - **commit 訊息**：繁體中文，前綴 `fix:` / `feat:` / `data:` / `docs:` / `refactor:`，最後一行列出版號
 - **在 Windows 的 Git Bash 裡**，heredoc 或 `node -e` 內的反斜線會被吃掉：含正規表示式的腳本請先寫成檔案再執行
 - **開發流程**：每次開工先讀 `docs/dev-workflow.md`，依它的「任務分類」決定走哪條路。改行程資料、照片、行前指南文字屬於 Quick fix，照本檔流程即可；新功能、資料格式變更、重構走 OpenSpec（`/opsx:*`）與 Matt Pocock skills（skills 在 `.claude/skills/`，`openspec` 指令每台電腦要各自安裝，見該檔 §0）
+- **App 發展路線圖**：各階段（Phase 0～5）與目前進度在 `docs/roadmap.md`，進度有變時要更新它
 
 ## 行程資料 `data.js`
 
