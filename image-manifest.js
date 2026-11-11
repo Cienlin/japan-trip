@@ -30,5 +30,11 @@ const PLACE_IMAGES = {
   "yamada_unagi": ["山田的鰻/1.jpg?v=c57b531e"],
   "meiji_jingu": ["明治神宮/1.jpg?v=3d40f367"],
   "akihabara": ["秋葉原/1.jpg?v=49c2462a"],
-  "tokyo_skytree": ["晴空塔展望台/1.jpg?v=49c2462a"]
+  "tokyo_skytree": ["晴空塔展望台/1.jpg?v=49c2462a"],
+  "eifukuen_shinjuku": [],
+  "negishi_yurakucho": [],
+  "pokemon_center_shibuya": [],
+  "taco_bell_shibuya": [],
+  "kameari_ryotsu": [],
+  "jingu_gaien_ginkgo": []
 };
