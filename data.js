@@ -120,26 +120,6 @@ const PLACES = [
 
   // ==================== DAY 2 (12/10 週四) — 銀座 + 東京車站 ====================
   {
-    id: "bongen_coffee",
-    name: "BONGEN COFFEE 盆栽咖啡 銀座",
-    englishName: "BONGENCOFFEE Ginza (盆源珈琲)",
-    category: "food",
-    lat: 35.6711,
-    lng: 139.7708,
-    day: 2,
-    time: "10:00",
-    desc: "10:00 悠閒出門開啟銀座日。位於銀座小巷的精品咖啡店，店內擺著百年盆栽，招牌是手沖精品咖啡與濃縮拿鐵，搭配日式和菓子點心。店小人多，可能要外帶去逛。",
-    imageFolder: "BONGEN COFFEE 銀座",
-    gmaps: "https://maps.google.com/?q=BONGEN+COFFEE+Ginza",
-    transitInfo: {
-      from: "SYLA HOTEL Oshiage",
-      method: "subway",
-      line: "都營淺草線 (押上 → 東銀座)",
-      duration: 20,
-      details: "10:00 押上站搭都營淺草線直達東銀座站（7 站、13 分鐘），A7 出口步行 5 分鐘。"
-    }
-  },
-  {
     id: "tonkatsu_aoki",
     name: "とんかつ檍 銀座 8 丁目店",
     englishName: "Tonkatsu Aoki Ginza 8-chome (とんかつ檍)",
@@ -152,11 +132,11 @@ const PLACES = [
     imageFolder: "とんかつ檍 銀座",
     gmaps: "https://maps.google.com/?q=Tonkatsu+Aoki+Ginza+8-chome",
     transitInfo: {
-      from: "BONGEN COFFEE",
-      method: "walk",
-      line: "徒步 (Walk 1.0km)",
-      duration: 13,
-      details: "沿銀座中央通往南步行約 1 公里抵達銀座 8 丁目，店在地下室。"
+      from: "SYLA HOTEL Oshiage",
+      method: "subway",
+      line: "都營淺草線 (押上 → 新橋)",
+      duration: 25,
+      details: "10:45 押上站搭都營淺草線直達新橋站（約 17 分鐘），出站往銀座方向步行約 5 分鐘到銀座 8 丁目，店在地下室。"
     }
   },
   {
@@ -240,27 +220,7 @@ const PLACES = [
     }
   },
 
-  // ==================== DAY 3 (12/11 週五, 平日) — 代代木八幡 + 新宿 ====================
-  {
-    id: "path_yoyogi",
-    name: "PATH 荷蘭鬆餅早餐 代代木八幡",
-    englishName: "PATH (パス) Yoyogi-Hachiman",
-    category: "food",
-    lat: 35.6688,
-    lng: 139.6899,
-    day: 3,
-    time: "10:00",
-    desc: "隱身代代木八幡的法式小餐館，招牌「Dutch Baby 荷蘭烤鬆餅」現點現烤，鬆軟餅皮上鋪滿生火腿、布拉塔起司、淋楓糖。08:00 開店、14:00 打烊，平日早去更容易有位。5 人可能要拆桌坐。",
-    imageFolder: "PATH 荷蘭鬆餅",
-    gmaps: "https://maps.google.com/?q=PATH+Yoyogihachiman",
-    transitInfo: {
-      from: "SYLA HOTEL Oshiage",
-      method: "subway",
-      line: "半藏門線 → 千代田線",
-      duration: 40,
-      details: "09:00 押上站搭半藏門線至表參道，轉千代田線至代代木公園站，八幡口步行 3 分鐘。"
-    }
-  },
+  // ==================== DAY 3 (12/11 週五, 平日) — 新宿 ====================
   {
     id: "alpen_tokyo",
     name: "Alpen Tokyo 體育用品旗艦",
@@ -274,11 +234,11 @@ const PLACES = [
     imageFolder: "Alpen Tokyo",
     gmaps: "https://maps.google.com/?q=Alpen+Tokyo+Shinjuku",
     transitInfo: {
-      from: "PATH 荷蘭鬆餅",
+      from: "SYLA HOTEL Oshiage",
       method: "subway",
-      line: "小田急線 / 千代田線 (代代木八幡 → 新宿)",
-      duration: 15,
-      details: "代代木八幡站搭小田急線 2 站至新宿站（4 分鐘），東口步行 4 分鐘至新宿三丁目方向。"
+      line: "半藏門線 → 都營新宿線 (押上 → 新宿三丁目)",
+      duration: 35,
+      details: "11:55 押上站搭半藏門線至九段下站（約 16 分鐘），轉都營新宿線至新宿三丁目站（約 8 分鐘），出站往新宿站東口方向步行約 7 分鐘。"
     }
   },
   {
@@ -444,7 +404,7 @@ const PLACES = [
     }
   },
 
-  // ==================== DAY 5 (12/13 週日) — 清澄白河 + 淺草 + 入谷 + 上野 ====================
+  // ==================== DAY 5 (12/13 週日) — 清澄白河 + 淺草 + 入谷 ====================
   {
     id: "patisserie_ten",
     name: "PATISSERIE TEN& 泡芙 清澄白河",
@@ -526,26 +486,6 @@ const PLACES = [
     }
   },
   {
-    id: "cuiyun_ueno",
-    name: "水煮魚 翠雲 上野店",
-    englishName: "Cuiyun Ueno (翠雲 上野店)",
-    category: "food",
-    lat: 35.7084,
-    lng: 139.7735,
-    day: 5,
-    time: "18:30",
-    desc: "東京超有名的精緻川菜館，招牌『水煮魚』魚肉滑嫩、紅油花椒噴香，麻辣過癮。⚠️ **老闆不吃牛沒問題，主打魚料理跟豬料理**。5 人聚餐點大盤菜共享超划算。",
-    imageFolder: "翠雲 上野",
-    gmaps: "https://maps.app.goo.gl/vJZ7t3rMbehgdnHDA",
-    transitInfo: {
-      from: "American Diner Andra",
-      method: "walk",
-      line: "徒步 (Walk 900m) 至上野",
-      duration: 12,
-      details: "從入谷沿昭和通往南走約 900 公尺至上野站不忍口一帶。"
-    }
-  },
-  {
     id: "otafuku_oden",
     name: "淺草大多福 關東煮",
     englishName: "Asakusa Oden Otafuku (浅草 大多福)",
@@ -558,11 +498,11 @@ const PLACES = [
     imageFolder: "大多福 關東煮",
     gmaps: "https://maps.google.com/?q=Asakusa+Oden+Otafuku",
     transitInfo: {
-      from: "翠雲 上野店",
-      method: "subway",
-      line: "東京 Metro 銀座線 (上野 → 淺草)",
-      duration: 15,
-      details: "上野站搭銀座線 3 站至淺草（5 分鐘），出站往北步行 8 分鐘至千束大多福。吃完直接叫計程車回押上約 ¥1,200。"
+      from: "American Diner Andra",
+      method: "walk",
+      line: "徒步 (Walk 約 1.4km)",
+      duration: 18,
+      details: "從 American Diner Andra 往東北步行約 1.4 公里到千束的大多福；不想走可以搭計程車（約 5 分鐘）。吃完直接叫計程車回押上約 ¥1,200。"
     }
   },
 
@@ -669,7 +609,7 @@ const PLACES = [
     lng: 139.7731,
     day: null,
     time: null,
-    desc: "🌟 **推薦候補**：你們興趣裡的動漫電玩男子聖地！Yodobashi Camera 9 層、GiGO 遊戲中心、Super Potato 二手電玩、扭蛋機殿堂。若想加碼可用半天，離 D5 上野只有 2 站。",
+    desc: "🌟 **推薦候補**：你們興趣裡的動漫電玩男子聖地！Yodobashi Camera 9 層、GiGO 遊戲中心、Super Potato 二手電玩、扭蛋機殿堂。若想加碼可用半天，離 D5 入谷只有 3 站（日比谷線）。",
     imageFolder: "秋葉原",
     gmaps: "https://maps.google.com/?q=Akihabara+Electric+Town",
     transitInfo: null
