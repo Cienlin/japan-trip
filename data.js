@@ -78,26 +78,6 @@ const PLACES = [
     transitInfo: null
   },
   {
-    id: "sensoji_night",
-    name: "淺草寺",
-    englishName: "Senso-ji Temple (浅草寺) — Night Visit",
-    category: "sightseeing",
-    lat: 35.7148,
-    lng: 139.7967,
-    day: 1,
-    time: "20:45",
-    desc: "可以看看第一天晚上要去看看還是有去淺草在順便去",
-    imageFolder: "淺草寺",
-    gmaps: "https://maps.google.com/?q=Sensoji+Temple",
-    transitInfo: {
-      from: "Chiikawa Land 晴空塔店 (Solamachi)",
-      method: "subway",
-      line: "都營淺草線 (押上 → 淺草)",
-      duration: 10,
-      details: "逛完 Solamachi，約 20:30 押上站搭都營淺草線 2 站至淺草站（3 分鐘），A4 出口步行 5 分鐘抵達雷門。"
-    }
-  },
-  {
     id: "lawson_oshiage",
     name: "Lawson 押上店 (第一晚宵夜)",
     englishName: "Lawson Oshiage",
@@ -110,11 +90,11 @@ const PLACES = [
     imageFolder: "Lawson 押上店",
     gmaps: "https://maps.google.com/?q=Lawson+Oshiage",
     transitInfo: {
-      from: "淺草寺",
-      method: "subway",
-      line: "都營淺草線 (淺草 → 押上)",
-      duration: 10,
-      details: "淺草站搭都營淺草線回押上，出站 Lawson 就在飯店旁。"
+      from: "Chiikawa Land 晴空塔店 (Solamachi)",
+      method: "walk",
+      line: "徒步 (Walk 250m)",
+      duration: 4,
+      details: "逛完 Solamachi 往飯店方向走回來，Lawson 就在飯店旁。"
     }
   },
 
@@ -404,7 +384,27 @@ const PLACES = [
     }
   },
 
-  // ==================== DAY 5 (12/13 週日) — 清澄白河 + 淺草 + 入谷 ====================
+  // ==================== DAY 5 (12/13 週日) — 晴空塔 + 清澄白河 + 淺草 + 入谷 ====================
+  {
+    id: "tokyo_skytree",
+    name: "東京晴空塔 天望展望台",
+    englishName: "Tokyo Skytree Tembo Deck",
+    category: "sightseeing",
+    lat: 35.7101,
+    lng: 139.8107,
+    day: 5,
+    time: "09:00",
+    desc: "住飯店旁邊，全世界最高的獨立式電波塔（634m）！天望甲板 350m 高，看整個東京 + 富士山。週末 9:00 開門（平日 10:00），D5 是週日，開門就上去人比較少；也可以先買 Fast Ticket 免排隊。",
+    imageFolder: "晴空塔展望台",
+    gmaps: "https://maps.google.com/?q=Tokyo+Skytree",
+    transitInfo: {
+      from: "SYLA HOTEL Oshiage",
+      method: "walk",
+      line: "徒步 (Walk 400m)",
+      duration: 5,
+      details: "從飯店步行約 5 分鐘到晴空塔，4F 是天望甲板的售票、入口樓層。"
+    }
+  },
   {
     id: "patisserie_ten",
     name: "PATISSERIE TEN& 泡芙 清澄白河",
@@ -418,11 +418,31 @@ const PLACES = [
     imageFolder: "PATISSERIE TEN 泡芙",
     gmaps: "https://maps.google.com/?q=PATISSERIE+TEN+Kiyosumi-shirakawa",
     transitInfo: {
-      from: "SYLA HOTEL Oshiage",
+      from: "東京晴空塔",
       method: "subway",
       line: "半藏門線 (押上 → 清澄白河)",
       duration: 12,
-      details: "09:45 押上站搭半藏門線直達清澄白河站（3 站、6 分鐘），B2 出口步行 5 分鐘。"
+      details: "從晴空塔走到押上站，搭半藏門線直達清澄白河站（3 站、6 分鐘），B2 出口步行 5 分鐘。"
+    }
+  },
+  {
+    id: "sensoji_night",
+    name: "淺草寺",
+    englishName: "Senso-ji Temple (浅草寺) & Kaminarimon (雷門)",
+    category: "sightseeing",
+    lat: 35.7148,
+    lng: 139.7967,
+    day: 5,
+    time: "10:45",
+    desc: "可以看看第一天晚上要去看看還是有去淺草在順便去",
+    imageFolder: "淺草寺",
+    gmaps: "https://maps.google.com/?q=Sensoji+Temple",
+    transitInfo: {
+      from: "PATISSERIE TEN&",
+      method: "subway",
+      line: "半藏門線 → 銀座線 (清澄白河 → 淺草)",
+      duration: 25,
+      details: "清澄白河搭半藏門線到三越前，轉東京 Metro 銀座線到淺草站（約 20 分鐘），出站步行 2 分鐘到雷門，穿過仲見世通到淺草寺。"
     }
   },
   {
@@ -438,11 +458,11 @@ const PLACES = [
     imageFolder: "淺草章魚燒 蛸兄弟",
     gmaps: "https://maps.google.com/?q=浅草蛸たこ×ころも兄弟",
     transitInfo: {
-      from: "PATISSERIE TEN&",
-      method: "subway",
-      line: "半藏門線 → 銀座線 (清澄白河 → 淺草)",
-      duration: 25,
-      details: "清澄白河搭半藏門線回押上，轉東京 Metro 銀座線至淺草站；或搭大江戶線至藏前轉都營淺草線至淺草。"
+      from: "淺草寺",
+      method: "walk",
+      line: "徒步 (Walk 400m)",
+      duration: 6,
+      details: "參拜完從淺草寺往雷門方向走回來，章魚燒店在雷門西側一帶。"
     }
   },
   {
@@ -612,20 +632,6 @@ const PLACES = [
     desc: "🌟 **推薦候補**：你們興趣裡的動漫電玩男子聖地！Yodobashi Camera 9 層、GiGO 遊戲中心、Super Potato 二手電玩、扭蛋機殿堂。若想加碼可用半天，離 D5 入谷只有 3 站（日比谷線）。",
     imageFolder: "秋葉原",
     gmaps: "https://maps.google.com/?q=Akihabara+Electric+Town",
-    transitInfo: null
-  },
-  {
-    id: "tokyo_skytree",
-    name: "東京晴空塔 天望展望台 (推薦景點)",
-    englishName: "Tokyo Skytree Tembo Deck",
-    category: "sightseeing",
-    lat: 35.7101,
-    lng: 139.8107,
-    day: null,
-    time: null,
-    desc: "🌟 **推薦候補**：住飯店旁邊，全世界最高的獨立式電波塔（634m）！天望甲板 350m 高，看整個東京 + 富士山。5 分鐘走到，任何早上有空都可以上去。假日建議 9:00 開場前排隊或買 Fast Ticket。",
-    imageFolder: "晴空塔展望台",
-    gmaps: "https://maps.google.com/?q=Tokyo+Skytree",
     transitInfo: null
   },
   {
