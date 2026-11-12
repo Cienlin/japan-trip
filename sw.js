@@ -3,11 +3,13 @@
 //   - App shell (HTML/CSS/JS/manifest/icon):network-first,3 秒逾時或離線才用快取
 //     → 有網路時一開就是最新版,不用再靠手動改版號才能更新
 //   - 景點圖片:cache-first,頁面載入後由 app.js 通知預先快取全部圖片
-//   - 地圖圖磚:cache-first,上限 MAX_TILES 張(旅途中省流量、離線也看得到看過的區域)
+//   - 備用底圖 (OpenStreetMap) 圖磚:cache-first,上限 MAX_TILES 張(旅途中省流量、離線也看得到看過的區域)
+//   - Google 底圖 (tile.googleapis.com):不攔截,交給瀏覽器照 Cache-Control 處理
+//     (Google 規定不得自行儲存圖磚,所以不放進 App 的快取)
 //   - 其他跨源 (Leaflet CDN、Google Fonts):stale-while-revalidate
 //   圖片 / 圖磚 / CDN 快取名稱固定,改版不會被清掉
 
-const VERSION = 'v1.4.6';
+const VERSION = 'v1.4.7';
 const SHELL_CACHE = `tokyo-shell-${VERSION}`;
 const IMAGE_CACHE = 'tokyo-images';
 const TILE_CACHE = 'tokyo-tiles';
@@ -107,6 +109,9 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(cacheFirst(event, TILE_CACHE, trimTiles));
     return;
   }
+
+  // Google 底圖的圖磚與版權文字:不攔截 (見檔頭說明)
+  if (url.hostname === 'tile.googleapis.com') return;
 
   event.respondWith(staleWhileRevalidate(event, CDN_CACHE));
 });

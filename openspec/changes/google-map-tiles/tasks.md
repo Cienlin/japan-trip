@@ -8,8 +8,8 @@
 
 ## 2. 測試頁
 
-- [ ] 2.1 建立 `map-test.html` 與 `map-test.js`：Leaflet 加 `data.js`，用圓點畫出所有地點與 D5 路線；按鈕切換地名「日文（zh-TW）／英日並列（en-US）」、字「一般（2x + highDpi，tileSize 256）／兩倍字（4x + highDpi，tileSize 512、zoomOffset -1）」、主題「淺色／深色」；顯示 Google logo、版權文字，以及診斷資訊（建立通行碼的結果、HTTP 狀態與錯誤訊息、`tileWidth`、圖磚成功／失敗次數）。不加進 `SHELL_ASSETS`。驗證：`node --check map-test.js` 通過，App 的檔案都沒有改到
-- [ ] 2.2 更新版號（`sw.js` 的 `VERSION` 與 `index.html` 的 `#version-badge`），commit 並 push。驗證：兩處版號一致，`git status` 乾淨，已推到 `origin/main`
+- [x] 2.1 建立 `map-test.html` 與 `map-test.js`：Leaflet 加 `data.js`，用圓點畫出所有地點與 D5 路線；按鈕切換地名「日文（zh-TW）／英日並列（en-US）」、字「一般（2x + highDpi，tileSize 256）／兩倍字（4x + highDpi，tileSize 512、zoomOffset -1）」、主題「淺色／深色」；顯示 Google logo、版權文字，以及診斷資訊（建立通行碼的結果、HTTP 狀態與錯誤訊息、`tileWidth`、圖磚成功／失敗次數）。不加進 `SHELL_ASSETS`。驗證：`node --check map-test.js` 通過，App 的檔案都沒有改到
+- [x] 2.2 更新版號（`sw.js` 的 `VERSION` 與 `index.html` 的 `#version-badge`），commit 並 push。驗證：兩處版號一致，`git status` 乾淨，已推到 `origin/main`
 - [ ] 2.3 給使用者手機測試清單，涵蓋各種組合、預期畫面、出問題時要截診斷資訊。由使用者決定正式版的地名語言與字的大小。驗證：使用者回報測試結果與選擇；有錯誤時先修好，再重測
 
 ## 3. 底圖判斷邏輯（純函式與測試）
@@ -35,7 +35,7 @@
   驗證：`node --check app.js`，並逐一對照 design 第 5 點每個退回條件的程式路徑
 - [ ] 4.2 深色主題：夜間 `styles` 常數；`applyTheme()` 在 Google 底圖使用中時，換成對應樣式的圖層，失敗就退回。`style.css` 的反轉選擇器改成只對 `#map.basemap-osm` 生效。驗證：`node --check app.js`，grep 確認反轉規則只剩 `basemap-osm` 的選擇器
 - [ ] 4.3 Google logo 控制項（左下角、高度 18px、`alt="Google Maps"`、深淺色各用 1.2 選的檔案）；`moveend` 後等 500ms 更新版權文字，失敗時保留上一次的內容；手機版的 `.leaflet-bottom` 移到分頁列上方（64px 加 safe area）。驗證：`node --check app.js`，CSS 規則在手機版的 media query 裡
-- [ ] 4.4 `sw.js`：`tile.googleapis.com` 的請求不攔截；更新檔頭的策略註解。驗證：`node --check sw.js`，並確認 Google 請求不會進到 `staleWhileRevalidate`
+- [x] 4.4 `sw.js`：`tile.googleapis.com` 的請求不攔截；更新檔頭的策略註解。驗證：`node --check sw.js`，並確認 Google 請求不會進到 `staleWhileRevalidate`
 - [ ] 4.5 文件：
   - `CLAUDE.md` 的「App 架構重點」補上底圖規則：Google 底圖、退回備用底圖、金鑰限制、不快取 Google 圖磚、`basemap.js` 與測試
   - `README.md` 補上檔案結構，以及 Google Cloud 的每日上限、旅行後停用與下次旅行重新啟用的方式
