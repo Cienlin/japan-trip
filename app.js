@@ -1952,9 +1952,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const { budget, accommodation } = TRIP_METADATA;
     const defaults = { rate: budget.jpyRate, flight: budget.flightTwd, pocket: budget.pocketJpy };
     const targetBudgetTwd = budget.targetTwd;
-    const hotelPerPersonJpy = accommodation.perPersonJpy;
+    // 住宿是已付款的台幣金額,不隨匯率變動 (匯率只影響零用金)
+    const hotelPerPersonTwd = accommodation.perPersonTwd;
 
-    document.getElementById("calc-hotel-jpy").textContent = hotelPerPersonJpy.toLocaleString();
+    document.getElementById("calc-hotel-twd").textContent = hotelPerPersonTwd.toLocaleString();
     document.getElementById("budget-target").textContent = targetBudgetTwd.toLocaleString();
 
     // v1.4.1 以前一打開就把三個欄位全部存起來 (沒有 v 標記),其中跟當時預設值相同的其實沒人改過,轉換時清掉
@@ -1990,7 +1991,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const pocketJpy = parseFloat(inputs.pocket.value) || 0;
 
       // Calculate conversions
-      const hotelTwd = Math.round(hotelPerPersonJpy * rate);
+      const hotelTwd = hotelPerPersonTwd;
       const pocketTwd = Math.round(pocketJpy * rate);
       const totalTwd = Math.round(flightTwd + hotelTwd + pocketTwd);
 

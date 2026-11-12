@@ -53,8 +53,9 @@ const budget = TRIP_METADATA.budget || {};
     errors.push(`TRIP_METADATA.budget.${key} 要是大於 0 的數字:${budget[key]}`);
   }
 });
-if (typeof TRIP_METADATA.accommodation?.perPersonJpy !== "number") {
-  errors.push("TRIP_METADATA.accommodation.perPersonJpy 要是數字");
+const perPersonTwd = TRIP_METADATA.accommodation?.perPersonTwd;
+if (typeof perPersonTwd !== "number" || !(perPersonTwd > 0)) {
+  errors.push(`TRIP_METADATA.accommodation.perPersonTwd (每人分攤住宿,台幣) 要是大於 0 的數字:${perPersonTwd}`);
 }
 
 // ---------- 每個地點的欄位 ----------

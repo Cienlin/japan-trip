@@ -21,10 +21,10 @@ const TRIP_METADATA = {
   accommodation: {
     name: "SYLA HOTEL Oshiage (押上)",
     address: "東京都墨田區押上 3 丁目 (Oshiage, Sumida-ku) — 走 5 分鐘到晴空塔",
-    cost: "165,598 日幣 (5 晚總額，5 人平分約 33,120 日幣/人)",
-    // 結構化欄位:總價 / 每人 — app.js 從此計算,不再硬編碼
+    cost: "165,598 日幣 (5 晚)，5 人分攤每人 NT$9,061",
+    // 結構化欄位:總價 (日幣原價) / 每人實際分攤 (台幣,已付款,不隨匯率變動) — 預算計算機用 perPersonTwd
     totalCostJpy: 165598,
-    perPersonJpy: 33120,
+    perPersonTwd: 9061,
     link: "https://www.agoda.com/zh-tw/syla-hotel-oshiage/hotel/all/tokyo-jp.html?checkIn=2026-12-9&los=5",
     coordinates: [35.7108, 139.8150]
   },

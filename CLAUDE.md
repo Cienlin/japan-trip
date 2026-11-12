@@ -15,7 +15,7 @@
 
 ## 行程資料 `data.js`
 
-- `TRIP_METADATA`：機票、飯店、`startDate`（Day 1 的日期，旅行中用來判斷今天是 Day 幾）、`budget`（預算計算機的預設值與預算目標；app.js 與 index.html 不寫死這些數字，改這裡就好）
+- `TRIP_METADATA`：機票、飯店、`startDate`（Day 1 的日期，旅行中用來判斷今天是 Day 幾）、`budget`（預算計算機的預設值與預算目標；app.js 與 index.html 不寫死這些數字，改這裡就好）、`accommodation.perPersonTwd`（每人分攤住宿，已付款的台幣金額，預算計算機直接使用、不隨匯率換算）
 - `PLACES`：每個地點的欄位
   - `category`：`food` / `shopping` / `sightseeing` / `lodging` / `transport`
   - `day`：1～6；`null` 代表候補（不排入行程）
