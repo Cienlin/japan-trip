@@ -161,6 +161,25 @@ for (const [, id] of indexHtml.matchAll(/data-day-of="([^"]+)"/g)) {
   if (!byId[id]) errors.push(`index.html 的天數標籤 data-day-of="${id}" 找不到這個地點`);
 }
 
+// ---------- Material Symbols 圖示 ----------
+// 字型只載入 icon_names 列出的圖示,沒列到的會直接顯示英文名稱 (例如畫面上出現大大的 savings)
+const iconNames = (indexHtml.match(/Material\+Symbols\+Outlined[^"]*icon_names=([^&"]+)/) || [])[1];
+if (!iconNames) {
+  errors.push("index.html 找不到 Material Symbols 字型的 icon_names");
+} else {
+  const listed = iconNames.split(",");
+  const used = new Set();
+  [indexHtml, read("app.js")].forEach((source) => {
+    for (const [, name] of source.matchAll(/material-symbols-outlined[^>]*>\s*([a-z0-9_]+)\s*</g)) used.add(name);
+  });
+  [...used].filter((name) => !listed.includes(name)).forEach((name) => {
+    errors.push(`圖示「${name}」沒有加進 index.html 字型網址的 icon_names (需依字母排序),畫面會顯示英文名稱`);
+  });
+  if (listed.join(",") !== [...listed].sort().join(",")) {
+    warnings.push("index.html 字型網址的 icon_names 要依字母排序");
+  }
+}
+
 // ---------- 結果 ----------
 const candidates = PLACES.filter((p) => p.day === null).length;
 console.log(`已檢查 data.js:${PLACES.length} 個地點 (${PLACES.length - candidates} 個排入行程、${candidates} 個候補)`);

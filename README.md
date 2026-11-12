@@ -37,7 +37,7 @@
 
 - **行程、地點**：照 [`docs/行程變更範本.md`](docs/行程變更範本.md) 填寫，或直接用 app 的「複製變更內容」，交給 Claude 修改
 - **地點照片**：放進 `images/<地點名稱>/`，用數字命名（`1.jpg`、`2.jpg`⋯，第 1 張是封面），再執行 `node tools/sync-images.js` 更新圖片清單（也會提醒不同地點用了同一張照片）
-- **檢查資料**：改完 `data.js` 或 `index.html` 後執行 `node tools/check-data.js`，會檢查交通說明是否對應前一站、時間與天數格式、座標、預算欄位等
+- **檢查資料**：改完 `data.js` 或 `index.html` 後執行 `node tools/check-data.js`，會檢查交通說明是否對應前一站、時間與天數格式、座標、預算欄位、圖示有沒有列進字型網址等
 - **預算分頁**：機票與匯率的預設值在 `data.js` 的 `TRIP_METADATA.budget`，每人分攤住宿在 `TRIP_METADATA.accommodation.perPersonTwd`；改了之後大家的手機都會更新（自己在手機上改過的欄位除外）。總預算沒有預設值，各自填
 
 ## 📁 檔案結構
