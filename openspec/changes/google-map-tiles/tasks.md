@@ -54,5 +54,5 @@
 ## 5. 收尾
 
 - [x] 5.1 刪掉 `map-test.html` 與 `map-test.js`；如果金鑰的網站限制有暫時加 `openlayers.org`，請使用者移除。更新版號，commit 並 push。驗證：檔案已不存在，使用者確認 App 正常
-- [ ] 5.2 執行 `/code-review`（medium 以上），每個 finding 都要處理：修正、說明理由拒絕，或記到 `docs/backlog.md`。驗證：所有 finding 都有處理結果
+- [x] 5.2 執行 `/code-review`（medium 以上），每個 finding 都要處理：修正、說明理由拒絕，或記到 `docs/backlog.md`。驗證：所有 finding 都有處理結果
 - [ ] 5.3 更新 `docs/roadmap.md` 的「目前進度」，執行 `/opsx:archive google-map-tiles`，commit 並 push。驗證：`openspec/specs/map` 與 `offline-updates` 已同步新規格，change 移到 `archive/`

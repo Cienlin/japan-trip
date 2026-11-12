@@ -518,8 +518,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function applyTheme(theme) {
     document.body.classList.toggle("theme-dark", theme === 'dark');
     document.body.classList.toggle("theme-light", theme === 'light');
-    if (map && basemapMode === "google") {
-      showGoogleLogo(true);
+    // 正在用 Google 底圖,或第一次的底圖還在載入 (basemapMode 還是 null) 時,依新主題重新載入,
+    // 舊主題的請求會作廢;已經改用備用底圖時,深色靠 CSS 反轉
+    if (map && basemapMode !== "osm") {
+      if (basemapMode === "google") showGoogleLogo(true);
       loadGoogleBasemap();
     }
   }
