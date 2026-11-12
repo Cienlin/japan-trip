@@ -38,7 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
     customPlaces: "tokyo_trip_custom_places",
     placeOverrides: "tokyo_trip_place_overrides",
     checklist: "tokyo_trip_checklist_state",
-    budget: "tokyo_trip_budget_inputs"
+    budget: "tokyo_trip_budget_inputs",
+    // Google 底圖的通行碼,依主題分開存:{ light: {...}, dark: {...} }
+    googleTileSessions: "tokyo_trip_google_tile_sessions"
   };
 
   const HOTEL_ID = "syla_hotel";
@@ -150,10 +152,55 @@ document.addEventListener("DOMContentLoaded", () => {
   let isPickingCoords = false;
   let tempPickMarker = null;
 
-  // Map tile — 2024 起 CARTO basemaps 開始要 API key + 浮水印,改用 OpenStreetMap
-  // 深色主題透過 CSS filter 反轉,不需第二個 tile source
-  const tileUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
-  const tileAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+  // 底圖:有網路時用 Google 圖磚 (高解析度,手機上清楚);用不了時退回 OpenStreetMap (備用底圖),不顯示提示
+  // 判斷邏輯在 basemap.js (有測試),這裡只負責 Leaflet 與畫面
+  // 金鑰一定會公開在網頁裡,靠 Google Cloud 的網站限制、API 限制與每日上限 3,000 張保護 (見 CLAUDE.md)
+  const GOOGLE_MAP_TILES_KEY = "AIzaSyAFrF2zfEIb0TVBYSoGvDLdC3ooK6vpo4I";
+  const GOOGLE_TILES_API = "https://tile.googleapis.com";
+  // 2026-11 用測試頁比較後選定:地名日文、一般大小的字
+  // zh-TW 的地名跟 ja 一樣是日文 (Google 不會翻成中文),但版權文字是中文;highDpi 只能搭配 2x/4x
+  const GOOGLE_TILE_SETTINGS = { language: "zh-TW", region: "TW", scale: "scaleFactor2x" };
+  const GOOGLE_SESSION_TIMEOUT_MS = 5000;
+  // Google 規定背景複雜 (地圖) 時用有外框的 logo
+  const GOOGLE_LOGOS = {
+    light: "assets/GoogleMaps_Logo_WithLightOutline.svg",
+    dark: "assets/GoogleMaps_Logo_WithDarkOutline.svg"
+  };
+  // 深色主題的 Google 底圖:Google Maps 官方範例的 Night mode 樣式,文字顏色調亮,手機上比較好讀
+  const GOOGLE_NIGHT_STYLES = [
+    { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+    { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+    { elementType: "labels.text.fill", stylers: [{ color: "#b8b0a2" }] },
+    { featureType: "administrative.locality", elementType: "labels.text.fill", stylers: [{ color: "#e0b07a" }] },
+    { featureType: "poi", elementType: "labels.text.fill", stylers: [{ color: "#e0b07a" }] },
+    { featureType: "poi.park", elementType: "geometry", stylers: [{ color: "#263c3f" }] },
+    { featureType: "poi.park", elementType: "labels.text.fill", stylers: [{ color: "#8fbf98" }] },
+    { featureType: "road", elementType: "geometry", stylers: [{ color: "#38414e" }] },
+    { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#212a37" }] },
+    { featureType: "road", elementType: "labels.text.fill", stylers: [{ color: "#c0c7d2" }] },
+    { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#746855" }] },
+    { featureType: "road.highway", elementType: "geometry.stroke", stylers: [{ color: "#1f2835" }] },
+    { featureType: "road.highway", elementType: "labels.text.fill", stylers: [{ color: "#f3d19c" }] },
+    { featureType: "transit", elementType: "geometry", stylers: [{ color: "#2f3948" }] },
+    { featureType: "transit.station", elementType: "labels.text.fill", stylers: [{ color: "#e0b07a" }] },
+    { featureType: "water", elementType: "geometry", stylers: [{ color: "#17263c" }] },
+    { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#7d8aa0" }] },
+    { featureType: "water", elementType: "labels.text.stroke", stylers: [{ color: "#17263c" }] }
+  ];
+
+  // 備用底圖 — 2024 起 CARTO basemaps 開始要 API key + 浮水印,改用 OpenStreetMap
+  // 深色主題透過 CSS filter 反轉 (只套在備用底圖,Google 底圖用上面的深色樣式)
+  const osmTileUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+  const osmAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+
+  let baseLayer = null;          // 目前的底圖圖層
+  let basemapMode = null;        // "google" 或 "osm"
+  let googleSession = null;      // 目前 Google 底圖用的通行碼 (查版權文字要用)
+  let googleBlocked = false;     // 這次打開 App 期間已退回備用底圖,不再嘗試 Google (避免兩種底圖來回切換)
+  let basemapRequestId = 0;      // 等待通行碼期間又切換主題時,只套用最後一次
+  let googleLogoControl = null;
+  let copyrightText = "";
+  let copyrightTimer = null;
 
   // Icons mapping for categories
   const categoryEmojis = {
@@ -465,11 +512,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Apply a theme: swap body class (太陽/月亮圖示與地圖 tile 都靠 CSS 依 class 切換,不重新請求)
+  // Apply a theme: swap body class (太陽/月亮圖示與備用底圖的反轉都靠 CSS 依 class 切換)
   // 首次繪製前 index.html 開頭的 inline script 已先套好 class,這裡負責之後的切換
+  // Google 底圖的深淺色是不同的通行碼,要換圖層;第一次呼叫時地圖還沒建立,由 initMap 載入底圖
   function applyTheme(theme) {
     document.body.classList.toggle("theme-dark", theme === 'dark');
     document.body.classList.toggle("theme-light", theme === 'light');
+    if (map && basemapMode === "google") {
+      showGoogleLogo(true);
+      loadGoogleBasemap();
+    }
   }
 
   // 標題的狀態:出發前倒數;旅行中顯示今天是 Day 幾;回國後顯示旅程結束
@@ -539,13 +591,13 @@ document.addEventListener("DOMContentLoaded", () => {
       minZoom: 10
     }).setView([35.6895, 139.755], 12);
 
-    // Add Tile Layer (單一 source,主題切換靠 CSS filter,不用重新請求 tile)
-    // crossOrigin:用 CORS 載入 tile,Service Worker 才拿得到可快取的回應 (no-cors 的 opaque 回應無法判斷成功與否)
-    L.tileLayer(tileUrl, {
-      attribution: tileAttribution,
-      maxZoom: 19,
-      crossOrigin: true
-    }).addTo(map);
+    // 底圖:先試 Google,失敗就退回備用底圖;Google logo 放左下角,版權文字在移動地圖後更新
+    googleLogoControl = new GoogleLogoControl().addTo(map);
+    map.on("moveend", () => {
+      clearTimeout(copyrightTimer);
+      copyrightTimer = setTimeout(updateGoogleCopyright, 500);
+    });
+    loadGoogleBasemap();
 
     // 我的位置:藍點放在自己的 pane,蓋在地點 marker (600) 之上、popup (700) 之下
     map.createPane("userLocation").style.zIndex = 620;
@@ -554,6 +606,200 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Draw all markers
     updateMapMarkers();
+  }
+
+  // ==========================================
+  // 底圖 (Google 底圖,用不了時退回備用底圖)
+  // ==========================================
+
+  // Google logo:高度與留白照 Google 規定 (style.css 的 .google-maps-logo)
+  const GoogleLogoControl = L.Control.extend({
+    options: { position: "bottomleft" },
+    onAdd() {
+      const img = L.DomUtil.create("img", "google-maps-logo");
+      img.alt = "Google Maps";
+      img.hidden = true;
+      return img;
+    }
+  });
+
+  function showGoogleLogo(visible) {
+    const img = googleLogoControl && googleLogoControl.getContainer();
+    if (!img) return;
+    img.hidden = !visible;
+    if (visible) img.src = GOOGLE_LOGOS[activeTheme];
+  }
+
+  function saveGoogleSessions(sessions) {
+    try {
+      localStorage.setItem(STORAGE_KEYS.googleTileSessions, JSON.stringify(sessions));
+    } catch (e) {
+      // 存不了 (例如私密瀏覽) 也沒關係,下次重新建立通行碼
+    }
+  }
+
+  // 向 Google 建立新的通行碼 (不計費),存在手機上給下次沿用
+  async function createGoogleSession(theme) {
+    const body = {
+      mapType: "roadmap",
+      language: GOOGLE_TILE_SETTINGS.language,
+      region: GOOGLE_TILE_SETTINGS.region,
+      scale: GOOGLE_TILE_SETTINGS.scale,
+      highDpi: true
+    };
+    if (theme === "dark") body.styles = GOOGLE_NIGHT_STYLES;
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), GOOGLE_SESSION_TIMEOUT_MS);
+    try {
+      const res = await fetch(`${GOOGLE_TILES_API}/v1/createSession?key=${GOOGLE_MAP_TILES_KEY}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        signal: controller.signal
+      });
+      if (!res.ok) throw new Error(`createSession HTTP ${res.status}`);
+      const json = await res.json();
+      if (!json.session) throw new Error("createSession 沒有回傳 session");
+
+      const session = {
+        session: json.session,
+        expiry: json.expiry,
+        tileWidth: json.tileWidth,
+        scale: GOOGLE_TILE_SETTINGS.scale,
+        language: GOOGLE_TILE_SETTINGS.language
+      };
+      saveGoogleSessions({ ...readJson(STORAGE_KEYS.googleTileSessions, {}), [theme]: session });
+      return session;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  // 手機上有還能用的通行碼就沿用 (圖磚網址不變,瀏覽器快取才用得到),否則重新建立
+  async function getGoogleSession(theme, forceNew) {
+    if (!forceNew) {
+      const stored = readJson(STORAGE_KEYS.googleTileSessions, {})[theme];
+      if (Basemap.isSessionUsable(stored, GOOGLE_TILE_SETTINGS, Date.now())) {
+        return { session: stored, reused: true };
+      }
+    }
+    return { session: await createGoogleSession(theme), reused: false };
+  }
+
+  // 只替換底圖圖層,地圖的中心點與縮放層級不變
+  function setBaseLayer(layer, mode) {
+    if (baseLayer) map.removeLayer(baseLayer);
+    baseLayer = layer;
+    basemapMode = mode;
+    layer.addTo(map);
+    layer.bringToBack();
+
+    const container = map.getContainer();
+    container.classList.toggle("basemap-google", mode === "google");
+    container.classList.toggle("basemap-osm", mode === "osm");
+    showGoogleLogo(mode === "google");
+    if (mode !== "google") setGoogleCopyright("");
+  }
+
+  // 改用備用底圖,這次打開 App 期間不再嘗試 Google;不顯示提示
+  function fallbackToOsm() {
+    googleBlocked = true;
+    basemapRequestId += 1; // 還在等待的通行碼請求回來後不套用
+    googleSession = null;
+    if (basemapMode === "osm") return;
+    // crossOrigin:用 CORS 載入 tile,Service Worker 才拿得到可快取的回應 (no-cors 的 opaque 回應無法判斷成功與否)
+    setBaseLayer(L.tileLayer(osmTileUrl, {
+      attribution: osmAttribution,
+      maxZoom: 19,
+      crossOrigin: true
+    }), "osm");
+  }
+
+  // 依目前主題載入 Google 底圖;離線、建立通行碼失敗或逾時就退回備用底圖
+  async function loadGoogleBasemap(forceNew = false) {
+    if (googleBlocked || navigator.onLine === false || typeof Basemap === "undefined") {
+      fallbackToOsm();
+      return;
+    }
+    const requestId = ++basemapRequestId;
+    try {
+      const result = await getGoogleSession(activeTheme, forceNew);
+      if (requestId !== basemapRequestId || googleBlocked) return; // 等待期間又切換了主題或已退回
+      showGoogleLayer(result);
+    } catch (err) {
+      // 建立通行碼失敗 (API 停用、金鑰被擋、逾時、離線) 或其他意外錯誤:退回備用底圖,地圖不會空白
+      if (requestId === basemapRequestId) fallbackToOsm();
+    }
+  }
+
+  function showGoogleLayer(result) {
+    const layer = L.tileLayer(Basemap.tileUrlTemplate({
+      api: GOOGLE_TILES_API,
+      session: result.session.session,
+      key: GOOGLE_MAP_TILES_KEY
+    }), { maxZoom: 19, minZoom: 10 });
+
+    // 連續 3 張圖磚失敗:沿用的通行碼先重新建立一次 (可能過期),還是失敗就退回備用底圖
+    let failureState = Basemap.initialFailureState(result.reused);
+    let retired = false; // 這個圖層已經處理過 (重新建立或退回),之後的事件不再理會
+    const onTileEvent = (event) => {
+      if (retired || baseLayer !== layer) return;
+      const next = Basemap.nextFailureState(failureState, event);
+      failureState = next.state;
+      if (next.action === "renew") {
+        retired = true;
+        loadGoogleBasemap(true);
+      } else if (next.action === "fallback") {
+        retired = true;
+        fallbackToOsm();
+      }
+    };
+    layer.on("tileload", () => onTileEvent("load"));
+    layer.on("tileerror", () => onTileEvent("error"));
+
+    googleSession = result.session;
+    setBaseLayer(layer, "google");
+    updateGoogleCopyright();
+  }
+
+  // 版權文字:Google 規定要完整顯示目前畫面的 copyright,內容來自 Google,仍然跳脫後再放進 Leaflet
+  function setGoogleCopyright(text) {
+    if (copyrightText) map.attributionControl.removeAttribution(copyrightText);
+    copyrightText = text ? escapeHtml(text) : "";
+    if (copyrightText) map.attributionControl.addAttribution(copyrightText);
+  }
+
+  // 查目前畫面的版權文字 (不計費);失敗時保留上一次的文字
+  async function updateGoogleCopyright() {
+    if (basemapMode !== "google" || !googleSession) return;
+    const session = googleSession;
+    const b = map.getBounds();
+    const clampLat = (v) => Math.max(-90, Math.min(90, v));
+    const clampLng = (v) => Math.max(-180, Math.min(180, v));
+    const url = Basemap.viewportUrl({
+      api: GOOGLE_TILES_API,
+      session: session.session,
+      key: GOOGLE_MAP_TILES_KEY,
+      zoom: Math.round(map.getZoom()),
+      bounds: {
+        north: clampLat(b.getNorth()),
+        south: clampLat(b.getSouth()),
+        east: clampLng(b.getEast()),
+        west: clampLng(b.getWest())
+      }
+    });
+    try {
+      const res = await fetch(url);
+      if (!res.ok) return;
+      const json = await res.json();
+      // 等待期間換了通行碼 (切換主題) 或退回備用底圖,就不套用
+      if (json.copyright && googleSession === session && basemapMode === "google") {
+        setGoogleCopyright(json.copyright);
+      }
+    } catch (e) {
+      // 保留上一次的文字
+    }
   }
 
   // ==========================================

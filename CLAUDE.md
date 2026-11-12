@@ -53,6 +53,11 @@
 - **本機編輯**：內建地點的修改存成 localStorage 的 override（`EDITABLE_FIELDS`），自訂地點存在 `tokyo_trip_custom_places`，都只存在各自的手機。開啟時會自動清掉「已經跟 data.js 相同」的 override，以及「data.js 已有同名同座標地點」的自訂地點
 - 預算計算機只把使用者改過的欄位存進 localStorage（`{ v: 2, ... }`），沒改過的一律用 `TRIP_METADATA.budget` 的最新值
 - 使用者輸入的內容一律經過 `escapeHtml()` / `safeUrl()`，圖片網址用 `cssEscapeUrl()`
-- `sw.js`：頁面檔案採 network-first（`cache: 'no-cache'`，3 秒逾時才用快取）；圖片與地圖圖磚採 cache-first；新增頁面要用到的檔案時，記得加進 `SHELL_ASSETS`
+- `sw.js`：頁面檔案採 network-first（`cache: 'no-cache'`，3 秒逾時才用快取）；圖片與備用底圖（OpenStreetMap）圖磚採 cache-first；Google 底圖（`tile.googleapis.com`）不攔截；新增頁面要用到的檔案時，記得加進 `SHELL_ASSETS`（少一個檔案 Service Worker 就裝不起來）
+- **地圖底圖**：有網路時用 Google Map Tiles API 的圖磚（`app.js` 的 `GOOGLE_*` 常數；地名日文、一般大小的字是 2026-11 用測試頁選定的），用不了時自動改用 OpenStreetMap 備用底圖、不顯示提示
+  - 判斷邏輯（通行碼能不能沿用、連續 3 張失敗時重新建立或退回）在 `basemap.js`，改了要跑 `node --test "tests/*.test.js"`
+  - Google 規定：圖磚不能存進 Service Worker 快取、不能用 CSS 反轉顏色（深色用 `GOOGLE_NIGHT_STYLES`）、地圖上要一直看得到 Google logo（`assets/`，不可修改）與版權文字；手機版放在底部分頁列（64px）上方
+  - Google 圖磚不會把日本地名翻成中文（`zh-TW` 跟 `ja` 一樣是日文），不要再承諾中文地名
+- **Google 金鑰公開是正常的**：網頁版地圖的金鑰一定在原始碼裡，GitHub 寄 secret scanning 警告時選「Won't fix」，不用撤銷。保護靠 Google Cloud 設定：網站限制 `https://cienlin.github.io/*`（不能寫 `/japan-trip/*`，跨網域請求只送網域）、API 限制只允許 Map Tiles API、`2D Tiles requests per day` = 3,000（每月免費 100,000 張以內）；不要調低 `uncharged requests per day`。停用、重新啟用的方式見 README
 - CSS：`:hover` 規則要包在 `@media (hover: hover)` 裡（避免手機點擊後 hover 卡住）；顏色用 `:root` 與 `body.theme-dark` 的變數；用 `hidden` 屬性隱藏元素
 - 註解使用繁體中文

@@ -1138,9 +1138,18 @@ body.theme-dark .next-stop-tag {
   z-index: 1;
 }
 
-/* 深色主題:反轉 OSM 亮色底圖成類似 dark map 效果 */
-body.theme-dark .leaflet-tile-pane {
+/* 深色主題:反轉備用底圖 (OSM) 的亮色圖磚成類似 dark map 效果
+   Google 底圖不能反轉 (Google 規定不得修改),深色改用 app.js 的 GOOGLE_NIGHT_STYLES */
+body.theme-dark #map.basemap-osm .leaflet-tile-pane {
   filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9) saturate(0.6);
+}
+
+/* Google logo:高度 18px (規定 16~19),留白左右上 10px、下 5px;隱藏靠 [hidden] */
+.leaflet-control.google-maps-logo {
+  display: block;
+  height: 18px;
+  width: auto;
+  margin: 10px 10px 5px 10px;
 }
 
 /* 反轉會把 attribution 上的連結顏色也翻掉,反回來 */
@@ -1734,6 +1743,11 @@ body.theme-dark .close-drawer-btn {
   /* 提示放在底部 sidebar (64px) 上方 */
   .map-toast {
     bottom: calc(64px + 16px);
+  }
+
+  /* 地圖左下的 Google logo、右下的版權文字放在底部 sidebar (64px) 上方,不能被蓋住 (Google 規定) */
+  .leaflet-bottom {
+    bottom: 64px;
   }
 
   /* Bottom Navigation Sheet (Sidebar) — 錨定到 .app-container 底部
