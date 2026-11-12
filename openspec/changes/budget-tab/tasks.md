@@ -17,14 +17,14 @@
 
 ## 3. 預算分頁
 
-- [ ] 3.1 `index.html`：
+- [x] 3.1 `index.html`：
   - `.tab-navigation` 在美食景點與行前指南之間加「預算」按鈕（`data-tab="budget"`、圖示 `savings`）
   - 新增 `#pane-budget`，由上到下：設定、記一筆（金額欄 `type="text" inputmode="numeric" pattern="[0-9]*"`、備註、加入、錯誤提示）、結果、花費明細
   - 拿掉行前指南的「旅程預算與花費計算機」卡片
 
   驗證：`node tools/check-data.js` 沒有 ❌，grep 確認 `#pane-logistics` 裡沒有 `calc-` 欄位
-- [ ] 3.2 `data.js` 拿掉 `TRIP_METADATA.budget.targetTwd`、`pocketJpy`；`tools/check-data.js` 改成只檢查 `flightTwd`、`jpyRate`。驗證：`node tools/check-data.js` 沒有 ❌，grep 確認程式不再用到這兩個欄位
-- [ ] 3.3 `app.js`：
+- [x] 3.2 `data.js` 拿掉 `TRIP_METADATA.budget.targetTwd`、`pocketJpy`；`tools/check-data.js` 改成只檢查 `flightTwd`、`jpyRate`。驗證：`node tools/check-data.js` 沒有 ❌，grep 確認程式不再用到這兩個欄位
+- [x] 3.3 `app.js`：
   - `initBudgetCalculator()` 改寫成 `initBudgetTab()`：讀設定時用 `Budget.migrateSettings()` 並存回 v3
   - 總預算、機票、匯率欄位只記改過的值
   - 加入花費（`Budget.parseAmount()`，不合法時顯示提示）、刪除前 `confirm()`、明細（最新在上、日期、備註經 `escapeHtml()`）
@@ -32,8 +32,8 @@
   - `STORAGE_KEYS` 加 `expenses`
 
   驗證：`node --check app.js`，逐一對照 `specs/budget/spec.md` 每條需求的程式路徑
-- [ ] 3.4 `style.css`：預算分頁版面（記一筆、明細清單、未填總預算的提示）；手機版底部分頁列改成圖示在上、文字在下。驗證：手機版規則在 768px 以下的 media query 裡，`:hover` 規則都包在 `@media (hover: hover)`
-- [ ] 3.5 文件：
+- [x] 3.4 `style.css`：預算分頁版面（記一筆、明細清單、未填總預算的提示）；手機版底部分頁列改成圖示在上、文字在下。驗證：手機版規則在 768px 以下的 media query 裡，`:hover` 規則都包在 `@media (hover: hover)`
+- [x] 3.5 文件：
   - `CLAUDE.md`：預算的資料位置，包括 `STORAGE_KEYS.budget` v3、`expenses`、`TRIP_METADATA.budget` 剩下的欄位、`budget.js` 與測試
   - `README.md`：功能與檔案結構
   - `GLOSSARY.md`：「預算」區塊加入總預算、花費、目前花費、目前總花費、剩餘預算，「預算計算機」移過去並改寫

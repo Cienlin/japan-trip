@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     placeOverrides: "tokyo_trip_place_overrides",
     checklist: "tokyo_trip_checklist_state",
     budget: "tokyo_trip_budget_inputs",
+    expenses: "tokyo_trip_expenses",  // 預算分頁的花費明細
     // Google 底圖的通行碼,依主題分開存:{ light: {...}, dark: {...} }
     googleTileSessions: "tokyo_trip_google_tile_sessions"
   };
@@ -379,7 +380,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // E. Initialize Persistence & Calculators
     initChecklist();
-    initBudgetCalculator();
+    initBudgetTab();
 
     // F. 每分鐘檢查跨日與「下一站」;手機上的 app 常常整天不重新載入,從背景切回來時也立即更新
     setInterval(onClockTick, 60000);
@@ -1938,114 +1939,212 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Budget & Expense Calculator
-  // 預設值與預算目標都來自 data.js 的 TRIP_METADATA.budget。手機只記住使用者自己改過的欄位,
-  // 沒改過的一律用 data.js 的最新值,之後改機票價格等預設值時大家的手機才會跟著更新
-  function initBudgetCalculator() {
+  // ==========================================
+  // 預算分頁 (設定、記一筆、結果、花費明細)
+  // ==========================================
+  // 機票與匯率的預設值來自 data.js 的 TRIP_METADATA.budget;總預算沒有預設值,由各自填
+  // 手機只記住旅伴改過的欄位 (STORAGE_KEYS.budget,v3),沒改過的一律用 data.js 的最新值,
+  // 之後主揪改機票價格等預設值時大家的手機才會跟著更新
+  // 花費明細存在 STORAGE_KEYS.expenses;金額解析與加總在 budget.js (有測試)
+  function initBudgetTab() {
     const inputs = {
-      rate: document.getElementById("calc-rate"),
+      budgetTwd: document.getElementById("calc-budget"),
       flight: document.getElementById("calc-flight"),
-      pocket: document.getElementById("calc-pocket")
+      rate: document.getElementById("calc-rate")
     };
-    if (!inputs.rate || !inputs.flight || !inputs.pocket) return;
+    if (!inputs.budgetTwd || !inputs.flight || !inputs.rate || typeof Budget === "undefined") return;
+
+    // 寫不進去 (例如私密瀏覽) 也不中斷畫面,只是下次打開不會記得
+    const store = (key, value) => {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (e) {
+        console.error(`Failed to save ${key}:`, e);
+      }
+    };
 
     const { budget, accommodation } = TRIP_METADATA;
-    const defaults = { rate: budget.jpyRate, flight: budget.flightTwd, pocket: budget.pocketJpy };
-    const targetBudgetTwd = budget.targetTwd;
-    // 住宿是已付款的台幣金額,不隨匯率變動 (匯率只影響零用金)
-    const hotelPerPersonTwd = accommodation.perPersonTwd;
+    const defaults = { rate: budget.jpyRate, flight: budget.flightTwd };
+    // 住宿是已付款的台幣金額,不隨匯率變動 (匯率只影響目前花費)
+    const hotelTwd = accommodation.perPersonTwd;
+    document.getElementById("calc-hotel-twd").textContent = hotelTwd.toLocaleString();
 
-    document.getElementById("calc-hotel-twd").textContent = hotelPerPersonTwd.toLocaleString();
-    document.getElementById("budget-target").textContent = targetBudgetTwd.toLocaleString();
-
-    // v1.4.1 以前一打開就把三個欄位全部存起來 (沒有 v 標記),其中跟當時預設值相同的其實沒人改過,轉換時清掉
-    const LEGACY_DEFAULTS = { rate: 0.22, flight: 14424, pocket: 50000 };
-    const stored = readJson(STORAGE_KEYS.budget, {}) || {};
-    const edits = {};
-    Object.keys(defaults).forEach(key => {
-      const value = stored[key];
-      if (typeof value !== "number" || value === defaults[key]) return;
-      if (stored.v !== 2 && value === LEGACY_DEFAULTS[key]) return;
-      edits[key] = value;
+    // v1.4.1 以前一打開就把欄位全部存起來 (沒有 v 標記),跟當時預設值相同的其實沒人改過,轉換時清掉
+    const LEGACY_DEFAULTS = { rate: 0.22, flight: 14424 };
+    const settings = Budget.migrateSettings(readJson(STORAGE_KEYS.budget, null), {
+      legacyDefaults: LEGACY_DEFAULTS,
+      defaults
     });
-    const saveEdits = () => {
-      localStorage.setItem(STORAGE_KEYS.budget, JSON.stringify({ v: 2, ...edits }));
-    };
-    saveEdits();
+    store(STORAGE_KEYS.budget, settings);
+
+    // 只留下格式正確的花費 (金額是正整數),避免壞掉的資料讓整個分頁出錯
+    const storedExpenses = readJson(STORAGE_KEYS.expenses, []);
+    let expenses = (Array.isArray(storedExpenses) ? storedExpenses : []).filter(e =>
+      e && typeof e.id === "string" && Number.isInteger(e.amount) && e.amount > 0);
+
+    // ---------- 設定:總預算、機票、匯率 ----------
+    inputs.budgetTwd.value = settings.budgetTwd ?? "";
+    inputs.flight.value = settings.flight ?? defaults.flight;
+    inputs.rate.value = settings.rate ?? defaults.rate;
 
     Object.entries(inputs).forEach(([key, input]) => {
-      input.value = edits[key] ?? defaults[key];
-      // 改回預設值或清空的欄位不記,下次打開用 data.js 的值
+      // 改回預設值、清空或不合法的欄位不記,下次打開用 data.js 的值 (總預算沒有預設值,清空就是空白)
       input.addEventListener("input", () => {
         const value = parseFloat(input.value);
-        if (Number.isFinite(value) && value !== defaults[key]) edits[key] = value;
-        else delete edits[key];
-        saveEdits();
-        calculate();
+        const valid = Number.isFinite(value) && (key === "flight" ? value >= 0 : value > 0);
+        if (valid && value !== defaults[key]) settings[key] = value;
+        else delete settings[key];
+        store(STORAGE_KEYS.budget, settings);
+        render();
       });
     });
 
-    function calculate() {
-      const rate = parseFloat(inputs.rate.value) || defaults.rate;
-      const flightTwd = parseFloat(inputs.flight.value) || 0;
-      const pocketJpy = parseFloat(inputs.pocket.value) || 0;
+    // ---------- 記一筆花費 ----------
+    const form = document.getElementById("expense-form");
+    const amountInput = document.getElementById("expense-amount");
+    const noteInput = document.getElementById("expense-note");
+    const addBtn = document.getElementById("expense-add-btn");
+    const errorEl = document.getElementById("expense-error");
+    const AMOUNT_ERRORS = {
+      empty: "請先輸入金額",
+      invalid: "金額要是大於 0 的整數，只輸入數字",
+      zero: "金額要是大於 0 的整數"
+    };
 
-      // Calculate conversions
-      const hotelTwd = hotelPerPersonTwd;
-      const pocketTwd = Math.round(pocketJpy * rate);
-      const totalTwd = Math.round(flightTwd + hotelTwd + pocketTwd);
+    const showAmountError = (message) => {
+      errorEl.textContent = message;
+      errorEl.hidden = !message;
+    };
 
-      // Render results in DOM
-      document.getElementById("res-flight-twd").textContent = `NT$ ${flightTwd.toLocaleString()}`;
-      document.getElementById("res-hotel-twd").textContent = `NT$ ${hotelTwd.toLocaleString()}`;
-      document.getElementById("res-pocket-twd").textContent = `NT$ ${pocketTwd.toLocaleString()}`;
-      
-      const totalEl = document.getElementById("res-total-twd");
-      totalEl.textContent = `NT$ ${totalTwd.toLocaleString()}`;
+    // 輸入時:空白只停用加入按鈕,不提示;不合法時馬上提示原因
+    const checkAmount = () => {
+      const result = Budget.parseAmount(amountInput.value);
+      addBtn.disabled = !result.ok;
+      showAmountError(result.ok || result.reason === "empty" ? "" : AMOUNT_ERRORS[result.reason]);
+      return result;
+    };
+    amountInput.addEventListener("input", checkAmount);
 
-      // Update progress bar — 顯示實際百分比 (可超過 100%),只有進度條寬度封頂 100%
-      const percentage = Math.round((totalTwd / targetBudgetTwd) * 100);
-      document.getElementById("budget-percentage").textContent = `已用 ${percentage}%`;
-
-      const fillBar = document.getElementById("budget-progress-fill");
-      fillBar.style.width = `${Math.min(100, percentage)}%`;
-
-      // Remove previous color classes
-      fillBar.classList.remove("under-budget", "near-budget", "over-budget");
-      
-      // Update color — 超支用金額判斷,避免 100.4% 四捨五入成 100% 時顏色與超支訊息不一致
-      if (totalTwd > targetBudgetTwd) {
-        fillBar.classList.add("over-budget");
-      } else if (percentage < 80) {
-        fillBar.classList.add("under-budget");
-      } else {
-        fillBar.classList.add("near-budget");
+    // 在備註欄按 Enter 也會送出,所以空白時要另外提示
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const result = checkAmount();
+      if (!result.ok) {
+        showAmountError(AMOUNT_ERRORS[result.reason]);
+        amountInput.focus();
+        return;
       }
+      expenses.push({
+        id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+        amount: result.value,
+        note: noteInput.value.trim().slice(0, 40),
+        createdAt: new Date().toISOString()
+      });
+      store(STORAGE_KEYS.expenses, expenses);
+      amountInput.value = "";
+      noteInput.value = "";
+      checkAmount();
+      render();
+    });
 
-      // Update status message
-      const statusMsgEl = document.getElementById("budget-status-msg");
-      statusMsgEl.className = "budget-status-msg"; // reset classes
-      
-      const diff = targetBudgetTwd - totalTwd;
-      if (diff > 0) {
-        if (percentage < 80) {
-          statusMsgEl.classList.add("under");
-          statusMsgEl.textContent = `預算非常充裕！距離目標 NT$ ${targetBudgetTwd.toLocaleString()} 還剩餘 NT$ ${diff.toLocaleString()}。`;
-        } else {
-          statusMsgEl.classList.add("warn");
-          statusMsgEl.textContent = `預算尚在控制範圍內，距離目標還剩餘 NT$ ${diff.toLocaleString()}，請注意後續購物花費。`;
-        }
-      } else if (diff === 0) {
-        statusMsgEl.classList.add("warn");
-        statusMsgEl.textContent = `估計總花費剛好達到 NT$ ${targetBudgetTwd.toLocaleString()} 預算目標！`;
-      } else {
-        statusMsgEl.classList.add("danger");
-        statusMsgEl.textContent = `⚠️ 注意：估計總花費已超支 NT$ ${Math.abs(diff).toLocaleString()}！建議微調日幣預算或購物計畫。`;
-      }
+    // ---------- 花費明細:刪除前確認 ----------
+    // 日期用手機的時區顯示 (在日本就是日本時間)
+    const formatExpenseDate = (iso) => {
+      const date = new Date(iso);
+      return Number.isNaN(date.getTime()) ? "" : `${date.getMonth() + 1}/${date.getDate()}`;
+    };
+
+    const listEl = document.getElementById("expense-list");
+    listEl.addEventListener("click", (event) => {
+      const btn = event.target.closest("[data-expense-id]");
+      if (!btn) return;
+      const expense = expenses.find(e => e.id === btn.dataset.expenseId);
+      if (!expense) return;
+      const label = [formatExpenseDate(expense.createdAt), expense.note, `¥${expense.amount.toLocaleString()}`]
+        .filter(Boolean).join(" ");
+      if (!confirm(`刪除這一筆花費？\n${label}`)) return;
+      expenses = expenses.filter(e => e.id !== expense.id);
+      store(STORAGE_KEYS.expenses, expenses);
+      render();
+    });
+
+    function renderExpenseList() {
+      // 最新的在最上面 (照記錄的順序,不依手機時間排序,避免手機時間被改過時順序亂掉)
+      listEl.innerHTML = expenses.slice().reverse().map(e => `
+        <li class="expense-item">
+          <span class="expense-date">${escapeHtml(formatExpenseDate(e.createdAt))}</span>
+          <span class="expense-note">${e.note ? escapeHtml(e.note) : '<span class="expense-note-empty">沒有備註</span>'}</span>
+          <strong class="expense-amount">¥${e.amount.toLocaleString()}</strong>
+          <button type="button" class="expense-delete-btn" data-expense-id="${escapeHtml(e.id)}" aria-label="刪除這一筆">
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        </li>`).join("");
+      document.getElementById("expense-count").textContent = expenses.length;
+      document.getElementById("expense-empty").hidden = expenses.length > 0;
     }
 
-    // Initial calculation
-    calculate();
+    // ---------- 結果:目前總花費、已用百分比、剩餘預算 ----------
+    function render() {
+      const flightTwd = parseFloat(inputs.flight.value) || 0;
+      const rate = parseFloat(inputs.rate.value) || defaults.rate;
+      const summary = Budget.summarize({
+        budgetTwd: parseFloat(inputs.budgetTwd.value), // 空白是 NaN → 沒填總預算
+        flightTwd,
+        hotelTwd,
+        rate,
+        expenses
+      });
+      const twd = (value) => `NT$ ${value.toLocaleString()}`;
+
+      document.getElementById("res-flight-twd").textContent = twd(Math.round(flightTwd));
+      document.getElementById("res-hotel-twd").textContent = twd(hotelTwd);
+      document.getElementById("res-spent-jpy").textContent = `¥${summary.spentJpy.toLocaleString()}`;
+      document.getElementById("res-spent-twd").textContent = twd(summary.spentTwd);
+      document.getElementById("res-total-twd").textContent = twd(summary.totalTwd);
+
+      // 沒填總預算:只提示先填,不顯示百分比與剩餘預算
+      const hasBudget = summary.status !== "unset";
+      document.getElementById("budget-unset-hint").hidden = hasBudget;
+      document.getElementById("budget-progress-container").hidden = !hasBudget;
+
+      if (hasBudget) {
+        const budgetTwd = parseFloat(inputs.budgetTwd.value);
+        document.getElementById("budget-target").textContent = budgetTwd.toLocaleString();
+        document.getElementById("budget-percentage").textContent = `已用 ${summary.percentage}%`;
+
+        // 進度條寬度封頂 100%,百分比照實際顯示 (可超過 100%)
+        const fillBar = document.getElementById("budget-progress-fill");
+        fillBar.style.width = `${Math.min(100, summary.percentage)}%`;
+        fillBar.classList.remove("under-budget", "near-budget", "over-budget");
+        fillBar.classList.add(`${summary.status}-budget`);
+
+        const isOver = summary.status === "over";
+        const remainingEl = document.getElementById("res-remaining-twd");
+        document.getElementById("res-remaining-label").textContent = isOver ? "已超支" : "剩餘預算";
+        remainingEl.textContent = twd(Math.abs(summary.remainingTwd));
+        remainingEl.classList.toggle("is-over", isOver);
+
+        const statusMsgEl = document.getElementById("budget-status-msg");
+        statusMsgEl.className = "budget-status-msg";
+        if (summary.status === "under") {
+          statusMsgEl.classList.add("under");
+          statusMsgEl.textContent = "預算充裕！";
+        } else if (summary.status === "near") {
+          statusMsgEl.classList.add("warn");
+          statusMsgEl.textContent = summary.remainingTwd === 0
+            ? "剛好花完總預算！"
+            : "已用超過 80%，請注意後續花費。";
+        } else {
+          statusMsgEl.classList.add("danger");
+          statusMsgEl.textContent = `⚠️ 已超支 NT$ ${Math.abs(summary.remainingTwd).toLocaleString()}！`;
+        }
+      }
+
+      renderExpenseList();
+    }
+
+    checkAmount();
+    render();
   }
 
   // ==========================================

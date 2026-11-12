@@ -1832,12 +1832,21 @@ body.theme-dark .close-drawer-btn {
     border-radius: 0;
   }
   
+  /* 4 個分頁:圖示在上、文字在下,375px 寬的手機也放得下 */
   .tab-btn {
-    padding: 8px 4px;
-    font-size: 0.8rem;
-    gap: 4px;
+    flex-direction: column;
+    padding: 4px 2px;
+    font-size: 0.72rem;
+    gap: 2px;
     height: 48px;
     border-radius: var(--border-radius-sm);
+    white-space: nowrap;
+  }
+
+  .tab-btn .tab-icon {
+    width: 22px;
+    height: 22px;
+    font-size: 22px;
   }
   
   .tab-content {
@@ -2374,6 +2383,132 @@ body.theme-dark .calc-results {
   background: rgba(239, 68, 68, 0.1);
   color: var(--status-danger-text);
   border-color: rgba(239, 68, 68, 0.25);
+}
+
+/* ==========================================
+   預算分頁:記一筆、結果、花費明細
+   ========================================== */
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.expense-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.expense-error {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--status-danger-text);
+}
+
+/* 「目前花費」後面的日幣金額 */
+.result-sub {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.budget-unset-hint {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--status-warn-text);
+}
+
+.result-item.budget-remaining {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.result-item.budget-remaining strong {
+  font-size: 1.1rem;
+  color: var(--status-ok-text);
+}
+
+.result-item.budget-remaining strong.is-over {
+  color: var(--status-danger-text);
+}
+
+.expense-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* 一筆花費:日期 | 備註 | 金額 | 刪除 */
+.expense-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.88rem;
+}
+
+.expense-item:last-child {
+  border-bottom: none;
+}
+
+.expense-date {
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.expense-note {
+  color: var(--text-main);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.expense-note-empty {
+  color: var(--text-muted);
+}
+
+.expense-amount {
+  color: var(--text-main);
+  font-variant-numeric: tabular-nums;
+}
+
+.expense-delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.expense-delete-btn .material-symbols-outlined {
+  font-size: 20px;
+}
+
+@media (hover: hover) {
+  .expense-delete-btn:hover {
+    color: var(--status-danger-text);
+    background: rgba(239, 68, 68, 0.1);
+  }
+}
+
+.expense-empty,
+.budget-local-note {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.budget-local-note {
+  margin-top: 12px;
 }
 
 @media (max-width: 600px) {

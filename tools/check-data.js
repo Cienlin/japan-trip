@@ -48,7 +48,7 @@ if (!/^\d{4}-\d{2}-\d{2}$/.test(TRIP_METADATA.startDate || "")) {
   errors.push(`TRIP_METADATA.startDate 要寫成 YYYY-MM-DD:${TRIP_METADATA.startDate}`);
 }
 const budget = TRIP_METADATA.budget || {};
-["targetTwd", "flightTwd", "jpyRate", "pocketJpy"].forEach((key) => {
+["flightTwd", "jpyRate"].forEach((key) => {
   if (typeof budget[key] !== "number" || !(budget[key] > 0)) {
     errors.push(`TRIP_METADATA.budget.${key} 要是大於 0 的數字:${budget[key]}`);
   }

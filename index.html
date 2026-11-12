@@ -79,6 +79,10 @@
           <span class="material-symbols-outlined tab-icon">explore</span>
           美食景點
         </button>
+        <button class="tab-btn" data-tab="budget" id="tab-btn-budget">
+          <span class="material-symbols-outlined tab-icon">savings</span>
+          預算
+        </button>
         <button class="tab-btn" data-tab="logistics" id="tab-btn-logistics">
           <span class="material-symbols-outlined tab-icon">flight_takeoff</span>
           行前指南
@@ -144,8 +148,117 @@
             <!-- Rendered dynamically in app.js -->
           </div>
         </section>
-        
-        <!-- Tab 3: Logistics & Packing List -->
+
+        <!-- Tab 3: 預算 — 設定、記一筆、結果、花費明細 (結果在明細上方,明細變長也不用捲到底)
+             由 app.js 的 initBudgetTab 處理;計算在 budget.js;資料只存在這支手機 -->
+        <section class="tab-pane" id="pane-budget">
+          <div class="logistics-card">
+            <div class="card-header">
+              <span class="material-symbols-outlined logistics-icon">tune</span>
+              <h3>預算設定</h3>
+            </div>
+            <div class="budget-calculator">
+              <div class="calc-row">
+                <div class="calc-group">
+                  <label for="calc-budget">總預算 (台幣)</label>
+                  <input type="number" id="calc-budget" step="1000" min="0" inputmode="numeric" placeholder="自己填">
+                </div>
+                <div class="calc-group">
+                  <label for="calc-flight">機票 (台幣)</label>
+                  <input type="number" id="calc-flight" step="1" min="0" inputmode="numeric">
+                </div>
+              </div>
+              <div class="calc-row">
+                <div class="calc-group">
+                  <label>住宿分攤 (台幣)</label>
+                  <div class="calc-static-value">NT$ <span id="calc-hotel-twd"></span></div>
+                </div>
+                <div class="calc-group">
+                  <label for="calc-rate">匯率 (台幣/1日圓)</label>
+                  <input type="number" id="calc-rate" step="0.0001" min="0.01" inputmode="decimal">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="logistics-card">
+            <div class="card-header">
+              <span class="material-symbols-outlined logistics-icon">add_card</span>
+              <h3>記一筆花費</h3>
+            </div>
+            <!-- 金額用 text + inputmode=numeric:手機跳出只有數字的鍵盤,不合法的輸入也拿得到原文來提示 -->
+            <form class="expense-form" id="expense-form" novalidate>
+              <div class="calc-row">
+                <div class="calc-group">
+                  <label for="expense-amount">金額 (日幣)</label>
+                  <input type="text" id="expense-amount" inputmode="numeric" pattern="[0-9]*" maxlength="15" autocomplete="off" placeholder="例如 2050">
+                </div>
+                <div class="calc-group">
+                  <label for="expense-note">備註 (選填)</label>
+                  <input type="text" id="expense-note" maxlength="40" autocomplete="off" placeholder="例如 一蘭拉麵">
+                </div>
+              </div>
+              <p class="expense-error" id="expense-error" hidden></p>
+              <button type="submit" class="btn btn-primary btn-full" id="expense-add-btn" disabled>加入</button>
+            </form>
+          </div>
+
+          <div class="logistics-card">
+            <div class="card-header">
+              <span class="material-symbols-outlined logistics-icon">account_balance_wallet</span>
+              <h3>目前花費與剩餘預算</h3>
+            </div>
+            <div class="budget-calculator">
+              <div class="calc-results">
+                <div class="result-item">
+                  <span>機票 (台幣)</span>
+                  <strong id="res-flight-twd"></strong>
+                </div>
+                <div class="result-item">
+                  <span>住宿分攤 (台幣)</span>
+                  <strong id="res-hotel-twd"></strong>
+                </div>
+                <div class="result-item">
+                  <span>目前花費 <span id="res-spent-jpy" class="result-sub"></span></span>
+                  <strong id="res-spent-twd"></strong>
+                </div>
+                <div class="result-item total">
+                  <span>目前總花費</span>
+                  <strong id="res-total-twd"></strong>
+                </div>
+              </div>
+
+              <p class="budget-unset-hint" id="budget-unset-hint" hidden>先填上方的「總預算」，才會顯示已用百分比與剩餘預算。</p>
+
+              <div class="budget-progress-container" id="budget-progress-container" hidden>
+                <div class="budget-progress-header">
+                  <span>總預算：NT$ <span id="budget-target"></span></span>
+                  <span id="budget-percentage"></span>
+                </div>
+                <div class="budget-progress-bar">
+                  <div class="budget-progress-fill" id="budget-progress-fill"></div>
+                </div>
+                <div class="result-item budget-remaining">
+                  <span id="res-remaining-label">剩餘預算</span>
+                  <strong id="res-remaining-twd"></strong>
+                </div>
+                <div class="budget-status-msg" id="budget-status-msg"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="logistics-card">
+            <div class="card-header">
+              <span class="material-symbols-outlined logistics-icon">receipt_long</span>
+              <h3>花費明細 (<span id="expense-count">0</span> 筆)</h3>
+            </div>
+            <p class="expense-empty" id="expense-empty">還沒有記錄。旅途中每花一筆就記下來。</p>
+            <ul class="expense-list" id="expense-list"></ul>
+            <p class="budget-local-note">記帳與預算設定只存在這支手機，清除瀏覽器資料就會消失。</p>
+          </div>
+        </section>
+
+        <!-- Tab 4: Logistics & Packing List -->
         <section class="tab-pane" id="pane-logistics">
           
           <!-- Flights Info -->
@@ -179,70 +292,6 @@
               <div class="hotel-actions">
                 <a href="#" id="hotel-agoda-link" target="_blank" class="btn btn-outline btn-sm">Agoda 訂房連結</a>
                 <button id="hotel-locate-btn" class="btn btn-primary btn-sm">在地圖上標示</button>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Budget & Cost Calculator -->
-          <div class="logistics-card">
-            <div class="card-header">
-              <span class="material-symbols-outlined logistics-icon">account_balance_wallet</span>
-              <h3>旅程預算與花費計算機 (5人分攤)</h3>
-            </div>
-            <!-- 預設值、預算目標與計算結果都由 app.js 依 data.js 的 TRIP_METADATA 填入 -->
-            <div class="budget-calculator">
-              <div class="calc-row">
-                <div class="calc-group">
-                  <label for="calc-rate">日幣匯率 (台幣/1日圓)</label>
-                  <input type="number" id="calc-rate" step="0.0001" min="0.01">
-                </div>
-                <div class="calc-group">
-                  <label for="calc-flight">個人機票費用 (台幣)</label>
-                  <input type="number" id="calc-flight" step="1" min="0">
-                </div>
-              </div>
-              
-              <div class="calc-row">
-                <div class="calc-group">
-                  <label for="calc-pocket">個人日幣預算 (餐飲/購物)</label>
-                  <input type="number" id="calc-pocket" step="1000" min="0">
-                </div>
-                <div class="calc-group">
-                  <label>每人分攤住宿 (台幣)</label>
-                  <div class="calc-static-value">NT$ <span id="calc-hotel-twd"></span></div>
-                </div>
-              </div>
-
-              <div class="calc-divider"></div>
-
-              <div class="calc-results">
-                <div class="result-item">
-                  <span>機票花費 (台幣)</span>
-                  <strong id="res-flight-twd"></strong>
-                </div>
-                <div class="result-item">
-                  <span>住宿分攤 (台幣)</span>
-                  <strong id="res-hotel-twd"></strong>
-                </div>
-                <div class="result-item">
-                  <span>零用預算 (台幣)</span>
-                  <strong id="res-pocket-twd"></strong>
-                </div>
-                <div class="result-item total">
-                  <span>估計每人總花費</span>
-                  <strong id="res-total-twd"></strong>
-                </div>
-              </div>
-
-              <div class="budget-progress-container">
-                <div class="budget-progress-header">
-                  <span>預算目標：NT$ <span id="budget-target"></span></span>
-                  <span id="budget-percentage"></span>
-                </div>
-                <div class="budget-progress-bar">
-                  <div class="budget-progress-fill" id="budget-progress-fill"></div>
-                </div>
-                <div class="budget-status-msg" id="budget-status-msg"></div>
               </div>
             </div>
           </div>
@@ -346,7 +395,7 @@
       <div id="map"></div>
 
       <!-- Version + Viewport Debug Badge (方便診斷 iOS PWA viewport bug) -->
-      <div class="version-badge" id="version-badge">v1.4.15</div>
+      <div class="version-badge" id="version-badge">v1.4.16</div>
       
       <!-- Theme & Action Floating Toolbar -->
       <div class="floating-toolbar">
