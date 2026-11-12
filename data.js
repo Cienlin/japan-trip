@@ -1,5 +1,5 @@
 const TRIP_METADATA = {
-  title: "東京冬日 5 人行 🇯🇵",
+  title: "東京行",
   dates: "2026/12/9 ~ 12/14 (六天五夜)",
   peopleCount: 5,
   // ISO 起飛時間 (桃園機場,台灣時間 +08:00) — 用於倒數計時,單一資料源

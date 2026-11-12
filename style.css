@@ -285,7 +285,10 @@ body.theme-dark .tab-btn.active {
 .tab-pane {
   display: none;
   padding: 20px;
+  /* 用 clip 而不是 hidden:hidden 會讓 .tab-pane 變成捲動容器,行程的天數按鈕 (sticky) 就固定不住;
+     不支援 clip 的舊瀏覽器沿用上一行的 hidden */
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .tab-pane.active {
@@ -318,11 +321,14 @@ body.theme-dark .tab-btn.active {
 /* ==========================================
    TAB 1: ITINERARY TIMELINE
    ========================================== */
+/* 往下捲動看行程時,天數按鈕固定在捲動區的最上方;背景半透明,加模糊讓底下的行程不干擾 */
 .day-selector-wrapper {
   margin-bottom: 20px;
   position: sticky;
-  top: -20px;
+  top: 0;
   background: var(--bg-sidebar);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   z-index: 5;
   padding: 10px 0;
   border-bottom: 1px solid var(--border-color);
@@ -1782,10 +1788,37 @@ body.theme-dark .close-drawer-btn {
     display: none;
   }
   
+  /* 手機版標題列:「🗻 東京行」與出發倒數排成同一行 (不換行),日期在標題下方自己換行 */
   .sidebar.expanded .brand-header {
     display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
     padding: 14px 16px;
     flex-shrink: 0;
+  }
+
+  .header-logo {
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .header-logo > div {
+    min-width: 0;
+  }
+
+  .emoji-logo {
+    font-size: 1.6rem;
+  }
+
+  .brand-header .subtitle {
+    font-size: 0.75rem;
+  }
+
+  .countdown-badge {
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: 0.72rem;
+    padding: 5px 8px;
   }
   
   .tab-navigation {
