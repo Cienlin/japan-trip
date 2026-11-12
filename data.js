@@ -123,13 +123,13 @@ const PLACES = [
     name: "Uniqlo 銀座旗艦店",
     englishName: "UNIQLO Ginza (ユニクロ 銀座店)",
     category: "shopping",
-    lat: 35.6717,
-    lng: 139.7647,
+    lat: 35.6702,
+    lng: 139.7635,
     day: 2,
     time: "13:30",
     desc: "你們清單裡「一定要去」的點！全球最大 Uniqlo 旗艦店，12 層樓。特別聯名款、UT 客製化專區、頂樓 Uniqlo Coffee。留 1.5 ~ 2 小時慢慢挑冬裝。",
     imageFolder: "Uniqlo 銀座",
-    gmaps: "https://maps.google.com/?q=UNIQLO+Ginza",
+    gmaps: "https://maps.app.goo.gl/gghggXqJd81zzHmi9",
     transitInfo: {
       from: "Tonkatsu Aoki",
       method: "walk",
@@ -333,7 +333,7 @@ const PLACES = [
     time: "14:30",
     desc: "前面如果買夠了就不看",
     imageFolder: "Chiikawa 原宿店",
-    gmaps: "https://maps.google.com/?q=Kiddy+Land+Harajuku",
+    gmaps: "https://maps.app.goo.gl/JBWr123mratPgxdP8",
     transitInfo: {
       from: "原宿大阪燒 やいやい",
       method: "walk",
@@ -616,7 +616,7 @@ const PLACES = [
     time: null,
     desc: "🌟 **推薦候補**：東京市中心的巨型森林神社，鳥居下拍照極美。若 D4 想在原宿多留 1 小時，走 15 分鐘就到，五人拍團體照的絕佳場所。",
     imageFolder: "明治神宮",
-    gmaps: "https://maps.google.com/?q=Meiji+Jingu",
+    gmaps: "https://maps.app.goo.gl/78zYWAVM5sRB9NMS9",
     transitInfo: null
   },
   {
@@ -700,7 +700,7 @@ const PLACES = [
     time: null,
     desc: "《烏龍派出所》的故鄉，龜有站北口有兩津勘吉銅像，車站周邊還有十幾座角色銅像可以邊走邊找。可以排在 D2 早上：逛完從龜有搭千代田線（直通 JR 常磐線各停）直達日比谷，約 30 分鐘，再走到銀座吃とんかつ檍。",
     imageFolder: "龜有 兩津勘吉",
-    gmaps: "https://maps.google.com/?q=Ryotsu+Kankichi+Statue+Kameari",
+    gmaps: "https://maps.app.goo.gl/K6bQ9cS8sqXLqtmy5",
     transitInfo: null
   },
   {
@@ -708,13 +708,13 @@ const PLACES = [
     name: "神宮外苑 銀杏並木 (推薦景點)",
     englishName: "Meiji Jingu Gaien Ginkgo Avenue (明治神宮外苑 いちょう並木)",
     category: "sightseeing",
-    lat: 35.6740,
-    lng: 139.7178,
+    lat: 35.6727,
+    lng: 139.7206,
     day: null,
     time: null,
     desc: "🌟 **推薦候補**：東京最有名的銀杏大道，約 300 公尺、約 150 棵銀杏排成四列，免費。從 D4 的 Café Kitsuné 青山步行約 15 分鐘。⚠️ 往年最美是 11 月下旬到 12 月上旬，12/9 之後可能是尾聲（滿地落葉），出發前一週再看一次黃葉狀況。",
     imageFolder: "神宮外苑 銀杏並木",
-    gmaps: "https://maps.google.com/?q=Meiji+Jingu+Gaien+Ginkgo+Avenue",
+    gmaps: "https://maps.app.goo.gl/mLFjLwzYTBKCrs2c7",
     transitInfo: null
   },
   {
