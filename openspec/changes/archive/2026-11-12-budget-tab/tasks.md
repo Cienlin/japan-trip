@@ -52,4 +52,4 @@
 ## 4. 收尾
 
 - [x] 4.1 執行 `/code-review`（medium 以上），每個 finding 都要處理：修正、說明理由拒絕，或記到 `docs/backlog.md`。驗證：所有 finding 都有處理結果
-- [ ] 4.2 更新 `docs/roadmap.md` 的「目前進度」；歸檔（`/opsx:archive budget-tab`），同步規格，並把 `openspec/specs/pre-trip-guide` 的 Purpose 拿掉「預算計算機」；commit 並 push。驗證：`openspec/specs/budget` 已建立，`pre-trip-guide` 不再有預算需求，change 移到 `archive/`
+- [x] 4.2 更新 `docs/roadmap.md` 的「目前進度」；歸檔（`/opsx:archive budget-tab`），同步規格，並把 `openspec/specs/pre-trip-guide` 的 Purpose 拿掉「預算計算機」；commit 並 push。驗證：`openspec/specs/budget` 已建立，`pre-trip-guide` 不再有預算需求，change 移到 `archive/`
