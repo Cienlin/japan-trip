@@ -2,18 +2,18 @@
 
 ## 1. 準備
 
-- [ ] 1.1 `docs/roadmap.md` 的 Phase 2 註明預算分頁是凍結期的破例。驗證：roadmap 的 Phase 2 與「目前進度」都有寫到
+- [x] 1.1 `docs/roadmap.md` 的 Phase 2 註明預算分頁是凍結期的破例。驗證：roadmap 的 Phase 2 與「目前進度」都有寫到
 
 ## 2. 金額解析與預算加總（純函式與測試）
 
-- [ ] 2.1 先寫 `tests/budget.test.js`（`node --test`），涵蓋：
+- [x] 2.1 先寫 `tests/budget.test.js`（`node --test`），涵蓋：
   - 金額：`2050` = 2050、`2,050` 與全形 `２０５０` = 2050、前後空白、空白是 `empty`、`0` 是 `zero`、`12.5`、`-300`、`1200+850`、`12a` 是 `invalid`、超過 9 位數是 `invalid`
   - 加總：預算空白時 `status` 是 `"unset"`；`{ 50000, 14424, 9061, 0.21, ¥32,600 }` → 總花費 30331、61%、剩餘 19669、`"under"`；80% 以上是 `"near"`；超過是 `"over"` 且剩餘是負數
   - 設定轉換：v2 的 rate、flight 保留、pocket 丟掉；沒有 v 的舊資料跟舊預設值相同時丟掉
 
   驗證：`budget.js` 還沒寫之前，測試會失敗
-- [ ] 2.2 實作 `budget.js`：`parseAmount`、`summarize`、`migrateSettings`。驗證：`node --check budget.js` 與 `node --test "tests/*.test.js"` 全部通過；暫時拿掉幾個判斷（全形轉換、0 的檢查、`"near"` 的門檻、pocket 丟掉），對應的測試會失敗，還原後通過
-- [ ] 2.3 `index.html` 在 `app.js` 之前載入 `budget.js`，`sw.js` 的 `SHELL_ASSETS` 加入 `budget.js`。驗證：`node --check sw.js`、`SHELL_ASSETS` 每個檔案都存在、`node tools/check-data.js` 沒有 ❌
+- [x] 2.2 實作 `budget.js`：`parseAmount`、`summarize`、`migrateSettings`。驗證：`node --check budget.js` 與 `node --test "tests/*.test.js"` 全部通過；暫時拿掉幾個判斷（全形轉換、0 的檢查、`"near"` 的門檻、pocket 丟掉），對應的測試會失敗，還原後通過
+- [x] 2.3 `index.html` 在 `app.js` 之前載入 `budget.js`，`sw.js` 的 `SHELL_ASSETS` 加入 `budget.js`。驗證：`node --check sw.js`、`SHELL_ASSETS` 每個檔案都存在、`node tools/check-data.js` 沒有 ❌
 
 ## 3. 預算分頁
 
