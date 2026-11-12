@@ -14,15 +14,15 @@
 
 ## 3. 底圖判斷邏輯（純函式與測試）
 
-- [ ] 3.1 先寫 `tests/basemap.test.js`（`node --test`），涵蓋：
+- [x] 3.1 先寫 `tests/basemap.test.js`（`node --test`），涵蓋：
   - 通行碼離過期不到 1 天就不沿用；字的大小或地名語言的設定不同，也不沿用
   - 圖磚載入成功時，連續失敗次數歸零
   - 沿用的通行碼連續失敗 3 次，先重新建立一次；新的通行碼連續失敗 3 次，就退回
   - viewport 網址包含 session、key、zoom 與四個邊界
 
   驗證：`basemap.js` 還沒寫之前，測試會失敗
-- [ ] 3.2 實作 `basemap.js`：一般 script 定義全域物件，加上 `module.exports` 判斷。驗證：`node --check basemap.js` 與 `node --test` 全部通過；暫時拿掉其中一個判斷時，對應的測試會失敗（人為製造紅燈），還原後通過
-- [ ] 3.3 在 `index.html` 的 `app.js` 之前載入 `basemap.js`，並把 `basemap.js` 和 logo 檔加進 `sw.js` 的 `SHELL_ASSETS`。驗證：`node --check sw.js`、`node tools/check-data.js` 沒有 ❌
+- [x] 3.2 實作 `basemap.js`：一般 script 定義全域物件，加上 `module.exports` 判斷。驗證：`node --check basemap.js` 與 `node --test` 全部通過；暫時拿掉其中一個判斷時，對應的測試會失敗（人為製造紅燈），還原後通過
+- [x] 3.3 在 `index.html` 的 `app.js` 之前載入 `basemap.js`，並把 `basemap.js` 和 logo 檔加進 `sw.js` 的 `SHELL_ASSETS`。驗證：`node --check sw.js`、`node tools/check-data.js` 沒有 ❌
 
 ## 4. 換進 App
 
