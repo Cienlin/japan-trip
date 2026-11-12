@@ -47,6 +47,16 @@ const Budget = (() => {
   const isNonNegative = (value) => typeof value === "number" && Number.isFinite(value) && value >= 0;
   const VALIDATORS = { rate: isPositive, flight: isNonNegative, budgetTwd: isPositive };
 
+  // 設定欄位 (總預算、機票、匯率) 輸入的值:合法就回傳數字,空白或不合法回傳 null
+  // 匯率與總預算要大於 0,機票可以是 0;存進手機與畫面計算都用這個判斷,兩邊才會一致
+  function parseSetting(key, text) {
+    const validate = VALIDATORS[key];
+    const trimmed = String(text ?? "").trim();
+    if (!validate || !trimmed) return null;
+    const value = Number(trimmed);
+    return validate(value) ? value : null;
+  }
+
   // 手機上存的預算設定轉成 v3:{ v: 3, rate?, flight?, budgetTwd? },只留旅伴改過的欄位
   // - v2 { v: 2, rate?, flight?, pocket? }:pocket (零用金) 已改成逐筆記帳,丟掉
   // - 沒有 v 的舊資料 (v1.4.1 以前一打開就全部存起來):跟當時預設值 legacyDefaults 相同的視為沒改過
@@ -67,7 +77,7 @@ const Budget = (() => {
     return result;
   }
 
-  return { parseAmount, summarize, migrateSettings };
+  return { parseAmount, parseSetting, summarize, migrateSettings };
 })();
 
 if (typeof module !== "undefined" && module.exports) {

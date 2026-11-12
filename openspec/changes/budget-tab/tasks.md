@@ -39,7 +39,7 @@
   - `GLOSSARY.md`：「預算」區塊加入總預算、花費、目前花費、目前總花費、剩餘預算，「預算計算機」移過去並改寫
 
   驗證：用詞跟規格一致
-- [ ] 3.6 更新版號，commit 並 push。給使用者手機測試清單：
+- [x] 3.6 更新版號，commit 並 push。給使用者手機測試清單：
   - 4 個分頁的順序與手機版排版；結果區在明細上方
   - 總預算空白時的提示，填了之後的百分比與剩餘預算
   - 記帳：點金額欄出現數字鍵盤、記一筆有備註與沒備註的、空白與 0 不能加入
@@ -51,5 +51,5 @@
 
 ## 4. 收尾
 
-- [ ] 4.1 執行 `/code-review`（medium 以上），每個 finding 都要處理：修正、說明理由拒絕，或記到 `docs/backlog.md`。驗證：所有 finding 都有處理結果
+- [x] 4.1 執行 `/code-review`（medium 以上），每個 finding 都要處理：修正、說明理由拒絕，或記到 `docs/backlog.md`。驗證：所有 finding 都有處理結果
 - [ ] 4.2 更新 `docs/roadmap.md` 的「目前進度」；歸檔（`/opsx:archive budget-tab`），同步規格，並把 `openspec/specs/pre-trip-guide` 的 Purpose 拿掉「預算計算機」；commit 並 push。驗證：`openspec/specs/budget` 已建立，`pre-trip-guide` 不再有預算需求，change 移到 `archive/`

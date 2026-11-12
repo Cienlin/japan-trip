@@ -1990,9 +1990,8 @@ document.addEventListener("DOMContentLoaded", () => {
     Object.entries(inputs).forEach(([key, input]) => {
       // 改回預設值、清空或不合法的欄位不記,下次打開用 data.js 的值 (總預算沒有預設值,清空就是空白)
       input.addEventListener("input", () => {
-        const value = parseFloat(input.value);
-        const valid = Number.isFinite(value) && (key === "flight" ? value >= 0 : value > 0);
-        if (valid && value !== defaults[key]) settings[key] = value;
+        const value = Budget.parseSetting(key, input.value);
+        if (value !== null && value !== defaults[key]) settings[key] = value;
         else delete settings[key];
         store(STORAGE_KEYS.budget, settings);
         render();
@@ -2003,7 +2002,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("expense-form");
     const amountInput = document.getElementById("expense-amount");
     const noteInput = document.getElementById("expense-note");
-    const addBtn = document.getElementById("expense-add-btn");
     const errorEl = document.getElementById("expense-error");
     const AMOUNT_ERRORS = {
       empty: "請先輸入金額",
@@ -2016,16 +2014,16 @@ document.addEventListener("DOMContentLoaded", () => {
       errorEl.hidden = !message;
     };
 
-    // 輸入時:空白只停用加入按鈕,不提示;不合法時馬上提示原因
+    // 輸入時:不合法馬上提示原因,空白不提示 (按加入時才提示)
+    // 加入按鈕不停用:按鈕停用時,在備註欄按 Enter 不會送出表單,空白就沒辦法提示
     const checkAmount = () => {
       const result = Budget.parseAmount(amountInput.value);
-      addBtn.disabled = !result.ok;
       showAmountError(result.ok || result.reason === "empty" ? "" : AMOUNT_ERRORS[result.reason]);
       return result;
     };
     amountInput.addEventListener("input", checkAmount);
 
-    // 在備註欄按 Enter 也會送出,所以空白時要另外提示
+    // 按加入或在備註欄按 Enter 都會送出;金額空白或不合法時提示並回到金額欄
     form.addEventListener("submit", (event) => {
       event.preventDefault();
       const result = checkAmount();
@@ -2085,10 +2083,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ---------- 結果:目前總花費、已用百分比、剩餘預算 ----------
     function render() {
-      const flightTwd = parseFloat(inputs.flight.value) || 0;
-      const rate = parseFloat(inputs.rate.value) || defaults.rate;
+      // 空白或不合法 (例如負數) 的欄位改用預設值,跟存進手機的一致;總預算沒有預設值,null 就是沒填
+      const flightTwd = Budget.parseSetting("flight", inputs.flight.value) ?? defaults.flight;
+      const rate = Budget.parseSetting("rate", inputs.rate.value) ?? defaults.rate;
+      const budgetTwd = Budget.parseSetting("budgetTwd", inputs.budgetTwd.value);
       const summary = Budget.summarize({
-        budgetTwd: parseFloat(inputs.budgetTwd.value), // 空白是 NaN → 沒填總預算
+        budgetTwd,
         flightTwd,
         hotelTwd,
         rate,
@@ -2108,7 +2108,6 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("budget-progress-container").hidden = !hasBudget;
 
       if (hasBudget) {
-        const budgetTwd = parseFloat(inputs.budgetTwd.value);
         document.getElementById("budget-target").textContent = budgetTwd.toLocaleString();
         document.getElementById("budget-percentage").textContent = `已用 ${summary.percentage}%`;
 

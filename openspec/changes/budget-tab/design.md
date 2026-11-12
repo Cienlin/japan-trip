@@ -32,6 +32,7 @@
 
 跟 `basemap.js` 一樣：一般 `<script>` 載入（在 `app.js` 之前），定義全域的 `Budget`，加上 `module.exports` 判斷。測試在 `tests/budget.test.js`。內容：
 - `parseAmount(text)` → `{ ok: true, value }` 或 `{ ok: false, reason }`
+- `parseSetting(key, text)` → 設定欄位（總預算、機票、匯率）合法時回傳數字，否則 `null`；存進手機與畫面計算共用，不合法時畫面改用預設值（程式碼審查發現負數會被算進總額）
 - `summarize({ budgetTwd, flightTwd, hotelTwd, rate, expenses })` → `spentJpy`、`spentTwd`、`totalTwd`、`percentage`、`remainingTwd`、`status`（`"unset" | "under" | "near" | "over"`）
 - `migrateSettings(stored, legacyDefaults)` → 新格式的設定
 
@@ -45,7 +46,7 @@
 
 | 情況 | 結果 | 提示 |
 |---|---|---|
-| 空白 | `reason: "empty"` | 不提示，加入按鈕停用 |
+| 空白 | `reason: "empty"` | 輸入時不提示；按加入（或在備註欄按 Enter）時提示「請先輸入金額」。加入按鈕不停用，因為按鈕停用時按 Enter 不會送出表單（程式碼審查發現） |
 | 有數字以外的字元，例如 `12.5`、`-300`、`1200+850` | `reason: "invalid"` | 金額要是大於 0 的整數 |
 | 0 | `reason: "zero"` | 金額要是大於 0 的整數 |
 

@@ -2388,11 +2388,6 @@ body.theme-dark .calc-results {
 /* ==========================================
    預算分頁:記一筆、結果、花費明細
    ========================================== */
-.btn:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
 .expense-form {
   display: flex;
   flex-direction: column;

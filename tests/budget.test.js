@@ -114,6 +114,30 @@ test("機票空白當成 0", () => {
   assert.equal(result.totalTwd, 9061);
 });
 
+// ---------- 設定欄位的值 ----------
+
+test("合法的設定值", () => {
+  assert.equal(Budget.parseSetting("rate", "0.21"), 0.21);
+  assert.equal(Budget.parseSetting("flight", "14424"), 14424);
+  assert.equal(Budget.parseSetting("flight", "0"), 0);
+  assert.equal(Budget.parseSetting("budgetTwd", "50000"), 50000);
+  assert.equal(Budget.parseSetting("budgetTwd", " 50000 "), 50000);
+});
+
+test("空白、負數、0 (機票以外) 都不合法", () => {
+  assert.equal(Budget.parseSetting("flight", ""), null);
+  assert.equal(Budget.parseSetting("flight", "-14424"), null);
+  assert.equal(Budget.parseSetting("rate", "-0.21"), null);
+  assert.equal(Budget.parseSetting("rate", "0"), null);
+  assert.equal(Budget.parseSetting("budgetTwd", "0"), null);
+  assert.equal(Budget.parseSetting("budgetTwd", undefined), null);
+  assert.equal(Budget.parseSetting("budgetTwd", "abc"), null);
+});
+
+test("不認得的欄位不合法", () => {
+  assert.equal(Budget.parseSetting("pocket", "50000"), null);
+});
+
 // ---------- 手機上的設定轉換 ----------
 
 const LEGACY_DEFAULTS = { rate: 0.22, flight: 14424 };
