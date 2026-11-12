@@ -1152,7 +1152,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const override = {};
     EDITABLE_FIELDS.forEach(field => {
       let value = values[field] ?? null;
-      if (value === "") value = base[field] ?? "";
+      // 清空的欄位沿用原本的值;原本沒有值 (例如沒有 Google Maps 連結) 就維持 null,才不會被當成修改
+      if (value === "") value = base[field] ?? null;
       const baseValue = field === "time" ? normalizeTime(base.time) : (base[field] ?? null);
       if (value !== baseValue) override[field] = value;
     });
@@ -1834,10 +1835,11 @@ document.addEventListener("DOMContentLoaded", () => {
           ${drawerTransitHtml}
 
           <div class="drawer-actions">
+            ${safeUrl(place.gmaps) ? `
             <a href="${escapeHtml(safeUrl(place.gmaps))}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
               <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               Google Maps 地圖導航
-            </a>
+            </a>` : ""}
             <button class="btn btn-outline" id="drawer-locate-btn">
               <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
               定位地圖

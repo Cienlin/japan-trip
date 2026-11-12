@@ -262,22 +262,22 @@ const PLACES = [
   },
   {
     id: "omoide_yokocho",
-    name: "新宿回憶橫丁 居酒屋",
-    englishName: "Omoide Yokocho (思い出横丁)",
+    name: "居酒屋",
+    englishName: "居酒屋 (Izakaya)",
     category: "food",
     lat: 35.6931,
     lng: 139.6997,
     day: 3,
     time: "19:30",
     desc: "其實隨便居酒屋就可以了，到時候再看看要吃哪間",
-    imageFolder: "新宿回憶橫丁",
-    gmaps: "https://maps.google.com/?q=Omoide+Yokocho+Shinjuku",
+    imageFolder: "居酒屋",
+    gmaps: null,
     transitInfo: {
       from: "Shake Shack 新宿",
       method: "walk",
       line: "徒步 (Walk 約 900m) 到新宿西口",
       duration: 12,
-      details: "從新宿南口往北沿西口方向步行約 12 分鐘，思い出橫丁就在西口斜對面。玩到 24:00 前趕末班車押上線回飯店。"
+      details: "從新宿南口往北沿西口方向步行約 12 分鐘，西口一帶居酒屋很多 (思い出橫丁也在西口斜對面)。玩到 24:00 前趕末班車押上線回飯店。"
     }
   },
 
@@ -304,22 +304,22 @@ const PLACES = [
   },
   {
     id: "yaiyai_okonomiyaki",
-    name: "原宿大阪燒 やいやい",
-    englishName: "Harajuku Okonomiyaki Yai-yai (原宿お好み焼き やいやい)",
+    name: "大阪燒",
+    englishName: "お好み焼き (Okonomiyaki)",
     category: "food",
     lat: 35.6670,
     lng: 139.7057,
     day: 4,
     time: "13:00",
     desc: "你清單上的『大阪燒』實際位置！原宿裏通鐵板燒老店，客人自己在鐵板前煎大阪燒、廣島燒、文字燒、炒麵。5 個人圍鐵板一起玩最好玩。",
-    imageFolder: "原宿大阪燒 やいやい",
-    gmaps: "https://maps.app.goo.gl/Gh6o8XyB8696pZx78",
+    imageFolder: "大阪燒",
+    gmaps: null,
     transitInfo: {
       from: "Café Kitsuné 青山",
       method: "walk",
       line: "徒步 (Walk 1.3km 穿過表參道)",
       duration: 17,
-      details: "從 Café Kitsuné 往西沿表參道方向漫步，穿過原宿商圈至裏原宿。"
+      details: "從 Café Kitsuné 往西沿表參道方向漫步，到原宿一帶找大阪燒店。"
     }
   },
   {
@@ -335,7 +335,7 @@ const PLACES = [
     imageFolder: "Chiikawa 原宿店",
     gmaps: "https://maps.app.goo.gl/JBWr123mratPgxdP8",
     transitInfo: {
-      from: "原宿大阪燒 やいやい",
+      from: "大阪燒",
       method: "walk",
       line: "徒步 (Walk 250m)",
       duration: 3,
@@ -446,42 +446,42 @@ const PLACES = [
   },
   {
     id: "takoyaki_asakusa",
-    name: "淺草章魚燒 蛸兄弟",
-    englishName: "Asakusa Takoyaki Tako Kyodai (浅草蛸たこ×ころも兄弟)",
+    name: "章魚燒",
+    englishName: "たこ焼き (Takoyaki)",
     category: "food",
     lat: 35.7118,
     lng: 139.7947,
     day: 5,
     time: "12:00",
     desc: "一樣隨便一家章魚燒店就好了",
-    imageFolder: "淺草章魚燒 蛸兄弟",
-    gmaps: "https://maps.google.com/?q=浅草蛸たこ×ころも兄弟",
+    imageFolder: "章魚燒",
+    gmaps: null,
     transitInfo: {
       from: "淺草寺",
       method: "walk",
       line: "徒步 (Walk 400m)",
       duration: 6,
-      details: "參拜完從淺草寺往雷門方向走回來，章魚燒店在雷門西側一帶。"
+      details: "參拜完從淺草寺往雷門方向走回來，雷門、仲見世通一帶就有章魚燒店。"
     }
   },
   {
     id: "umezono_daifuku",
-    name: "梅園 淺草本店 (大福和菓子)",
-    englishName: "Umezono Asakusa Honten (梅園 浅草本店)",
+    name: "大福",
+    englishName: "大福 (Daifuku)",
     category: "food",
     lat: 35.7145,
     lng: 139.7959,
     day: 5,
     time: "12:30",
     desc: "這個大幅好像不是我要的那間，我看過的是奇哥影片的",
-    imageFolder: "梅園 淺草",
-    gmaps: "https://maps.google.com/?q=Umezono+Asakusa",
+    imageFolder: "大福",
+    gmaps: null,
     transitInfo: {
-      from: "章魚燒 蛸兄弟",
+      from: "章魚燒",
       method: "walk",
       line: "徒步 (Walk 200m)",
       duration: 3,
-      details: "沿仲見世通往北 200 公尺，梅園就在仲見世通西側。"
+      details: "在仲見世通一帶找和菓子店買大福，走幾分鐘就到。"
     }
   },
   {
@@ -497,7 +497,7 @@ const PLACES = [
     imageFolder: "American Diner Andra",
     gmaps: "https://maps.app.goo.gl/uhuaHdVNmjzKpiri8",
     transitInfo: {
-      from: "梅園 淺草本店",
+      from: "大福",
       method: "subway",
       line: "東京 Metro 日比谷線 (淺草 → 入谷)",
       duration: 10,
@@ -506,22 +506,22 @@ const PLACES = [
   },
   {
     id: "otafuku_oden",
-    name: "淺草大多福 關東煮",
-    englishName: "Asakusa Oden Otafuku (浅草 大多福)",
+    name: "關東煮",
+    englishName: "おでん (Oden)",
     category: "food",
     lat: 35.7196,
     lng: 139.7915,
     day: 5,
     time: "21:00",
     desc: "這是名店，但好像也可以隨便找一家",
-    imageFolder: "大多福 關東煮",
-    gmaps: "https://maps.google.com/?q=Asakusa+Oden+Otafuku",
+    imageFolder: "關東煮",
+    gmaps: null,
     transitInfo: {
       from: "American Diner Andra",
       method: "walk",
       line: "徒步 (Walk 約 1.4km)",
       duration: 18,
-      details: "從 American Diner Andra 往東北步行約 1.4 公里到千束的大多福；不想走可以搭計程車（約 5 分鐘）。吃完直接叫計程車回押上約 ¥1,200。"
+      details: "從 American Diner Andra 往東北步行約 1.4 公里到淺草北邊的千束一帶，附近找一家關東煮；不想走可以搭計程車（約 5 分鐘）。吃完直接叫計程車回押上約 ¥1,200。"
     }
   },
 

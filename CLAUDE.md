@@ -22,6 +22,7 @@
   - `time`：`"HH:MM"`
   - `dayStart: true`：當天從這裡出發（例如 Day 1 的成田機場），它前面不顯示交通，地圖路線從它開始畫；沒有的話，每天預設從飯店出發
   - `imageFolder`：照片資料夾名稱（見下方「照片」）
+  - `gmaps`：Google Maps 連結。「到時候在附近找一間就好」的地點（章魚燒、大福、關東煮、居酒屋、大阪燒）名稱用統稱、照片資料夾也用統稱，`gmaps` 設成 `null`，詳細資訊就不顯示導航按鈕（每段交通的 Google Maps 路線用座標，不受影響）
   - `transitInfo`：**描述「從前一站怎麼到這裡」**，欄位有 `from`、`method`（walk/subway/train/bus）、`line`、`duration`（分鐘）、`details`
 - **移動、新增、刪除地點時，前後站的 `transitInfo` 都要跟著檢查**：後一站的 `from` 與交通說明要改成新的前一站。App 會比對「前一站」與 data.js 的原始行程，不一致時改顯示 Google Maps 路線，所以 data.js 本身要保持正確
 - 飯店 `syla_hotel`（app.js 的 `HOTEL_ID`）是 Day 1 19:00 的 check-in 站，也是每天路線的起點，Day 6 以外會回到飯店

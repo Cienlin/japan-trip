@@ -89,7 +89,8 @@ for (const p of PLACES) {
     warnings.push(`${label(p)}是候補,time / transitInfo / dayStart 不會用到,可以設成 null`);
   }
 
-  if (!p.gmaps || !/^https:\/\//.test(p.gmaps)) {
+  // 沒有 Google Maps 連結是允許的 (例如「到時候在附近找」的章魚燒、居酒屋),詳細資訊不顯示導航按鈕
+  if (p.gmaps != null && !/^https:\/\//.test(p.gmaps)) {
     warnings.push(`${label(p)}的 Google Maps 連結不是 https 網址:${p.gmaps}`);
   }
   if (!p.imageFolder) {
