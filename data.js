@@ -33,7 +33,7 @@ const TRIP_METADATA = {
   budget: {
     targetTwd: 50000,  // 預算目標 (台幣)
     flightTwd: 14424,  // 機票 (台幣)
-    jpyRate: 0.22,     // 匯率 (台幣 / 1 日圓)
+    jpyRate: 0.21,     // 匯率 (台幣 / 1 日圓) — 臺灣銀行現金賣出,2026-11-12
     pocketJpy: 50000   // 餐飲、購物零用預算 (日圓)
   }
 };
