@@ -3,7 +3,6 @@
 const PLACE_IMAGES = {
   "syla_hotel": ["SYLA 飯店/1.jpg?v=3e27d816","SYLA 飯店/2.jpg?v=7993cd1f","SYLA 飯店/3.jpg?v=c2ff7a62","SYLA 飯店/4.jpg?v=90a70c49","SYLA 飯店/5.jpg?v=74a4b47e","SYLA 飯店/6.jpg?v=f7ddec42","SYLA 飯店/7.jpg?v=639a7840","SYLA 飯店/8.jpg?v=c0f44cb4","SYLA 飯店/9.jpg?v=598222bd","SYLA 飯店/10.jpg?v=3d4bd94a","SYLA 飯店/11.jpg?v=29f25b4d"],
   "narita_airport": ["成田國際機場/1.jpg?v=55fcc2c9","成田國際機場/2.jpg?v=78dfaa12","成田國際機場/3.png?v=ce725019"],
-  "sensoji_night": ["淺草寺/1.jpg?v=4386852e","淺草寺/2.jpg?v=45e8a87e","淺草寺/3.png?v=84c46c0f"],
   "lawson_oshiage": ["Lawson 押上店/1.jpg?v=b33138f2"],
   "tonkatsu_aoki": ["とんかつ檍 銀座/1.jpg?v=c70ff2fb","とんかつ檍 銀座/2.jpg?v=a9f4525c"],
   "uniqlo_ginza": ["Uniqlo 銀座/1.jpg?v=360dcb87"],
@@ -19,7 +18,9 @@ const PLACE_IMAGES = {
   "chiikawa_harajuku": ["Chiikawa 原宿店/1.jpg?v=360dcb87"],
   "harbs_shibuya": ["HARBS 澀谷/1.jpg?v=6561115e","HARBS 澀谷/2.jpg?v=2f7d49bc"],
   "yamawarau_omotesando": ["山笑ふ 壽喜燒/1.jpg?v=b261e631","山笑ふ 壽喜燒/2.jpg?v=890d6bb3"],
+  "tokyo_skytree": ["晴空塔展望台/1.jpg?v=49c2462a"],
   "patisserie_ten": ["PATISSERIE TEN 泡芙/1.jpg?v=fe934412"],
+  "sensoji_night": ["淺草寺/1.jpg?v=4386852e","淺草寺/2.jpg?v=45e8a87e","淺草寺/3.png?v=84c46c0f"],
   "takoyaki_asakusa": ["淺草章魚燒 蛸兄弟/1.jpg?v=b3af80c3"],
   "umezono_daifuku": ["梅園 淺草/1.jpg?v=fe934412"],
   "american_diner_andra": ["American Diner Andra/1.jpg?v=e7438c8b","American Diner Andra/2.jpg?v=a299f70e"],
@@ -30,11 +31,11 @@ const PLACE_IMAGES = {
   "yamada_unagi": ["山田的鰻/1.jpg?v=c57b531e"],
   "meiji_jingu": ["明治神宮/1.jpg?v=3d40f367"],
   "akihabara": ["秋葉原/1.jpg?v=49c2462a"],
-  "tokyo_skytree": ["晴空塔展望台/1.jpg?v=49c2462a"],
   "eifukuen_shinjuku": [],
   "negishi_yurakucho": [],
   "pokemon_center_shibuya": [],
   "taco_bell_shibuya": [],
   "kameari_ryotsu": [],
-  "jingu_gaien_ginkgo": []
+  "jingu_gaien_ginkgo": [],
+  "sekaido_shinjuku": []
 };

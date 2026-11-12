@@ -718,4 +718,18 @@ const PLACES = [
     gmaps: "https://maps.google.com/?q=Meiji+Jingu+Gaien+Ginkgo+Avenue",
     transitInfo: null
   },
+  {
+    id: "sekaido_shinjuku",
+    name: "世界堂 (Sekaido) 新宿本店",
+    englishName: "Sekaido Shinjuku Main Store (世界堂 新宿本店)",
+    category: "shopping",
+    lat: 35.6899,
+    lng: 139.7063,
+    day: null,
+    time: null,
+    desc: "幫家人看文具。畫材、文具專賣店，整棟 5 層樓，多數商品最多打 8 折。9:30～21:00，年中無休（年初除外）。在新宿三丁目，離 D3 的 Alpen Tokyo 步行約 10 分鐘。",
+    imageFolder: "世界堂 新宿本店",
+    gmaps: "https://maps.google.com/?q=世界堂+新宿本店",
+    transitInfo: null
+  },
 ];
