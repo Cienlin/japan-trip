@@ -2,9 +2,9 @@
 
 ## 1. 準備
 
-- [ ] 1.1 使用者完成 Google Cloud 設定：建立專案與帳單帳戶、啟用 Map Tiles API、建立金鑰（網站限制 `https://cienlin.github.io/*`、API 限制只允許 Map Tiles API），已升級成付費帳戶（確認沒有選訂閱方案）、`2D Tiles requests per day` 設成 3,000，把金鑰交給 Claude。驗證：使用者回報每一步完成，並提供金鑰
-- [ ] 1.2 下載官方 `Google_Maps_Attribution_Assets.zip`，挑出淺色與深色底圖要用的 logo，放進 `assets/`。驗證：檔案存在，並在 commit 訊息記下選用哪個版本、為什麼（有外框或沒外框）
-- [ ] 1.3 在 `docs/roadmap.md` 的 Phase 2 註明這次是凍結期的破例（地圖底圖改用 Google）。驗證：roadmap 的 Phase 2 狀態與「目前進度」都有寫到
+- [x] 1.1 使用者完成 Google Cloud 設定：建立專案與帳單帳戶、啟用 Map Tiles API、建立金鑰（網站限制 `https://cienlin.github.io/*`、API 限制只允許 Map Tiles API），已升級成付費帳戶（確認沒有選訂閱方案）、`2D Tiles requests per day` 設成 3,000，把金鑰交給 Claude。驗證：使用者回報每一步完成，並提供金鑰
+- [x] 1.2 下載官方 `Google_Maps_Attribution_Assets.zip`，挑出淺色與深色底圖要用的 logo，放進 `assets/`。驗證：檔案存在，並在 commit 訊息記下選用哪個版本、為什麼（有外框或沒外框）
+- [x] 1.3 在 `docs/roadmap.md` 的 Phase 2 註明這次是凍結期的破例（地圖底圖改用 Google）。驗證：roadmap 的 Phase 2 狀態與「目前進度」都有寫到
 
 ## 2. 測試頁
 

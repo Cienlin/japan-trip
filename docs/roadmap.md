@@ -11,14 +11,15 @@
 |---|---|---|
 | Phase 0 | 導入開發流程（OpenSpec + Matt Pocock skills）、建立名詞表 `GLOSSARY.md`，只動文件 | ✅ 2026-10-01 |
 | Phase 1 | 規則考古：把現有程式的規則寫成基準規格 `openspec/specs/`（8 份）；程式跟規格不一致的地方、還沒決定的設計問題記在 `docs/backlog.md` | ✅ 2026-10-01 寫完，使用者審閱中 |
-| Phase 2 | 凍結期：旅行結束前不動網站架構，只做 Quick fix（行程資料、照片、行前指南文字） | 進行中，到 2026-12-14 |
+| Phase 2 | 凍結期：旅行結束前不動網站架構，只做 Quick fix（行程資料、照片、行前指南文字）。破例：地圖底圖改用 Google 圖磚（OpenSpec change `google-map-tiles`，2026-11-12 使用者決定） | 進行中，到 2026-12-14 |
 | Phase 3 | 重構：資料跟程式分開，純邏輯拆成模組並用 `node --test` 測試；處理 backlog 標「Phase 3」的項目，並決定 D1、D2 | 旅行後 |
 | Phase 4 | 加後端，讓旅伴的修改能同步；一併決定 backlog B9 | 旅行後 |
 | Phase 5 | 需要手機原生功能時，才用 Capacitor 包成 App | 視需要 |
 
 ## 目前進度
 
-最後更新：2026-10-02
+最後更新：2026-11-12
 
 - Phase 1 的規格與 backlog 已 commit，使用者還在審閱；有要改的地方直接改規格或 backlog
-- 審閱完之後，旅行前只做 Quick fix；Phase 3 等旅行結束再開始
+- 旅行前原則上只做 Quick fix；Phase 3 等旅行結束再開始
+- 凍結期破例：手機上地圖糊、字太小，出發前把底圖換成 Google 圖磚，用不了時自動退回 OpenStreetMap。進度看 `openspec/changes/google-map-tiles/tasks.md`
