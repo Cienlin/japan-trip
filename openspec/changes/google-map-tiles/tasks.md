@@ -42,7 +42,7 @@
   - `GLOSSARY.md` 加入「底圖」「備用底圖」
 
   驗證：三個檔案都有對應段落，用詞跟規格一致
-- [ ] 4.6 更新版號，commit 並 push。給使用者手機測試清單：
+- [x] 4.6 更新版號，commit 並 push。給使用者手機測試清單：
   - 淺色、深色主題的地圖都清楚，地名是選定的語言，字是選定的大小
   - logo 與版權文字在分頁列上方，拖曳地圖後版權文字會更新
   - 標記、每天的路線、我的位置、新增地點時點選座標都正常
@@ -53,6 +53,6 @@
 
 ## 5. 收尾
 
-- [ ] 5.1 刪掉 `map-test.html` 與 `map-test.js`；如果金鑰的網站限制有暫時加 `openlayers.org`，請使用者移除。更新版號，commit 並 push。驗證：檔案已不存在，使用者確認 App 正常
+- [x] 5.1 刪掉 `map-test.html` 與 `map-test.js`；如果金鑰的網站限制有暫時加 `openlayers.org`，請使用者移除。更新版號，commit 並 push。驗證：檔案已不存在，使用者確認 App 正常
 - [ ] 5.2 執行 `/code-review`（medium 以上），每個 finding 都要處理：修正、說明理由拒絕，或記到 `docs/backlog.md`。驗證：所有 finding 都有處理結果
 - [ ] 5.3 更新 `docs/roadmap.md` 的「目前進度」，執行 `/opsx:archive google-map-tiles`，commit 並 push。驗證：`openspec/specs/map` 與 `offline-updates` 已同步新規格，change 移到 `archive/`
