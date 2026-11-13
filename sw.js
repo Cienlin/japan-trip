@@ -9,7 +9,7 @@
 //   - 其他跨源 (Leaflet CDN、Google Fonts):stale-while-revalidate
 //   圖片 / 圖磚 / CDN 快取名稱固定,改版不會被清掉
 
-const VERSION = 'v1.4.20';
+const VERSION = 'v1.4.21';
 const SHELL_CACHE = `tokyo-shell-${VERSION}`;
 const IMAGE_CACHE = 'tokyo-images';
 const TILE_CACHE = 'tokyo-tiles';
