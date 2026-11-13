@@ -272,6 +272,22 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   };
 
+  // 天數按鈕下面的日期:由出發日算出,跟 getTripNow 一樣用 UTC 計算,不受手機時區影響
+  const tripDayDate = (day) => new Date(Date.parse(TRIP_START_DATE) + (day - 1) * DAY_MS);
+  const dayDateLabel = (day) => {
+    const d = tripDayDate(day);
+    return `${d.getUTCMonth() + 1}/${d.getUTCDate()} ${WEEKDAYS[d.getUTCDay()]}`;
+  };
+  // 「全部」的日期範圍:同一個月寫 12/9–14,跨月寫 12/30–1/2
+  const tripRangeLabel = (lastDay) => {
+    const first = tripDayDate(1);
+    const last = tripDayDate(lastDay);
+    const end = first.getUTCMonth() === last.getUTCMonth()
+      ? `${last.getUTCDate()}`
+      : `${last.getUTCMonth() + 1}/${last.getUTCDate()}`;
+    return `${first.getUTCMonth() + 1}/${first.getUTCDate()}–${end}`;
+  };
+
   const isTripDay = (day) => day >= 1 && day <= LAST_TRIP_DAY;
 
   // 每一站的前一站 id,當天第一站的前一站是飯店。{ [placeId]: prevPlaceId }
@@ -365,6 +381,7 @@ document.addEventListener("DOMContentLoaded", () => {
       autoSelectedDay = today;
       activeDay = String(today);
     }
+    labelDayButtons();
     syncDayButtons();
 
     // B. Initialize Leaflet Map
@@ -1692,6 +1709,19 @@ document.addEventListener("DOMContentLoaded", () => {
     syncDayButtons();
     renderItinerary();
     updateMapMarkers();
+  }
+
+  // 天數按鈕改成「天數＋日期」兩行 (按鈕本身寫死在 index.html,見 backlog B1)
+  function labelDayButtons() {
+    const buttons = [...document.querySelectorAll(".day-btn")];
+    const lastDay = Math.max(...buttons.map(b => Number(b.getAttribute("data-day"))).filter(Number.isInteger));
+    buttons.forEach(b => {
+      const day = b.getAttribute("data-day");
+      const label = day === "all" ? "全部" : `D${day}`;
+      const date = day === "all" ? tripRangeLabel(lastDay) : dayDateLabel(Number(day));
+      b.innerHTML = `<span class="day-btn-label">${label}</span><span class="day-btn-date">${date}</span>`;
+      b.setAttribute("aria-label", `${label} ${date}`);
+    });
   }
 
   // 天數按鈕:標示目前選取的天數,以及旅行中的今天 (小圓點)

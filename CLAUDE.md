@@ -64,4 +64,12 @@
   - Google 圖磚不會把日本地名翻成中文（`zh-TW` 跟 `ja` 一樣是日文），不要再承諾中文地名
 - **Google 金鑰公開是正常的**：網頁版地圖的金鑰一定在原始碼裡，GitHub 寄 secret scanning 警告時選「Won't fix」，不用撤銷。保護靠 Google Cloud 設定：網站限制 `https://cienlin.github.io/*`（不能寫 `/japan-trip/*`，跨網域請求只送網域）、API 限制只允許 Map Tiles API、`2D Tiles requests per day` = 3,000（每月免費 100,000 張以內）；不要調低 `uncharged requests per day`。停用、重新啟用的方式見 README
 - CSS：`:hover` 規則要包在 `@media (hover: hover)` 裡（避免手機點擊後 hover 卡住）；顏色用 `:root` 與 `body.theme-dark` 的變數；用 `hidden` 屬性隱藏元素
+- **外觀「藍墨水手帳」**（2026-11，OpenSpec change `notebook-look`，規格在 `openspec/specs/appearance`）：
+  - 字型全站用霞鶩文楷（`--font-primary`，Google Fonts 只載 400／700，所以 CSS 只用這兩種粗細），載不到時用手機內建中文字型
+  - 淺色是偏冷的白與淺灰（使用者不要米色），重點色是藍墨水（變數名稱沿用舊的 `--accent-gold`、`--primary`）；每個畫面的顏色收在 3～4 種，盡量不加框線
+  - 共用元件：便條紙（`--bg-card` + `--note-shadow`、沒有框線）、淺藍紙膠帶（`--tape` + `clip-path: var(--zigzag)`）、螢光筆（`var(--highlight-mark)`，定義在 `body` 上，深色主題才會跟著換）；寫在 style.css 開頭的「共用」區，新元件照這幾種組合
+  - 方格紙只鋪在行程分頁（`#pane-itinerary`）天數列以下；標題列、分頁列、天數列與其他分頁都是純色
+  - 時間軸不顯示類別（類別顏色 `--color-*` 只給地圖標記用）；交通說明維持原本的呈現
+  - 不用 `color-mix()`（舊一點的 iOS 不支援），半透明寫成 rgba 變數；SVG 圖示（下拉箭頭、行前清單的勾）用 data URI 變數，深色另外寫一份
+  - 天數按鈕的日期由 `app.js` 的 `labelDayButtons()` 依 `TRIP_METADATA.startDate` 算出（UTC 計算，跟手機時區無關）
 - 註解使用繁體中文

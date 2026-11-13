@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#0a4269">
+  <meta name="theme-color" content="#2f4f8f">
   <title>東京行 🇯🇵 互動地圖 & 行程規劃</title>
 
   <meta name="description" content="2026 年 12/9~12/14 東京 6 天 5 夜 5 人自由行:互動地圖、每日行程、美食景點、交通接駁、預算記帳與行前清單。">
@@ -31,13 +31,14 @@
   <!-- Leaflet Map CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   
-  <!-- Google Fonts: Outfit (English) & Noto Sans TC (Traditional Chinese) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <!-- Google Fonts:霞鶩文楷 (LXGW WenKai TC),全站共用;載不到時用 style.css 的系統中文字型
+       兩條字型連結都加 crossorigin:回應才是一般的跨源回應,Service Worker 才能存進快取,離線也有字型與圖示 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&display=swap" rel="stylesheet" crossorigin>
   <!-- Google Material Symbols Outlined — 只載入用到的圖示 (全套約 4MB → 子集約 3KB)
        新增圖示時要把名稱加進 icon_names (需依字母排序) -->
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=account_balance_wallet,add_card,delete,event_note,explore,flight_takeoff,hotel,playlist_add_check,receipt_long,savings,subway,tips_and_updates,tune&display=block" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=account_balance_wallet,add_card,delete,event_note,explore,flight_takeoff,hotel,playlist_add_check,receipt_long,savings,subway,tips_and_updates,tune&display=block" rel="stylesheet" crossorigin />
   
   <!-- Link Stylesheet -->
   <link rel="stylesheet" href="style.css">
@@ -73,19 +74,19 @@
       <nav class="tab-navigation">
         <button class="tab-btn active" data-tab="itinerary" id="tab-btn-itinerary">
           <span class="material-symbols-outlined tab-icon">event_note</span>
-          行程規劃
+          <span class="tab-label">行程規劃</span>
         </button>
         <button class="tab-btn" data-tab="directory" id="tab-btn-directory">
           <span class="material-symbols-outlined tab-icon">explore</span>
-          美食景點
+          <span class="tab-label">美食景點</span>
         </button>
         <button class="tab-btn" data-tab="budget" id="tab-btn-budget">
           <span class="material-symbols-outlined tab-icon">savings</span>
-          預算
+          <span class="tab-label">預算</span>
         </button>
         <button class="tab-btn" data-tab="logistics" id="tab-btn-logistics">
           <span class="material-symbols-outlined tab-icon">flight_takeoff</span>
-          行前指南
+          <span class="tab-label">行前指南</span>
         </button>
       </nav>
       
@@ -135,12 +136,12 @@
             </div>
             
             <div class="category-filters" id="category-filter-container">
-              <button class="filter-chip active" data-category="all">全部</button>
-              <button class="filter-chip" data-category="food">🍔 美食</button>
-              <button class="filter-chip" data-category="shopping">🛍️ 購物</button>
-              <button class="filter-chip" data-category="sightseeing">🗼 景點</button>
-              <button class="filter-chip" data-category="lodging">🏨 住宿</button>
-              <button class="filter-chip" data-category="transport">✈️ 交通</button>
+              <button class="filter-chip active" data-category="all"><span class="chip-label">全部</span></button>
+              <button class="filter-chip" data-category="food"><span class="chip-label">🍔 美食</span></button>
+              <button class="filter-chip" data-category="shopping"><span class="chip-label">🛍️ 購物</span></button>
+              <button class="filter-chip" data-category="sightseeing"><span class="chip-label">🗼 景點</span></button>
+              <button class="filter-chip" data-category="lodging"><span class="chip-label">🏨 住宿</span></button>
+              <button class="filter-chip" data-category="transport"><span class="chip-label">✈️ 交通</span></button>
             </div>
           </div>
           
@@ -394,7 +395,7 @@
       <div id="map"></div>
 
       <!-- Version + Viewport Debug Badge (方便診斷 iOS PWA viewport bug) -->
-      <div class="version-badge" id="version-badge">v1.4.22</div>
+      <div class="version-badge" id="version-badge">v1.5.0</div>
       
       <!-- Theme & Action Floating Toolbar -->
       <div class="floating-toolbar">

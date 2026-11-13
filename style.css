@@ -1,102 +1,111 @@
-/* Style sheet for Tokyo Travel Map Application */
+/* 東京行 — 外觀「藍墨水手帳」(OpenSpec change notebook-look)
+   - 字型:霞鶩文楷;顏色變數集中在 :root 與 body.theme-dark
+   - 便條紙 (白底 + 陰影、沒有框線)、淺藍紙膠帶 (--tape + --zigzag)、黃色螢光筆 (--highlight-mark)
+   - 方格紙只鋪在行程分頁 (#pane-itinerary);標題列、分頁列、天數列都是純色
+   - 不用 color-mix() (舊一點的 iOS 不支援),半透明一律寫成 rgba 變數 */
 
 :root {
   /* Filled by app.js on mobile/PWA; keeps all fixed layers on one viewport. */
   --app-height: 100dvh;
-  /* Common Core Tokens */
-  --font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-chinese: 'Noto Sans TC', sans-serif;
-  
+  /* 霞鶩文楷由 index.html 從 Google Fonts 載入;載不到時用手機內建的中文字型 */
+  --font-primary: "LXGW WenKai TC", "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif;
+
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --border-radius-sm: 8px;
-  --border-radius-md: 12px;
+  --border-radius-sm: 6px;
+  --border-radius-md: 10px;
   --border-radius-lg: 18px;
   --border-radius-round: 50%;
-  
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.12);
-  
-  /* Category Colors */
-  --color-lodging: #0a4269; /* Primary deep blue */
-  --color-lodging-bg: #e0f2fe;
-  --color-transport: #0f766e; /* Teal:機場等交通據點 */
-  --color-transport-bg: #ccfbf1;
-  --color-food: #735c00; /* Secondary mustard yellow */
-  --color-food-bg: #ffe088;
-  --color-shopping: #830523; /* Tertiary deep red */
-  --color-shopping-bg: #ffdada;
-  --color-sightseeing: #005eb8; /* Shinkansen blue */
-  --color-sightseeing-bg: #e0f2fe;
-  
-  /* Theme-specific Colors (Light Theme Defaults) */
-  --bg-app: #f7f9fb;
-  --bg-sidebar: rgba(255, 255, 255, 0.85);
-  --bg-card: rgba(255, 255, 255, 0.9);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.18);
+  /* 便條紙:像貼在紙上,下緣微微翹起 */
+  --note-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 8px 14px -10px rgba(0, 0, 0, 0.35);
+
+  /* 紙膠帶兩端的鋸齒;小的用在天數按鈕與照片上 */
+  --zigzag: polygon(0 0, 100% 0, 96% 25%, 100% 50%, 96% 75%, 100% 100%, 0 100%, 4% 75%, 0 50%, 4% 25%);
+  --zigzag-small: polygon(0 0, 100% 0, 90% 50%, 100% 100%, 0 100%, 10% 50%);
+
+  /* 類別顏色:只給地圖標記用 (時間軸、清單、詳細資訊都不顯示類別顏色) */
+  --color-lodging: #0a4269;
+  --color-transport: #0f766e;
+  --color-food: #735c00;
+  --color-shopping: #830523;
+  --color-sightseeing: #005eb8;
+
+  /* 藍墨水手帳 (淺色):偏冷的白與淺灰,不用米色 */
+  --bg-app: #f6f7f9;            /* 純色底:標題列、分頁列、天數列、各分頁 */
+  --bg-sidebar: #f6f7f9;
+  --bg-card: #ffffff;           /* 便條紙 */
   --bg-card-hover: #ffffff;
-  --border-color: rgba(194, 201, 209, 0.4);
-  --text-main: #191c1e;
-  --text-muted: #42474e;
-  --text-inverse: #ffffff;
-  
-  /* New palette custom variables */
-  --primary: #0a4269;
+  --border-color: #e3e6eb;      /* 細線 */
+  --line-strong: #c4c9d1;       /* 輸入欄底線、虛線、點線 */
+  --text-main: #23262e;         /* 墨色 */
+  --text-muted: #646873;
+  --text-inverse: #ffffff;      /* 藍墨水底上的字 */
+  --primary: #2f4f8f;           /* 藍墨水 */
   --on-primary: #ffffff;
-  --secondary: #735c00;
-  --shinkansen-blue: #005eb8;
-  --frost-blue: #e0f2fe;
-  --primary-container: #2b5a82;
-  --on-primary-container: #a5d1ff;
-  
-  --accent-gold: #005eb8; /* Point accent highlights to Shinkansen Blue */
-  --accent-gold-hover: #0a4269;
-  --accent-gold-bg: #e0f2fe;
-  
-  /* 狀態文字色:預算充裕 / 接近 / 超支、本機修改標籤 */
-  --status-ok-text: #047857;
-  --status-warn-text: #c2410c;
-  --status-danger-text: #dc2626;
+  --accent-gold: #2f4f8f;       /* 重點色 (沿用舊名稱) = 藍墨水 */
+  --accent-gold-hover: #253f73;
+  --accent-gold-bg: rgba(47, 79, 143, 0.08);
+  --tape: rgba(190, 210, 235, 0.92);       /* 淺藍紙膠帶 */
+  --highlighter: rgba(255, 224, 92, 0.75); /* 黃色螢光筆 */
+  --grid-line: rgba(70, 100, 150, 0.10);   /* 行程區的方格紙 */
+  --photo-frame: #ffffff;                  /* 照片的白邊 */
+  --overlay: rgba(20, 22, 28, 0.45);       /* 視窗後面的遮罩 */
+
+  /* 狀態色:預算充裕 / 接近 / 超支、今天的小圓點 */
+  --status-ok-text: #2e7d4f;
+  --status-warn-text: #b5651d;
+  --status-danger-text: #b3261e;
+  --status-warn-fill: rgba(232, 140, 60, 0.55);
+  --status-danger-fill: rgba(214, 70, 60, 0.55);
 
   /* 地圖上的我的位置 (藍點) */
   --user-location: #2563eb;
 
-  --scrollbar-thumb: #cbd5e1;
-  --glass-blur: blur(12px); /* 必須是 filter function,不能只寫 12px,否則 backdrop-filter 整條失效 */
-  --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+  --scrollbar-thumb: #c4c9d1;
+  /* 下拉選單的箭頭、行前清單的勾 (SVG 裡不能用變數,深色另外寫) */
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23646873' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --check-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M2.5 8.5l3.5 3.5 7.5-8.5' fill='none' stroke='%232f4f8f' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
-/* Dark Theme Variables */
+/* 藍墨水手帳 (深色) */
 body.theme-dark {
-  --bg-app: #121620;
-  --bg-sidebar: rgba(26, 28, 30, 0.85);
-  --bg-card: rgba(30, 41, 59, 0.7);
-  --bg-card-hover: rgba(30, 41, 59, 0.95);
-  --border-color: rgba(255, 255, 255, 0.08);
-  --text-main: #eceef0;
-  --text-muted: #c2c7cf;
-  --text-inverse: #121620;
-  
-  --primary: #9ecbf9;
-  --on-primary: #001d33;
-  --secondary: #ffe088;
-  --shinkansen-blue: #9ecbf9;
-  --frost-blue: #1e293b;
-  --primary-container: #2b5a82;
-  --on-primary-container: #a5d1ff;
-  
-  --accent-gold: #9ecbf9;
-  --accent-gold-hover: #cfe5ff;
-  --accent-gold-bg: rgba(158, 203, 249, 0.1);
-  
-  --status-ok-text: #6ee7b7;
-  --status-warn-text: #fdba74;
-  --status-danger-text: #fca5a5;
+  --bg-app: #1b1d22;
+  --bg-sidebar: #1b1d22;
+  --bg-card: #262930;
+  --bg-card-hover: #2c2f37;
+  --border-color: #2c2f36;
+  --line-strong: #474a52;
+  --text-main: #ebe8e1;
+  --text-muted: #a9a59c;
+  --text-inverse: #10203d;
+  --primary: #9db8f0;
+  --on-primary: #10203d;
+  --accent-gold: #9db8f0;
+  --accent-gold-hover: #c3d4f6;
+  --accent-gold-bg: rgba(157, 184, 240, 0.12);
+  --tape: rgba(70, 95, 135, 0.9);
+  --highlighter: rgba(214, 180, 40, 0.42);
+  --grid-line: rgba(255, 255, 255, 0.05);
+  --photo-frame: #e9e6df;
+  --overlay: rgba(0, 0, 0, 0.55);
+  --note-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 14px -10px rgba(0, 0, 0, 0.7);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.45);
+
+  --status-ok-text: #7fd1a0;
+  --status-warn-text: #f2b072;
+  --status-danger-text: #f2928a;
+  --status-warn-fill: rgba(242, 176, 114, 0.5);
+  --status-danger-fill: rgba(242, 146, 138, 0.5);
 
   --user-location: #60a5fa;
 
-  --scrollbar-thumb: #475569;
-  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  --scrollbar-thumb: #474a52;
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23a9a59c' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --check-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M2.5 8.5l3.5 3.5 7.5-8.5' fill='none' stroke='%239db8f0' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
 /* Global Reset */
@@ -112,13 +121,23 @@ body.theme-dark {
 }
 
 body {
-  font-family: var(--font-primary), var(--font-chinese);
+  /* 螢光筆:定義在 body 上,深色主題的 --highlighter 才會跟著換
+     用法:background: var(--highlight-mark) 0 92% / 100% 60% no-repeat (只蓋住文字的下半部) */
+  --highlight-mark: linear-gradient(100deg, transparent 0 2%, var(--highlighter) 4% 96%, transparent 98%);
+  font-family: var(--font-primary);
   color: var(--text-main);
   background-color: var(--bg-app);
   overflow: hidden;
   height: var(--app-height);
   min-height: var(--app-height);
   transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
 }
 
 /* App Container Layout */
@@ -133,26 +152,47 @@ body {
 /* 所有 :hover 規則都包在 @media (hover: hover) 裡:觸控裝置點擊後 hover 樣式會卡住不消失 */
 
 /* ==========================================
+   共用:螢光筆、紙膠帶、便條紙
+   ========================================== */
+/* 螢光筆:目前的分頁、選中的類別、下一站、已修改、去程回程、旅行中的今天 */
+.tab-btn.active .tab-label,
+.filter-chip.active .chip-label,
+.next-stop-tag,
+.local-tag,
+.badge,
+.countdown-badge.is-traveling #countdown-text {
+  background: var(--highlight-mark) 0 92% / 100% 60% no-repeat;
+  padding: 0 4px;
+}
+
+/* 紙膠帶:時間、各區標題、視窗標題、版號 */
+.timeline-time-badge,
+.card-header,
+.modal-header h3,
+.version-badge {
+  background: var(--tape);
+  color: var(--text-main);
+  clip-path: var(--zigzag);
+}
+
+/* ==========================================
    SIDEBAR STYLING
    ========================================== */
 .sidebar {
   background-color: var(--bg-sidebar);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-right: var(--glass-border);
+  border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   height: var(--app-height);
   overflow: hidden;
   box-shadow: var(--shadow-md);
   z-index: 10;
-  transition: background-color var(--transition-normal), border var(--transition-normal);
+  transition: background-color var(--transition-normal);
 }
 
 /* Brand Header */
 .brand-header {
-  padding: 24px 20px;
-  border-bottom: 1px solid var(--border-color);
+  padding: 22px 20px 6px;
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
@@ -163,11 +203,11 @@ body {
 .header-logo {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .emoji-logo {
-  font-size: 2.2rem;
+  font-size: 2rem;
   animation: float 4s ease-in-out infinite;
 }
 
@@ -177,62 +217,52 @@ body {
 }
 
 .brand-header h1 {
-  font-size: 1.25rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  letter-spacing: -0.5px;
+  letter-spacing: 0.04em;
   color: var(--text-main);
   line-height: 1.2;
 }
 
 .brand-header .subtitle {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
+/* 出發倒數:沒有框,淡墨色小字 */
 .countdown-badge {
-  background: var(--accent-gold-bg);
-  border: 1px solid var(--accent-gold);
-  color: var(--accent-gold);
-  padding: 6px 12px;
-  border-radius: var(--border-radius-md);
+  color: var(--text-muted);
   font-size: 0.8rem;
-  font-weight: 600;
   text-align: center;
   font-variant-numeric: tabular-nums;
 }
 
-/* 倒數的時分秒:固定寬度,數字跳動時整個徽章不會左右抖 */
+/* 倒數的時分秒:固定寬度,數字跳動時整段文字不會左右抖 */
 .countdown-num {
   display: inline-block;
   min-width: 2ch;
   text-align: center;
 }
 
-/* 出發後 (旅行中顯示今天是 Day 幾、回國後顯示旅程結束) 改用綠色 */
+/* 出發後 (旅行中顯示今天是 Day 幾、回國後顯示旅程結束):墨色 + 螢光筆 (見上方共用規則) */
 .countdown-badge.is-traveling {
-  background: rgba(16, 185, 129, 0.1);
-  border-color: var(--status-ok-text);
-  color: var(--status-ok-text);
+  color: var(--text-main);
 }
 
-/* Tab Navigation */
+/* Tab Navigation:沒有框和色塊,目前的分頁用螢光筆 (見上方共用規則) */
 .tab-navigation {
   display: flex;
-  margin: 16px 16px 8px 16px;
-  background: var(--bg-app);
-  padding: 4px;
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-color);
+  margin: 6px 12px 4px;
 }
 
 .tab-btn {
   flex: 1;
   background: none;
   border: none;
-  padding: 8px 4px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  padding: 10px 4px;
+  font-size: 0.9rem;
+  font-weight: 400;
   color: var(--text-muted);
   cursor: pointer;
   display: flex;
@@ -240,39 +270,31 @@ body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  transition: all var(--transition-fast);
+  transition: color var(--transition-fast);
   border-radius: var(--border-radius-sm);
   outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tab-btn:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: -2px;
 }
 
 @media (hover: hover) {
   .tab-btn:hover {
     color: var(--text-main);
-    background: rgba(0, 0, 0, 0.03);
-  }
-}
-
-@media (hover: hover) {
-  body.theme-dark .tab-btn:hover {
-    background: rgba(255, 255, 255, 0.03);
   }
 }
 
 .tab-btn.active {
-  color: var(--primary);
-  background: var(--frost-blue);
-  box-shadow: var(--shadow-sm);
-}
-
-body.theme-dark .tab-btn.active {
-  color: var(--on-primary);
-  background: var(--primary-container);
+  color: var(--text-main);
 }
 
 .tab-icon {
-  width: 18px;
-  height: 18px;
-  font-size: 18px;
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
 }
 
 /* Tab Content */
@@ -293,6 +315,7 @@ body.theme-dark .tab-btn.active {
 
 .tab-pane.active {
   display: block;
+  min-height: 100%;
   animation: fadeIn 0.3s ease;
 }
 
@@ -321,227 +344,205 @@ body.theme-dark .tab-btn.active {
 /* ==========================================
    TAB 1: ITINERARY TIMELINE
    ========================================== */
-/* 往下捲動看行程時,天數按鈕固定在捲動區的最上方;背景半透明,加模糊讓底下的行程不干擾 */
+/* 行程分頁:天數列以下鋪方格紙;上方不留白,天數列 (純色) 直接貼齊頂端 */
+#pane-itinerary {
+  padding-top: 0;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+/* 往下捲動看行程時,天數按鈕固定在捲動區的最上方;純色,蓋住底下的方格紙 */
 .day-selector-wrapper {
-  margin-bottom: 20px;
+  margin: 0 -20px 28px;
   position: sticky;
   top: 0;
-  background: var(--bg-sidebar);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  background: var(--bg-app);
   z-index: 5;
-  padding: 10px 0;
+  padding: 12px 14px 6px;
   border-bottom: 1px solid var(--border-color);
-  margin-left: -20px;
-  margin-right: -20px;
-  padding-left: 20px;
-  padding-right: 20px;
 }
 
 .day-selector {
   display: flex;
-  gap: 6px;
+  gap: 2px;
   overflow-x: auto;
-  padding-bottom: 4px;
+  scrollbar-width: none;
+  /* 選中的小便條轉了角度、上面有紙膠帶,留一點空間不要被切掉 */
+  padding: 6px 4px 4px;
+  margin: -6px -4px -4px;
 }
 
 .day-selector::-webkit-scrollbar {
-  height: 4px;
+  display: none;
 }
 
-.day-selector::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb);
-  border-radius: 4px;
-}
-
+/* 天數按鈕:天數 + 日期兩行 (app.js labelDayButtons),字不加粗 */
 .day-btn {
-  background: var(--bg-card);
-  color: var(--text-main);
-  border: 1px solid var(--border-color);
-  padding: 6px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 0.82rem;
-  font-weight: 600;
-  white-space: nowrap;
-  transition: all var(--transition-fast);
+  flex: none;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 46px;
+  padding: 6px 8px 5px;
+  border: none;
+  border-radius: 1px;
+  background: none;
+  color: var(--text-muted);
+  font-size: 0.98rem;
+  font-weight: 400;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.day-btn-date {
+  font-size: 0.62rem;
+  margin-top: 2px;
+}
+
+@media (hover: hover) {
+  .day-btn:hover {
+    color: var(--text-main);
+  }
+}
+
+/* 選中的那天:一張貼著紙膠帶的小便條 */
+.day-btn.active {
+  color: var(--text-main);
+  background: var(--bg-card);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 6px 10px -6px rgba(0, 0, 0, 0.35);
+  transform: rotate(-2deg);
+}
+
+.day-btn.active .day-btn-date {
+  color: var(--text-muted);
+}
+
+.day-btn.active::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 24px;
+  height: 9px;
+  margin-left: -12px;
+  background: var(--tape);
+  clip-path: var(--zigzag-small);
 }
 
 /* 旅行中的今天:天數按鈕右上角加小圓點 */
 .day-btn.is-today::after {
   content: "";
   position: absolute;
-  top: 3px;
-  right: 5px;
+  top: 4px;
+  right: 4px;
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: var(--status-ok-text);
 }
 
-@media (hover: hover) {
-  .day-btn:hover {
-    background: var(--frost-blue);
-    border-color: var(--shinkansen-blue);
-    color: var(--primary);
-  }
-}
-
-@media (hover: hover) {
-  body.theme-dark .day-btn:hover {
-    background: var(--primary-container);
-    color: var(--on-primary-container);
-  }
-}
-
-.day-btn.active {
-  background: var(--primary);
-  color: var(--on-primary);
-  border-color: var(--primary);
-  box-shadow: 0 4px 10px rgba(10, 66, 105, 0.2);
-}
-
-body.theme-dark .day-btn.active {
-  background: var(--primary);
-  color: var(--on-primary);
-  border-color: var(--primary);
-}
-
-/* Timeline Components */
+/* Timeline:每一站是一張便條紙,時間寫在上緣的紙膠帶上;不顯示類別 */
 .itinerary-timeline {
   position: relative;
-  padding-left: 24px;
-}
-
-.itinerary-timeline::before {
-  content: '';
-  position: absolute;
-  left: 7px;
-  top: 8px;
-  bottom: 8px;
-  width: 2px;
-  background: var(--border-color);
+  padding: 0 2px;
 }
 
 .timeline-item {
   position: relative;
-  margin-bottom: 28px;
   cursor: pointer;
 }
 
+/* 沒有交通說明隔開的兩站 (例如當天的起點),留出紙膠帶的空間 */
+.timeline-item + .timeline-item {
+  margin-top: 30px;
+}
+
 .timeline-marker {
-  position: absolute;
-  left: -24px;
-  top: 6px;
-  width: 16px;
-  height: 16px;
-  border-radius: var(--border-radius-round);
-  background: var(--bg-sidebar);
-  border: 3px solid var(--border-color);
-  z-index: 2;
-  transition: all var(--transition-fast);
+  display: none;
 }
 
-@media (hover: hover) {
-  .timeline-item:hover .timeline-marker {
-    transform: scale(1.3);
-    border-color: var(--accent-gold);
-  }
-}
-
-/* 最後選取的地點:卡片加上強調色邊框 (圓點顏色見下方各類別) */
-.timeline-item.active .timeline-card {
-  border-color: var(--accent-gold);
-  box-shadow: 0 0 0 1px var(--accent-gold);
-}
-
-.timeline-item.active .timeline-marker {
-  background: var(--accent-gold);
-  border-color: var(--accent-gold);
-  box-shadow: 0 0 0 4px var(--accent-gold-bg);
-}
-
-/* Category Specific Timeline Colors */
-.timeline-item[data-cat="food"] .timeline-marker { border-color: var(--color-food); }
-.timeline-item[data-cat="food"].active .timeline-marker { background: var(--color-food); box-shadow: 0 0 0 4px var(--color-food-bg); }
-
-.timeline-item[data-cat="shopping"] .timeline-marker { border-color: var(--color-shopping); }
-.timeline-item[data-cat="shopping"].active .timeline-marker { background: var(--color-shopping); box-shadow: 0 0 0 4px var(--color-shopping-bg); }
-
-.timeline-item[data-cat="sightseeing"] .timeline-marker { border-color: var(--color-sightseeing); }
-.timeline-item[data-cat="sightseeing"].active .timeline-marker { background: var(--color-sightseeing); box-shadow: 0 0 0 4px var(--color-sightseeing-bg); }
-
-.timeline-item[data-cat="lodging"] .timeline-marker { border-color: var(--color-lodging); }
-.timeline-item[data-cat="lodging"].active .timeline-marker { background: var(--color-lodging); box-shadow: 0 0 0 4px var(--color-lodging-bg); }
-
-.timeline-item[data-cat="transport"] .timeline-marker { border-color: var(--color-transport); }
-.timeline-item[data-cat="transport"].active .timeline-marker { background: var(--color-transport); box-shadow: 0 0 0 4px var(--color-transport-bg); }
-
-/* Timeline Card */
 .timeline-card {
+  position: relative;
   background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-md);
-  padding: 14px 16px;
-  box-shadow: var(--shadow-sm);
-  transition: all var(--transition-normal);
+  border-radius: 2px;
+  padding: 26px 16px 14px;
+  box-shadow: var(--note-shadow);
+  transition: box-shadow var(--transition-fast);
 }
 
 @media (hover: hover) {
   .timeline-item:hover .timeline-card {
-    transform: translateX(4px);
-    background: var(--bg-card-hover);
-    border-color: var(--accent-gold);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 0 0 1px var(--line-strong), var(--note-shadow);
   }
 }
 
+/* 最後選取的地點:便條加藍框 */
+.timeline-item.active .timeline-card {
+  box-shadow: 0 0 0 2px var(--accent-gold), var(--note-shadow);
+}
+
 .timeline-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 6px;
+  height: 0;
 }
 
 .timeline-time-badge {
-  font-size: 0.8rem;
+  position: absolute;
+  top: -12px;
+  left: 14px;
+  padding: 3px 15px 2px;
+  font-size: 1.02rem;
   font-weight: 700;
-  color: var(--text-muted);
-  background: rgba(0, 0, 0, 0.05);
-  padding: 3px 8px;
-  border-radius: 12px;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+  transform: rotate(-2deg);
 }
 
-body.theme-dark .timeline-time-badge {
-  background: rgba(255, 255, 255, 0.08);
+/* 右上角:下一站、已修改、Day N、自訂地點的刪除鈕 */
+.timeline-card-header-right {
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 自訂地點多了刪除鈕 (36px 高),便條上緣多留空間,不要壓到地點名稱 */
+.timeline-card:has(.delete-place-btn) {
+  padding-top: 44px;
 }
 
 .timeline-day-tag {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--accent-gold);
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--text-muted);
 }
 
 .timeline-card h4 {
-  font-size: 0.95rem;
+  font-size: 1.02rem;
   font-weight: 700;
-  margin-bottom: 4px;
+  line-height: 1.4;
+  margin-bottom: 2px;
   color: var(--text-main);
 }
 
 .timeline-card .english-name {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: var(--text-muted);
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .timeline-card p.card-desc {
-  font-size: 0.85rem;
+  font-size: 0.86rem;
   color: var(--text-muted);
-  line-height: 1.4;
+  line-height: 1.55;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -549,14 +550,14 @@ body.theme-dark .timeline-time-badge {
   -webkit-box-orient: vertical;
 }
 
-/* Connection / Transit Log between timeline items */
+/* 兩站之間的交通:跟改版前一樣 (路線 - N 分鐘、說明、Google Maps 路線) */
 .transit-log {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 12px 10px;
-  margin: 6px 0 6px 14px;
-  border-left: 2px dashed var(--border-color);
+  margin: 8px 0 22px 14px;
+  border-left: 2px dashed var(--line-strong);
   font-size: 0.8rem;
   color: var(--text-muted);
   position: relative;
@@ -572,25 +573,24 @@ body.theme-dark .timeline-time-badge {
   height: 10px;
   border-radius: 50%;
   background: var(--bg-app);
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--line-strong);
 }
 
 .transit-icon-wrapper {
-  background: rgba(0, 0, 0, 0.04);
-  padding: 4px;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  background: var(--bg-card);
   border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-body.theme-dark .transit-icon-wrapper {
-  background: rgba(255, 255, 255, 0.06);
-}
-
 .transit-icon {
-  width: 16px;
-  height: 16px;
+  font-size: 13px;
+  line-height: 1;
 }
 
 .transit-duration {
@@ -598,12 +598,17 @@ body.theme-dark .transit-icon-wrapper {
   color: var(--accent-gold);
 }
 
+.transit-details {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
 /* 🧭 Google Maps 路線連結 (時間軸與抽屜的交通區塊共用) */
 .transit-nav-link {
   display: inline-block;
   margin-top: 4px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.76rem;
   color: var(--accent-gold);
   text-decoration: none;
 }
@@ -619,21 +624,21 @@ body.theme-dark .transit-icon-wrapper {
   margin-top: 0;
 }
 
-/* 本機修改提示列 */
+/* 本機修改提示列:一張便條;它在天數列上方,外圍用純色蓋住方格紙 */
 .local-changes-banner {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-bottom: 14px;
-  padding: 10px 12px;
-  border-radius: var(--border-radius-md);
-  background: var(--accent-gold-bg);
-  border: 1px solid var(--border-color);
+  margin: 12px 0 14px;
+  padding: 12px 14px;
+  border-radius: 2px;
+  background: var(--bg-card);
+  box-shadow: var(--note-shadow), 0 0 0 20px var(--bg-app);
 }
 
 .local-changes-text {
-  font-size: 0.8rem;
-  line-height: 1.4;
+  font-size: 0.84rem;
+  line-height: 1.5;
   color: var(--text-main);
 }
 
@@ -643,44 +648,37 @@ body.theme-dark .transit-icon-wrapper {
   gap: 8px;
 }
 
-/* 卡片上的「已修改」/「自訂」標籤 */
-.local-tag {
-  font-size: 0.68rem;
-  font-weight: 700;
-  padding: 1px 6px;
-  border-radius: 4px;
-  background: rgba(249, 115, 22, 0.14);
-  color: var(--status-warn-text);
-  white-space: nowrap;
-}
-
-body.theme-dark .local-tag {
-  background: rgba(251, 146, 60, 0.18);
-}
-
-/* 旅行中今天的「下一站」標籤 */
+/* 卡片上的「已修改」/「自訂」與旅行中今天的「下一站」:螢光筆 (見上方共用規則) */
+.local-tag,
 .next-stop-tag {
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  padding: 1px 6px;
-  border-radius: 4px;
-  background: rgba(16, 185, 129, 0.14);
-  color: var(--status-ok-text);
+  color: var(--text-main);
   white-space: nowrap;
-}
-
-body.theme-dark .next-stop-tag {
-  background: rgba(110, 231, 183, 0.16);
 }
 
 /* ==========================================
    TAB 2: DIRECTORY & SEARCH
    ========================================== */
+/* 「新增自訂地點」:虛線框,像預留給下一張便條的位置 */
+#open-add-modal-btn {
+  background: transparent;
+  color: var(--text-main);
+  border: 1.5px dashed var(--line-strong);
+}
+
+@media (hover: hover) {
+  #open-add-modal-btn:hover {
+    background: var(--accent-gold-bg);
+    border-color: var(--accent-gold);
+  }
+}
+
 .directory-controls {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
 }
 
 .search-box {
@@ -691,130 +689,139 @@ body.theme-dark .next-stop-tag {
 
 .search-icon {
   position: absolute;
-  left: 12px;
+  left: 4px;
   width: 18px;
   height: 18px;
   color: var(--text-muted);
   pointer-events: none;
 }
 
+/* 搜尋欄:只有底線 */
 #place-search {
   width: 100%;
-  padding: 12px 12px 12px 40px;
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-color);
-  background: var(--bg-card);
+  padding: 10px 4px 10px 30px;
+  border: none;
+  border-bottom: 1.5px solid var(--line-strong);
+  border-radius: 0;
+  background: transparent;
   color: var(--text-main);
   font-size: 16px; /* iOS Safari: <16px 會觸發自動放大 */
-  font-family: inherit;
   outline: none;
   -webkit-appearance: none;
   appearance: none;
-  transition: all var(--transition-fast);
+  transition: border-color var(--transition-fast);
+}
+
+#place-search::placeholder {
+  color: var(--text-muted);
+  opacity: 0.75;
 }
 
 #place-search:focus {
-  border-color: var(--accent-gold);
-  box-shadow: 0 0 0 3px var(--accent-gold-bg);
+  border-bottom-color: var(--accent-gold);
 }
 
+/* 類別篩選:純文字,選中的用螢光筆 (見上方共用規則) */
 .category-filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 0 2px;
+  margin: 0 -6px;
 }
 
 .filter-chip {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--text-main);
+  background: none;
+  border: none;
+  padding: 8px 6px;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--text-muted);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: color var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
 }
 
 @media (hover: hover) {
   .filter-chip:hover {
-    background: rgba(0, 0, 0, 0.04);
-    border-color: var(--text-muted);
-  }
-}
-
-@media (hover: hover) {
-  body.theme-dark .filter-chip:hover {
-    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-main);
   }
 }
 
 .filter-chip.active {
-  background: var(--text-main);
-  color: var(--bg-app);
-  border-color: var(--text-main);
+  color: var(--text-main);
 }
 
-/* 沒有內容時的提示 (D6 沒有排行程、搜尋沒有結果) */
+/* 沒有內容時的提示 (搜尋沒有結果、當天沒有行程):一張空白便條 */
 .empty-state {
   padding: 28px 16px;
   text-align: center;
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   line-height: 1.5;
   color: var(--text-muted);
-  border: 1px dashed var(--border-color);
-  border-radius: var(--border-radius-md);
+  background: var(--bg-card);
+  border-radius: 2px;
+  box-shadow: var(--note-shadow);
 }
 
-/* 時間軸沒有地點時:提示框佔滿寬度,不畫左側的時間線 */
-.itinerary-timeline .empty-state {
-  margin-left: -24px;
-}
-
-.itinerary-timeline:has(.empty-state)::before {
-  display: none;
-}
-
-/* Places List */
+/* Places List:每個地點是一張便條,照片像貼上紙膠帶的拍立得 */
 .places-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 18px;
 }
 
 .place-card {
   background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-md);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
+  border-radius: 2px;
+  box-shadow: var(--note-shadow);
   display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
   cursor: pointer;
-  transition: all var(--transition-normal);
+  transition: box-shadow var(--transition-fast);
 }
 
 @media (hover: hover) {
   .place-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--accent-gold);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 0 0 1px var(--line-strong), var(--note-shadow);
   }
 }
 
 .place-card-img {
-  width: 110px;
-  min-width: 110px;
+  flex: none;
+  width: 92px;
+  aspect-ratio: 1 / 1;
+  background-color: var(--border-color);
   background-position: center;
   background-size: cover;
+  border: 4px solid var(--photo-frame);
+  border-bottom-width: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+  transform: rotate(-2deg);
   position: relative;
 }
 
+.place-card:nth-child(even) .place-card-img {
+  transform: rotate(1.5deg);
+}
+
+.place-card-img::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 30px;
+  height: 11px;
+  margin-left: -15px;
+  background: var(--tape);
+  clip-path: var(--zigzag-small);
+}
+
 .place-card-body {
-  padding: 14px;
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   min-width: 0; /* 讓內部子元素 ellipsis 生效 */
 }
 
@@ -836,49 +843,106 @@ body.theme-dark .next-stop-tag {
   white-space: nowrap;
 }
 
+.place-card h3 {
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--text-main);
+}
+
 .place-card-eng {
-  font-size: 0.75rem;
+  font-size: 0.76rem;
   color: var(--text-muted);
-  line-height: 1.2;
+  line-height: 1.3;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.timeline-card-header-right {
+/* 類別、已修改、Day N:純文字,類別不再有彩色底 */
+.place-card-meta {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 4px 10px;
+  margin-top: 6px;
 }
 
-.transit-details {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
-.transit-step-emoji {
-  font-size: 1.3rem;
-}
-
-.transit-step-details {
-  font-size: 0.8rem;
+.place-card-category,
+.place-card-day {
+  font-size: 0.78rem;
+  font-weight: 400;
   color: var(--text-muted);
 }
 
-.transit-step-duration {
-  margin-left: auto;
-  text-align: right;
-  white-space: nowrap;
+/* ==========================================
+   共用:按鈕
+   ========================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 8px 16px;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--line-strong);
+  background: var(--bg-card);
+  color: var(--text-main);
+  font-size: 0.92rem;
+  font-weight: 400;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.transit-duration-lg {
-  font-size: 1rem;
+.btn:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
 }
 
-.transit-step-unit {
-  font-size: 0.75rem;
-  color: var(--text-muted);
+.btn-sm {
+  min-height: 36px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+.btn-primary {
+  background: var(--accent-gold);
+  border-color: var(--accent-gold);
+  color: var(--text-inverse);
+}
+
+@media (hover: hover) {
+  .btn-primary:hover {
+    background: var(--accent-gold-hover);
+    border-color: var(--accent-gold-hover);
+  }
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-main);
+}
+
+@media (hover: hover) {
+  .btn-outline:hover {
+    background: var(--accent-gold-bg);
+    border-color: var(--accent-gold);
+  }
+}
+
+.btn-danger {
+  background: transparent;
+  color: var(--status-danger-text);
+  border-color: var(--status-danger-text);
+}
+
+@media (hover: hover) {
+  .btn-danger:hover {
+    background: rgba(214, 70, 60, 0.1);
+  }
 }
 
 .btn-icon {
@@ -898,76 +962,52 @@ body.theme-dark .next-stop-tag {
   gap: 8px;
 }
 
-.place-card-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 8px;
-}
-
-.place-card h3 {
-  font-size: 0.95rem;
-  font-weight: 700;
-  margin-bottom: 2px;
-  color: var(--text-main);
-}
-
-.place-card-category {
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 4px;
-  text-transform: uppercase;
-}
-
-.place-card-category[data-cat="food"] { background: var(--color-food-bg); color: var(--color-food); }
-.place-card-category[data-cat="shopping"] { background: var(--color-shopping-bg); color: var(--color-shopping); }
-.place-card-category[data-cat="sightseeing"] { background: var(--color-sightseeing-bg); color: var(--color-sightseeing); }
-.place-card-category[data-cat="lodging"] { background: var(--color-lodging-bg); color: var(--color-lodging); }
-.place-card-category[data-cat="transport"] { background: var(--color-transport-bg); color: var(--color-transport); }
-
-.place-card-day {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--accent-gold);
-}
-
 /* ==========================================
-   TAB 3: LOGISTICS & INFO
+   預算與行前指南:每一區是一張便條,標題寫在紙膠帶上
    ========================================== */
 .logistics-card {
+  position: relative;
   background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-md);
-  padding: 16px;
-  margin-bottom: 16px;
-  box-shadow: var(--shadow-sm);
+  border-radius: 2px;
+  padding: 30px 16px 16px;
+  margin-top: 28px;
+  box-shadow: var(--note-shadow);
+}
+
+.logistics-card:first-child {
+  margin-top: 16px;
 }
 
 .card-header {
-  display: flex;
+  position: absolute;
+  top: -13px;
+  left: 14px;
+  max-width: calc(100% - 28px);
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 10px;
-  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 16px 3px;
+  transform: rotate(-1.5deg);
 }
 
 .logistics-icon {
-  width: 20px;
-  height: 20px;
-  color: var(--accent-gold);
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  color: var(--text-main);
 }
 
 .card-header h3 {
   font-size: 0.95rem;
   font-weight: 700;
+  line-height: 1.3;
   min-width: 0;
-  word-break: break-word;
-  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+/* 往返機票:去程、回程用螢光筆 (見上方共用規則) */
 .flight-route-info {
   display: flex;
   flex-direction: column;
@@ -976,40 +1016,36 @@ body.theme-dark .next-stop-tag {
 
 .flight-leg {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: baseline;
+  gap: 12px;
 }
 
 .badge {
-  font-size: 0.75rem;
+  flex: none;
+  font-size: 0.88rem;
   font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 4px;
-  color: white;
+  color: var(--text-main);
 }
 
-.badge-go { background: #3b82f6; }
-.badge-back { background: #f43f5e; }
-
 .flight-time {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1.6;
 }
 
 .hotel-details h4 {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   margin-bottom: 4px;
 }
 
 .hotel-addr {
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   color: var(--text-muted);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .hotel-cost {
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   margin-bottom: 12px;
 }
 
@@ -1019,60 +1055,9 @@ body.theme-dark .next-stop-tag {
   gap: 8px;
 }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 16px;
-  border-radius: var(--border-radius-sm);
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  text-decoration: none;
-  font-family: inherit;
-  border: none;
-}
-
-.btn-sm {
-  padding: 6px 12px;
-  font-size: 0.78rem;
-}
-
-.btn-primary {
-  background: var(--accent-gold);
-  color: var(--text-inverse);
-}
-
-@media (hover: hover) {
-  .btn-primary:hover {
-    background: var(--accent-gold-hover);
-    box-shadow: 0 4px 12px rgba(0, 94, 184, 0.25);
-  }
-}
-
-.btn-outline {
-  background: transparent;
-  color: var(--text-main);
-  border: 1px solid var(--border-color);
-}
-
-@media (hover: hover) {
-  .btn-outline:hover {
-    background: rgba(0, 0, 0, 0.04);
-    border-color: var(--text-muted);
-  }
-}
-
-@media (hover: hover) {
-  body.theme-dark .btn-outline:hover {
-    background: rgba(255, 255, 255, 0.05);
-  }
-}
-
 .subway-advice {
-  font-size: 0.85rem;
-  line-height: 1.5;
+  font-size: 0.9rem;
+  line-height: 1.7;
 }
 
 .subway-advice p {
@@ -1088,6 +1073,11 @@ body.theme-dark .next-stop-tag {
   margin-top: 10px;
 }
 
+/* 句子裡的天數標籤 (app.js 依行程自動填入) */
+.subway-advice [data-day-of] {
+  color: var(--accent-gold);
+}
+
 .text-link {
   color: var(--accent-gold);
   text-decoration: underline;
@@ -1097,9 +1087,10 @@ body.theme-dark .next-stop-tag {
   padding-left: 18px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
+/* 行前清單:手繪感的方框,打勾後文字劃掉 */
 .packing-checklist {
   display: flex;
   flex-direction: column;
@@ -1110,17 +1101,32 @@ body.theme-dark .next-stop-tag {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 0.85rem;
-  line-height: 1.4;
+  font-size: 0.9rem;
+  line-height: 1.5;
   cursor: pointer;
   user-select: none;
 }
 
 .todo-item input {
-  margin-top: 3px;
-  accent-color: var(--accent-gold);
-  width: 15px;
-  height: 15px;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border: 1.5px solid var(--text-main);
+  border-radius: 3px 4px 3px 5px;
+  background: transparent center / 16px 16px no-repeat;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.todo-item input:checked {
+  background-image: var(--check-mark);
+}
+
+.todo-item input:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
 }
 
 .todo-item input:checked + span {
@@ -1163,27 +1169,21 @@ body.theme-dark .leaflet-control-attribution {
   filter: none;
 }
 
-/* Version Badge (左上角,方便看快取狀態) */
+/* Version Badge (左上角,方便看快取狀態):一段紙膠帶 (見上方共用規則) */
 .version-badge {
   position: absolute;
   top: 16px;
   left: 16px;
-  background: rgba(0, 0, 0, 0.55);
-  color: #fff;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  font-family: var(--font-primary);
+  padding: 3px 12px 2px;
+  font-size: 0.72rem;
   letter-spacing: 0.3px;
+  transform: rotate(-2deg);
   z-index: 10;
   pointer-events: none;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   user-select: none;
 }
 
-/* Floating Toolbar */
+/* Floating Toolbar:紙質的圓形按鈕 */
 .floating-toolbar {
   position: absolute;
   top: 16px;
@@ -1196,28 +1196,30 @@ body.theme-dark .leaflet-control-attribution {
 
 .float-btn {
   background: var(--bg-card);
-  border: var(--glass-border);
+  border: none;
   color: var(--text-main);
   width: 44px;
   height: 44px;
-  border-radius: var(--border-radius-md);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   box-shadow: var(--shadow-md);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  transition: all var(--transition-fast);
+  transition: color var(--transition-fast), transform var(--transition-fast);
   outline: none;
   -webkit-tap-highlight-color: transparent;
+}
+
+.float-btn:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
 }
 
 @media (hover: hover) {
   .float-btn:hover {
     transform: translateY(-2px);
     color: var(--accent-gold);
-    background: var(--bg-card-hover);
   }
 }
 
@@ -1265,10 +1267,10 @@ body.theme-dark .leaflet-control-attribution {
   width: max-content;
   max-width: calc(100% - 32px);
   padding: 10px 16px;
-  border-radius: var(--border-radius-md);
+  border-radius: var(--border-radius-sm);
   background: var(--text-main);
-  color: var(--text-inverse);
-  font-size: 0.85rem;
+  color: var(--bg-app);
+  font-size: 0.88rem;
   line-height: 1.5;
   box-shadow: var(--shadow-lg);
   z-index: 40;
@@ -1285,7 +1287,7 @@ body.theme-dark .icon-moon {
   display: block;
 }
 
-/* Custom Marker Styling */
+/* Custom Marker Styling (地圖標記不受外觀改版影響) */
 .custom-div-icon {
   background: none;
   border: none;
@@ -1332,7 +1334,7 @@ body.theme-dark .icon-moon {
 .marker-pin.active {
   transform: rotate(-45deg) scale(1.2);
   border-color: var(--accent-gold);
-  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
 }
 
 /* Category colors for pins */
@@ -1350,11 +1352,8 @@ body.theme-dark .icon-moon {
   bottom: 0;
   left: 0;
   right: 0;
-  background: var(--bg-sidebar);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-top: var(--glass-border);
-  box-shadow: var(--shadow-lg);
+  background: var(--bg-app);
+  box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.18);
   z-index: 8;
   transform: translateY(105%);
   transition: transform var(--transition-normal), visibility 0s linear var(--transition-normal);
@@ -1376,28 +1375,24 @@ body.theme-dark .icon-moon {
   position: absolute;
   top: 10px;
   right: 12px;
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--bg-card);
   border: none;
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  box-shadow: var(--shadow-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   color: var(--text-main);
   z-index: 10;
-  transition: all var(--transition-fast);
+  transition: transform var(--transition-fast);
   -webkit-tap-highlight-color: transparent;
-}
-
-body.theme-dark .close-drawer-btn {
-  background: rgba(255, 255, 255, 0.1);
 }
 
 @media (hover: hover) {
   .close-drawer-btn:hover {
-    background: rgba(0,0,0,0.1);
     transform: scale(1.1);
   }
 }
@@ -1424,17 +1419,32 @@ body.theme-dark .close-drawer-btn {
 @media (max-width: 680px) {
   .detail-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 }
 
-/* Carousel Layout */
+/* 照片:白邊相框,上緣貼一段紙膠帶 (照片的裁切交給 .carousel-slides,相框外的紙膠帶才不會被切掉) */
 .image-carousel {
   position: relative;
-  border-radius: var(--border-radius-md);
-  overflow: hidden;
   height: 240px;
+  margin-top: 8px;
+  padding: 6px 6px 8px;
+  background: var(--photo-frame);
   box-shadow: var(--shadow-sm);
-  background: #000;
+  transform: rotate(-0.6deg);
+}
+
+.image-carousel::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  width: 56px;
+  height: 16px;
+  margin-left: -28px;
+  z-index: 3;
+  background: var(--tape);
+  clip-path: var(--zigzag-small);
 }
 
 /* 用 scroll-snap 讓手機可以左右滑;箭頭與圓點由 app.js 捲動到指定張數 */
@@ -1446,6 +1456,7 @@ body.theme-dark .close-drawer-btn {
   scroll-snap-type: x mandatory;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
+  background: var(--border-color);
 }
 
 .carousel-slides::-webkit-scrollbar {
@@ -1486,12 +1497,12 @@ body.theme-dark .close-drawer-btn {
   }
 }
 
-.carousel-control.prev { left: 10px; }
-.carousel-control.next { right: 10px; }
+.carousel-control.prev { left: 14px; }
+.carousel-control.next { right: 14px; }
 
 .carousel-indicators {
   position: absolute;
-  bottom: 12px;
+  bottom: 18px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -1503,7 +1514,8 @@ body.theme-dark .close-drawer-btn {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
   cursor: pointer;
   transition: all var(--transition-fast);
 }
@@ -1517,110 +1529,117 @@ body.theme-dark .close-drawer-btn {
 .detail-info {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .detail-header {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .detail-title-row {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .detail-info h2 {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.35;
 }
 
 .detail-english {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
 }
 
+/* 類別與 Day N:純文字 */
 .detail-badges {
   display: flex;
-  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
 }
 
 .tag-badge {
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 12px;
-  text-transform: uppercase;
-}
-
-.tag-badge[data-cat="food"] { background: var(--color-food-bg); color: var(--color-food); }
-.tag-badge[data-cat="shopping"] { background: var(--color-shopping-bg); color: var(--color-shopping); }
-.tag-badge[data-cat="sightseeing"] { background: var(--color-sightseeing-bg); color: var(--color-sightseeing); }
-.tag-badge[data-cat="lodging"] { background: var(--color-lodging-bg); color: var(--color-lodging); }
-.tag-badge[data-cat="transport"] { background: var(--color-transport-bg); color: var(--color-transport); }
-
-.tag-badge-day {
-  background: var(--accent-gold-bg);
-  color: var(--accent-gold);
+  font-size: 0.82rem;
+  font-weight: 400;
+  color: var(--text-muted);
 }
 
 .detail-desc {
-  font-size: 0.9rem;
-  line-height: 1.5;
+  font-size: 0.92rem;
+  line-height: 1.75;
   color: var(--text-main);
-  border-top: 1px solid var(--border-color);
-  padding-top: 10px;
 }
 
-/* Detail Transit Block */
+/* Detail Transit Block:上方虛線隔開,分鐘數用藍墨水色的大字 */
 .detail-transit-block {
-  background: var(--bg-app);
-  border-radius: var(--border-radius-md);
-  padding: 12px 14px;
-  border: 1px solid var(--border-color);
+  padding-top: 12px;
+  border-top: 1px dashed var(--line-strong);
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
 .transit-header-text {
-  font-size: 0.78rem;
-  font-weight: 700;
+  font-size: 0.8rem;
   color: var(--text-muted);
-  text-transform: uppercase;
 }
 
 .transit-step-body {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 0.85rem;
+  gap: 12px;
+  font-size: 0.88rem;
 }
 
 .transit-desc-text {
-  font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.4;
+}
+
+.transit-step-emoji {
+  font-size: 1.3rem;
+}
+
+.transit-step-details {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.transit-step-duration {
+  margin-left: auto;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--accent-gold);
+}
+
+.transit-duration-lg {
+  display: block;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.transit-step-unit {
+  font-size: 0.72rem;
 }
 
 .drawer-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 8px;
+  gap: 8px;
+  margin-top: 4px;
 }
 
 /* Custom Popup Style */
 .leaflet-popup-content-wrapper {
   background: var(--bg-card);
   color: var(--text-main);
-  font-family: var(--font-primary), var(--font-chinese);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-color);
+  font-family: var(--font-primary);
+  border-radius: 4px;
   box-shadow: var(--shadow-md);
   padding: 0;
   overflow: hidden;
@@ -1644,7 +1663,7 @@ body.theme-dark .close-drawer-btn {
 }
 
 .popup-body h3 {
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   font-weight: 700;
   margin-bottom: 2px;
 }
@@ -1656,9 +1675,8 @@ body.theme-dark .close-drawer-btn {
 }
 
 .popup-link {
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   color: var(--accent-gold);
-  font-weight: 600;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -1689,9 +1707,6 @@ body.theme-dark .close-drawer-btn {
   font-size: 14px;
 }
 
-/* ==========================================
-   MOBILE RESPONSIVENESS
-   ========================================== */
 /* ==========================================
    MOBILE RESPONSIVENESS (Google Maps Style Sheet Layout)
    ========================================== */
@@ -1768,11 +1783,9 @@ body.theme-dark .close-drawer-btn {
     height: 64px;
     padding-bottom: 0;
     background: var(--bg-sidebar);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border-top: 1px solid var(--border-color);
+    border-right: none;
     border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
     z-index: 20;
     transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
@@ -1783,17 +1796,17 @@ body.theme-dark .close-drawer-btn {
   .sidebar.expanded {
     height: 75%;
   }
-  
+
   .brand-header {
     display: none;
   }
-  
+
   /* 手機版標題列:「🗻 東京行」與出發倒數排成同一行 (不換行),日期在標題下方自己換行 */
   .sidebar.expanded .brand-header {
     display: flex;
     flex-wrap: nowrap;
     gap: 8px;
-    padding: 14px 16px;
+    padding: 16px 18px 4px;
     flex-shrink: 0;
   }
 
@@ -1810,6 +1823,10 @@ body.theme-dark .close-drawer-btn {
     font-size: 1.6rem;
   }
 
+  .brand-header h1 {
+    font-size: 1.35rem;
+  }
+
   .brand-header .subtitle {
     font-size: 0.75rem;
   }
@@ -1818,28 +1835,23 @@ body.theme-dark .close-drawer-btn {
     flex-shrink: 0;
     white-space: nowrap;
     font-size: 0.72rem;
-    padding: 5px 8px;
   }
-  
+
   .tab-navigation {
     height: 64px;
     margin: 0;
-    padding: 0 12px;
+    padding: 0 10px;
     align-items: center;
     flex-shrink: 0;
-    background: transparent;
-    border: none;
-    border-radius: 0;
   }
-  
+
   /* 4 個分頁:圖示在上、文字在下,375px 寬的手機也放得下 */
   .tab-btn {
     flex-direction: column;
     padding: 4px 2px;
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     gap: 2px;
     height: 48px;
-    border-radius: var(--border-radius-sm);
     white-space: nowrap;
   }
 
@@ -1848,18 +1860,35 @@ body.theme-dark .close-drawer-btn {
     height: 22px;
     font-size: 22px;
   }
-  
+
   .tab-content {
     display: none;
     flex: 1;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
-  
+
   .sidebar.expanded .tab-content {
     display: block;
   }
-  
+
+  .tab-pane {
+    padding: 8px 18px 28px;
+  }
+
+  #pane-itinerary {
+    padding-top: 0;
+  }
+
+  .day-selector-wrapper {
+    margin-left: -18px;
+    margin-right: -18px;
+  }
+
+  .local-changes-banner {
+    box-shadow: var(--note-shadow), 0 0 0 18px var(--bg-app);
+  }
+
   /* Place Detail Drawer — 浮在底部 sidebar (nav) 之上,兩者互不遮擋
      用 absolute (相對 .map-section,與 sidebar 同樣填滿 --app-height 容器) 而非 fixed,
      避免 iOS PWA 的 fixed viewport 與 --app-height 不一致造成錯位 */
@@ -1873,8 +1902,7 @@ body.theme-dark .close-drawer-btn {
     /* 上緣至少要離螢幕頂端有距離,不能吃掉整個地圖 */
     max-height: calc(75dvh - 64px);
     z-index: 30;
-    background: var(--bg-card); /* 用比較實的卡片色,避免透過去看到 sidebar */
-    border-top: 1px solid var(--border-color);
+    background: var(--bg-app);
     border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
     box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.18);
     /* 關閉時 translateY 要超過自身高度 + sidebar 高度,才會完全滑出視窗 */
@@ -1908,10 +1936,15 @@ body.theme-dark .close-drawer-btn {
   .image-carousel {
     height: 160px;
   }
+
+  /* 窄手機:倒數的字再小一點,標題列才不會被擠出畫面 */
+  .countdown-badge {
+    font-size: 0.66rem;
+  }
 }
 
 /* ==========================================
-   MODAL & FORMS (ADD PLACE)
+   MODAL & FORMS (ADD PLACE):視窗是一張便條,標題寫在紙膠帶上
    ========================================== */
 .modal-overlay {
   position: fixed;
@@ -1919,9 +1952,7 @@ body.theme-dark .close-drawer-btn {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: var(--overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1940,18 +1971,17 @@ body.theme-dark .close-drawer-btn {
 }
 
 .modal-card {
-  background: var(--bg-sidebar);
-  border: var(--glass-border);
-  border-radius: var(--border-radius-lg);
+  background: var(--bg-card);
+  border-radius: 4px;
   width: 90%;
   max-width: 520px;
   max-height: 85dvh;
   overflow-y: auto;
   box-shadow: var(--shadow-lg);
-  padding: 24px;
+  padding: 22px 20px 20px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
   animation: modalSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -1964,21 +1994,21 @@ body.theme-dark .close-drawer-btn {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 12px;
+  gap: 8px;
 }
 
 .modal-header h3 {
-  font-size: 1.2rem;
+  padding: 4px 16px 3px;
+  font-size: 1rem;
   font-weight: 700;
-  color: var(--text-main);
+  transform: rotate(-1.5deg);
 }
 
 .modal-close-btn {
   background: none;
   border: none;
   font-size: 1.6rem;
-  font-weight: 300;
+  font-weight: 400;
   cursor: pointer;
   color: var(--text-muted);
   line-height: 1;
@@ -2000,14 +2030,14 @@ body.theme-dark .close-drawer-btn {
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-top: 10px;
+  gap: 16px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 2px;
+  min-width: 0;
 }
 
 .form-group.full-width {
@@ -2015,72 +2045,97 @@ body.theme-dark .close-drawer-btn {
 }
 
 .form-group label {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-main);
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--text-muted);
 }
 
 .form-group label .required {
-  color: #ef4444;
+  color: var(--status-danger-text);
 }
 
+/* 輸入欄:只有底線 (表單與預算分頁共用) */
 .form-group input,
 .form-group select,
-.form-group textarea {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-sm);
-  padding: 10px 12px;
+.calc-group input {
+  width: 100%;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--line-strong);
+  border-radius: 0;
+  padding: 6px 2px;
   font-size: 16px; /* iOS Safari: <16px 會觸發自動放大 */
+  line-height: 1.4;
   color: var(--text-main);
-  font-family: inherit;
   outline: none;
   -webkit-appearance: none;
   appearance: none;
-  transition: all var(--transition-fast);
+  transition: border-color var(--transition-fast);
+}
+
+.form-group select {
+  padding-right: 22px;
+  background: var(--select-arrow) right 4px center / 12px 8px no-repeat;
+  cursor: pointer;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder,
+.calc-group input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
 }
 
 .form-group input:focus,
 .form-group select:focus,
-.form-group textarea:focus {
-  border-color: var(--accent-gold);
-  box-shadow: 0 0 0 3px var(--accent-gold-bg);
+.calc-group input:focus {
+  border-bottom-color: var(--accent-gold);
+}
+
+/* 備註欄與複製變更內容:橫線紙 */
+.form-group textarea,
+.export-textarea {
+  width: 100%;
+  min-height: 112px;
+  background-color: transparent;
+  background-image: repeating-linear-gradient(to bottom, transparent 0 27px, var(--line-strong) 27px 28px);
+  background-attachment: local;
+  border: none;
+  border-radius: 0;
+  padding: 0 2px;
+  font-size: 16px; /* iOS Safari: <16px 會觸發自動放大 */
+  line-height: 28px;
+  color: var(--text-main);
+  outline: none;
+  resize: vertical;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.form-group textarea:focus,
+.export-textarea:focus {
+  box-shadow: inset 0 -2px 0 var(--accent-gold);
 }
 
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-  border-top: 1px solid var(--border-color);
-  padding-top: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+  border-top: 1px dashed var(--line-strong);
+  padding-top: 14px;
 }
 
 /* 編輯模式:左側放刪除 / 還原,右側放取消 / 儲存 */
 .form-actions-left {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-right: auto;
 }
 
-.btn-danger {
-  background: transparent;
-  color: #dc2626;
-  border: 1px solid rgba(220, 38, 38, 0.4);
-}
-
-@media (hover: hover) {
-  .btn-danger:hover {
-    background: rgba(239, 68, 68, 0.1);
-    border-color: #dc2626;
-  }
-}
-
 @media (max-width: 600px) {
-  .form-actions {
-    flex-wrap: wrap;
-  }
-
   .form-actions-left {
     width: 100%;
   }
@@ -2088,39 +2143,29 @@ body.theme-dark .close-drawer-btn {
 
 /* Export changes modal */
 .export-hint {
-  font-size: 0.85rem;
+  font-size: 0.86rem;
   color: var(--text-muted);
   line-height: 1.5;
 }
 
 .export-textarea {
-  width: 100%;
-  min-height: 220px;
-  padding: 10px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-sm);
-  background: var(--bg-card);
-  color: var(--text-main);
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 16px; /* iOS Safari: <16px 會觸發自動放大 */
-  line-height: 1.5;
-  resize: vertical;
+  min-height: 224px;
 }
 
-/* Confirm dialog — smaller card, no border-top on actions */
+/* Confirm dialog — smaller card */
 .confirm-modal-card {
-  max-width: 380px;
+  max-width: 340px;
   gap: 12px;
 }
 
 .confirm-modal-card .form-actions {
-  margin-top: 8px;
+  margin-top: 4px;
   padding-top: 12px;
 }
 
 .confirm-modal-message {
-  font-size: 0.95rem;
-  line-height: 1.5;
+  font-size: 1rem;
+  line-height: 1.6;
   color: var(--text-main);
   padding: 4px 0;
 }
@@ -2132,11 +2177,11 @@ body.theme-dark .close-drawer-btn {
   left: 50%;
   transform: translateX(-50%) translateY(-200px);
   z-index: 1000;
-  background: var(--bg-sidebar);
-  border: 2px solid var(--accent-gold);
+  background: var(--bg-card);
+  border: 1.5px dashed var(--accent-gold);
   box-shadow: var(--shadow-lg);
-  border-radius: 30px;
-  padding: 10px 24px;
+  border-radius: 4px;
+  padding: 10px 20px;
   visibility: hidden;
   transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), visibility 0s linear 0.4s;
   pointer-events: none;
@@ -2154,7 +2199,6 @@ body.theme-dark .close-drawer-btn {
   align-items: center;
   gap: 16px;
   font-size: 0.9rem;
-  font-weight: 600;
   color: var(--text-main);
 }
 
@@ -2162,8 +2206,8 @@ body.theme-dark .close-drawer-btn {
 .delete-place-btn {
   background: none;
   border: none;
-  color: #ef4444;
-  opacity: 0.4;
+  color: var(--status-danger-text);
+  opacity: 0.5;
   cursor: pointer;
   padding: 10px;
   min-width: 36px;
@@ -2172,7 +2216,7 @@ body.theme-dark .close-drawer-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--transition-fast);
+  transition: opacity var(--transition-fast), background-color var(--transition-fast);
   margin-left: 4px;
   -webkit-tap-highlight-color: transparent;
 }
@@ -2182,14 +2226,10 @@ body.theme-dark .close-drawer-btn {
   .timeline-card:hover .delete-place-btn {
     opacity: 0.8;
   }
-}
 
-@media (hover: hover) {
   .delete-place-btn:hover {
-    background: rgba(239, 68, 68, 0.15);
-    color: #dc2626;
+    background: rgba(214, 70, 60, 0.12);
     opacity: 1 !important;
-    transform: scale(1.1);
   }
 }
 
@@ -2206,252 +2246,188 @@ body.theme-dark .close-drawer-btn {
 }
 
 /* ==========================================
-   BUDGET & COST CALCULATOR
+   BUDGET:設定、記一筆、結果 (帳本)、花費明細
    ========================================== */
 .budget-calculator {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-top: 10px;
 }
 
 .calc-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 14px 16px;
 }
 
 .calc-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 2px;
+  min-width: 0;
 }
 
 .calc-group label {
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 400;
   color: var(--text-muted);
 }
 
-.calc-group input {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-sm);
-  padding: 10px 12px;
-  font-size: 16px; /* iOS Safari: <16px 會觸發自動放大 */
-  color: var(--text-main);
-  outline: none;
-  font-family: inherit;
-  -webkit-appearance: none;
-  appearance: none;
-  transition: all var(--transition-fast);
-}
-
-.calc-group input:focus {
-  border-color: var(--accent-gold);
-  box-shadow: 0 0 0 3px var(--accent-gold-bg);
-}
-
+/* 住宿分攤:已付款的固定金額,點線底 */
 .calc-static-value {
-  padding: 8px 12px;
-  background: rgba(0, 0, 0, 0.02);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-sm);
-  font-size: 0.9rem;
+  padding: 6px 2px;
+  border-bottom: 1.5px dotted var(--line-strong);
+  font-size: 1rem;
+  line-height: 1.4;
   color: var(--text-main);
-  font-weight: 600;
 }
 
-body.theme-dark .calc-static-value {
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.calc-divider {
-  height: 1px;
-  background: var(--border-color);
-  margin: 4px 0;
-}
-
+/* 結果:像帳本,每列點線分隔,總計用雙底線 */
 .calc-results {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  background: rgba(0, 0, 0, 0.01);
-  padding: 14px;
-  border-radius: var(--border-radius-md);
-  border: 1px dashed var(--border-color);
-}
-
-body.theme-dark .calc-results {
-  background: rgba(255, 255, 255, 0.01);
 }
 
 .result-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  font-size: 0.85rem;
-  color: var(--text-muted);
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px dotted var(--line-strong);
+  font-size: 0.92rem;
+  color: var(--text-main);
 }
 
 .result-item strong {
-  color: var(--text-main);
-  font-weight: 600;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .result-item.total {
   font-size: 1rem;
-  color: var(--text-main);
   font-weight: 700;
-  border-top: 1px solid var(--border-color);
-  padding-top: 10px;
-  margin-top: 4px;
+  border-bottom: 3px double var(--text-main);
 }
 
 .result-item.total strong {
-  color: var(--accent-gold);
-  font-size: 1.15rem;
+  font-size: 1.05rem;
+}
+
+/* 「目前花費」後面的日幣金額 */
+.result-sub {
+  margin-left: 4px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.budget-unset-hint {
+  margin-top: 4px;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--text-muted);
 }
 
 .budget-progress-container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   margin-top: 4px;
 }
 
 .budget-progress-header {
   display: flex;
   justify-content: space-between;
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.86rem;
   color: var(--text-muted);
 }
 
 .budget-progress-bar {
-  height: 8px;
+  height: 12px;
   background: var(--border-color);
-  border-radius: 4px;
+  border-radius: 999px;
   overflow: hidden;
 }
 
+/* 進度條像螢光筆:充裕 = 黃、接近 = 橘、超支 = 紅 (提示文字同一色系) */
 .budget-progress-fill {
   height: 100%;
-  background: var(--accent-gold);
-  border-radius: 4px;
   width: 0%;
+  background: var(--highlighter);
+  border-radius: 0 999px 999px 0;
   transition: width var(--transition-normal), background-color var(--transition-normal);
 }
 
-/* 預算狀態:充裕 = 綠、接近 = 橘、超支 = 紅 (進度條與提示訊息同一色系) */
-.budget-progress-fill.under-budget {
-  background: #10b981;
-}
-
 .budget-progress-fill.near-budget {
-  background: #f97316;
+  background: var(--status-warn-fill);
 }
 
 .budget-progress-fill.over-budget {
-  background: #ef4444;
-}
-
-.budget-status-msg {
-  font-size: 0.78rem;
-  font-weight: 600;
-  line-height: 1.4;
-  padding: 8px 12px;
-  border-radius: var(--border-radius-sm);
-  background: var(--accent-gold-bg);
-  color: var(--accent-gold);
-  border: 1px solid var(--border-color);
-}
-
-.budget-status-msg.under {
-  background: rgba(16, 185, 129, 0.1);
-  color: var(--status-ok-text);
-  border-color: rgba(16, 185, 129, 0.25);
-}
-
-.budget-status-msg.warn {
-  background: rgba(249, 115, 22, 0.1);
-  color: var(--status-warn-text);
-  border-color: rgba(249, 115, 22, 0.25);
-}
-
-.budget-status-msg.danger {
-  background: rgba(239, 68, 68, 0.1);
-  color: var(--status-danger-text);
-  border-color: rgba(239, 68, 68, 0.25);
-}
-
-/* ==========================================
-   預算分頁:記一筆、結果、花費明細
-   ========================================== */
-.expense-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.expense-error {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--status-danger-text);
-}
-
-/* 「目前花費」後面的日幣金額 */
-.result-sub {
-  font-weight: 600;
-  color: var(--text-main);
-}
-
-.budget-unset-hint {
-  margin-top: 12px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  line-height: 1.5;
-  color: var(--status-warn-text);
+  background: var(--status-danger-fill);
 }
 
 .result-item.budget-remaining {
   font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--text-main);
 }
 
 .result-item.budget-remaining strong {
-  font-size: 1.1rem;
-  color: var(--status-ok-text);
+  font-size: 1.05rem;
 }
 
 .result-item.budget-remaining strong.is-over {
   color: var(--status-danger-text);
 }
 
+.budget-status-msg {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--text-main);
+}
+
+.budget-status-msg.under {
+  color: var(--status-ok-text);
+}
+
+.budget-status-msg.warn {
+  color: var(--status-warn-text);
+}
+
+.budget-status-msg.danger {
+  color: var(--status-danger-text);
+}
+
+.expense-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.expense-error {
+  font-size: 0.82rem;
+  color: var(--status-danger-text);
+}
+
+/* 花費明細:日期 | 備註 | 金額 | 刪除,點線分隔 */
 .expense-list {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-/* 一筆花費:日期 | 備註 | 金額 | 刪除 */
 .expense-item {
   display: grid;
   grid-template-columns: auto 1fr auto auto;
   align-items: center;
   gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border-color);
-  font-size: 0.88rem;
-}
-
-.expense-item:last-child {
-  border-bottom: none;
+  padding: 6px 0;
+  border-bottom: 1px dotted var(--line-strong);
+  font-size: 0.9rem;
 }
 
 .expense-date {
   color: var(--text-muted);
+  font-size: 0.82rem;
   font-variant-numeric: tabular-nums;
 }
 
@@ -2467,6 +2443,7 @@ body.theme-dark .calc-results {
 
 .expense-amount {
   color: var(--text-main);
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
@@ -2477,7 +2454,7 @@ body.theme-dark .calc-results {
   width: 36px;
   height: 36px;
   border: none;
-  border-radius: var(--border-radius-sm);
+  border-radius: 50%;
   background: none;
   color: var(--text-muted);
   cursor: pointer;
@@ -2491,7 +2468,7 @@ body.theme-dark .calc-results {
 @media (hover: hover) {
   .expense-delete-btn:hover {
     color: var(--status-danger-text);
-    background: rgba(239, 68, 68, 0.1);
+    background: rgba(214, 70, 60, 0.1);
   }
 }
 
@@ -2507,15 +2484,10 @@ body.theme-dark .calc-results {
 }
 
 @media (max-width: 600px) {
-  .calc-row {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  /* 手機上 modal 表單改單欄,避免 input 擠成 130px */
+  /* 手機上 modal 表單改單欄,避免下拉選單的文字被切掉 */
   .form-grid {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 14px;
   }
 
   .form-group.full-width {
