@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 內建地點的本機修改:{ [placeId]: { 有改動的欄位..., deleted?: true } }
   let placeOverrides = {};
   let allPlaces = [];
-  // 原始行程 (data.js) 中每一站的前一站,用來判斷交通說明是否仍然適用
+  // 共用行程 (data.js) 中每一站的前一站,用來判斷交通說明是否仍然適用
   let originalPrevStop = {};
 
   // 編輯中的地點 id;null 代表表單是「新增」模式
@@ -1144,7 +1144,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // 內建地點:只記錄跟 data.js 不同的欄位;留空的文字欄位視為沿用原始資料
+  // 內建地點:只記錄跟 data.js 不同的欄位;留空的文字欄位視為沿用共用行程
   function saveDefaultPlaceEdit(placeId, values) {
     const base = defaultPlaces.find(p => p.id === placeId);
     if (!base) return;
@@ -1187,7 +1187,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function restorePlace(placeId) {
-    confirmDialog("確定要把這個地點還原成原始資料嗎？").then(ok => {
+    confirmDialog("確定要把這個地點還原成共用行程的內容嗎？").then(ok => {
       if (!ok) return;
       delete placeOverrides[placeId];
       savePlaceOverrides();
@@ -1199,7 +1199,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function restoreAllPlaces() {
-    confirmDialog("確定要把所有修改還原成原始行程嗎？（自訂地點不受影響）").then(ok => {
+    confirmDialog("確定要把所有修改還原成共用行程嗎？（自訂地點不受影響）").then(ok => {
       if (!ok) return;
       placeOverrides = {};
       savePlaceOverrides();
@@ -1466,7 +1466,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // 決定某一站要顯示的交通資訊 (時間軸與抽屜共用):
-  // - 前一站跟原始行程 (data.js) 一樣 → 沿用原本的交通說明
+  // - 前一站跟共用行程 (data.js) 一樣 → 沿用原本的交通說明
   // - 行程調整過 (自己或前面的站被移動) 或自訂地點 → 只顯示「從〇〇出發」與 Google Maps 路線
   function getTransitView(place, prevStopMap) {
     if (place.day === null || place.day === undefined) return null;
@@ -1766,7 +1766,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const info = transitView.info;
       drawerTransitHtml = `
         <div class="detail-transit-block">
-          <div class="transit-header-text">交通路線 (起點: ${escapeHtml(info.from)})</div>
+          <div class="transit-header-text">交通路線 (從 ${escapeHtml(info.from)} 出發)</div>
           <div class="transit-step-body">
             <span class="transit-step-emoji">${transitEmojiOf(info)}</span>
             <div>
@@ -1784,7 +1784,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else if (transitView) {
       drawerTransitHtml = `
         <div class="detail-transit-block">
-          <div class="transit-header-text">交通路線 (起點: ${escapeHtml(transitView.fromPlace.name)})</div>
+          <div class="transit-header-text">交通路線 (從 ${escapeHtml(transitView.fromPlace.name)} 出發)</div>
           <div class="transit-step-body">
             <span class="transit-step-emoji">🧭</span>
             <div class="transit-step-details">${escapeHtml(transitView.note)}</div>
