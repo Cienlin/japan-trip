@@ -117,6 +117,49 @@ test("同一個預設項目刪兩次,hidden 只記一次", () => {
   assert.deepEqual(Checklist.removeItem(once, "checklist-cash", DEFAULTS).hidden, ["checklist-cash"]);
 });
 
+// ---------- 自己的項目後來變成預設項目 ----------
+
+test("自己加的項目跟預設項目文字一樣時,併進預設項目,清單只出現一次", () => {
+  const stored = { v: 1, hidden: [], custom: [{ id: "custom-1", text: "日幣現金" }, { id: "custom-2", text: "充電線" }] };
+  const result = Checklist.mergeDuplicates(stored, {}, DEFAULTS);
+  assert.equal(result.merged, 1);
+  assert.deepEqual(result.stored.custom, [{ id: "custom-2", text: "充電線" }]);
+  assert.deepEqual(ids(Checklist.buildItems(DEFAULTS, result.stored)), [...ids(DEFAULTS), "custom-2"]);
+});
+
+test("合併時前後空白不影響比對", () => {
+  const stored = { v: 1, hidden: [], custom: [{ id: "custom-1", text: " 日幣現金　" }] };
+  assert.equal(Checklist.mergeDuplicates(stored, {}, DEFAULTS).merged, 1);
+});
+
+test("自己的項目勾過,合併後預設項目也是勾的;自己項目的打勾紀錄拿掉", () => {
+  const stored = { v: 1, hidden: [], custom: [{ id: "custom-1", text: "日幣現金" }] };
+  const result = Checklist.mergeDuplicates(stored, { "custom-1": true, "checklist-passport": true }, DEFAULTS);
+  assert.deepEqual(result.checked, { "checklist-cash": true, "checklist-passport": true });
+});
+
+test("預設項目已經勾了,自己的項目沒勾:合併後仍然是勾的", () => {
+  const stored = { v: 1, hidden: [], custom: [{ id: "custom-1", text: "日幣現金" }] };
+  const result = Checklist.mergeDuplicates(stored, { "checklist-cash": true, "custom-1": false }, DEFAULTS);
+  assert.deepEqual(result.checked, { "checklist-cash": true });
+});
+
+test("這支手機刪掉了那個預設項目時,保留自己的項目", () => {
+  const stored = { v: 1, hidden: ["checklist-cash"], custom: [{ id: "custom-1", text: "日幣現金" }] };
+  const result = Checklist.mergeDuplicates(stored, { "custom-1": true }, DEFAULTS);
+  assert.equal(result.merged, 0);
+  assert.deepEqual(result.stored.custom, [{ id: "custom-1", text: "日幣現金" }]);
+  assert.deepEqual(result.checked, { "custom-1": true });
+});
+
+test("合併不改到原本的資料", () => {
+  const stored = { v: 1, hidden: [], custom: [{ id: "custom-1", text: "日幣現金" }] };
+  const checked = { "custom-1": true };
+  Checklist.mergeDuplicates(stored, checked, DEFAULTS);
+  assert.equal(stored.custom.length, 1);
+  assert.deepEqual(checked, { "custom-1": true });
+});
+
 test("還原:刪掉的預設項目回到原本的位置,自己的項目不變", () => {
   const before = { v: 1, hidden: ["checklist-passport", "checklist-cash"], custom: [{ id: "custom-1", text: "充電線" }] };
   const after = Checklist.restoreDefaults(before);

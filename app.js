@@ -1967,7 +1967,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let stored = Checklist.normalize(readJson(STORAGE_KEYS.checklistItems, null));
     // 打勾狀態 { 項目 id: true/false };預設項目的 id 沿用改版前的,舊的打勾紀錄直接對得上
     const rawChecked = readJson(STORAGE_KEYS.checklist, {});
-    const checked = rawChecked && typeof rawChecked === "object" && !Array.isArray(rawChecked) ? rawChecked : {};
+    let checked = rawChecked && typeof rawChecked === "object" && !Array.isArray(rawChecked) ? rawChecked : {};
 
     // 寫不進去 (例如私密瀏覽) 也不中斷畫面,只是下次打開不會記得
     const save = (key, value) => {
@@ -1977,6 +1977,15 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error(`Failed to save ${key}:`, e);
       }
     };
+
+    // 自己加的項目後來變成預設項目 (文字一樣) 時,合併成一項,打勾跟著搬過去
+    const merged = Checklist.mergeDuplicates(stored, checked, defaults);
+    if (merged.merged > 0) {
+      stored = merged.stored;
+      checked = merged.checked;
+      save(STORAGE_KEYS.checklistItems, stored);
+      save(STORAGE_KEYS.checklist, checked);
+    }
     const TEXT_ERRORS = { empty: "請先輸入項目", tooLong: `項目最多 ${Checklist.MAX_LENGTH} 個字` };
     const showError = (message) => {
       errorEl.textContent = message;

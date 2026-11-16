@@ -53,7 +53,7 @@
 - `app.js`：整個 app 包在一個 `DOMContentLoaded` 裡。儲存名稱統一用 `STORAGE_KEYS`，讀取 localStorage 用 `readJson()`，飯店用 `HOTEL_ID`
 - **本機編輯**：內建地點的修改存成 localStorage 的 override（`EDITABLE_FIELDS`），自訂地點存在 `tokyo_trip_custom_places`，都只存在各自的手機。開啟時會自動清掉「已經跟 data.js 相同」的 override，以及「data.js 已有同名同座標地點」的自訂地點
 - **分頁順序**：行程規劃｜美食景點｜預算｜行前指南｜行前清單（手機底部 5 個；電腦版側邊欄也是圖示在上、文字在下）
-- **行前清單分頁**：預設項目來自 `TRIP_METADATA.checklist`，旅伴可以在自己的手機新增、刪除項目（預設項目刪掉只是不顯示，可以還原）。打勾狀態存在 `STORAGE_KEYS.checklist`（`{ 項目 id: true/false }`），自己的項目與刪掉的預設項目存在 `STORAGE_KEYS.checklistItems`（`{ v: 1, hidden, custom }`），都只存在各自的手機；組合與新增刪除的規則在 `checklist.js`，改了要跑 `node --test "tests/*.test.js"`
+- **行前清單分頁**：預設項目來自 `TRIP_METADATA.checklist`，旅伴可以在自己的手機新增、刪除項目（預設項目刪掉只是不顯示，可以還原；自己加的項目跟預設項目文字一樣時，打開時自動合併成一項，打勾跟著搬過去）。打勾狀態存在 `STORAGE_KEYS.checklist`（`{ 項目 id: true/false }`），自己的項目與刪掉的預設項目存在 `STORAGE_KEYS.checklistItems`（`{ v: 1, hidden, custom }`），都只存在各自的手機；組合與新增刪除的規則在 `checklist.js`，改了要跑 `node --test "tests/*.test.js"`
 - **預算分頁**：
   - 設定只把旅伴改過的欄位存進 `STORAGE_KEYS.budget`（`{ v: 3, rate?, flight?, budgetTwd? }`），沒改過的一律用 `TRIP_METADATA.budget` 的最新值；舊版資料由 `Budget.migrateSettings()` 轉換
   - 花費明細存在 `STORAGE_KEYS.expenses`（`[{ id, amount, note, createdAt }]`），金額只接受正整數日圓，不分類別、不能修改（刪掉重記）

@@ -58,7 +58,33 @@ const Checklist = (() => {
     return { ...normalize(stored), hidden: [] };
   }
 
-  return { MAX_LENGTH, normalize, buildItems, parseText, addItem, removeItem, restoreDefaults };
+  // 自己加的項目跟預設項目文字一樣 (例如主揪後來把它加進預設項目) → 併進預設項目,清單只出現一次
+  // 打勾:任一份勾過,合併後就是勾的;這支手機刪掉了那個預設項目時不合併,保留自己的項目
+  // 回傳 { stored, checked, merged: 合併了幾項 },不改到傳進來的資料
+  function mergeDuplicates(stored, checked, defaults) {
+    const data = normalize(stored);
+    const nextChecked = { ...(checked && typeof checked === "object" ? checked : {}) };
+    const visibleDefaultIdByText = new Map(
+      (Array.isArray(defaults) ? defaults : [])
+        .filter((item) => !data.hidden.includes(item.id))
+        .map((item) => [String(item.text).trim(), item.id])
+    );
+    const custom = [];
+    let merged = 0;
+    data.custom.forEach((item) => {
+      const defaultId = visibleDefaultIdByText.get(item.text.trim());
+      if (!defaultId) {
+        custom.push(item);
+        return;
+      }
+      merged++;
+      if (nextChecked[item.id] === true) nextChecked[defaultId] = true;
+      delete nextChecked[item.id];
+    });
+    return { stored: { ...data, custom }, checked: nextChecked, merged };
+  }
+
+  return { MAX_LENGTH, normalize, buildItems, parseText, addItem, removeItem, restoreDefaults, mergeDuplicates };
 })();
 
 if (typeof module !== "undefined" && module.exports) {
