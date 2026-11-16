@@ -37,7 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
     theme: "tokyo_trip_theme",
     customPlaces: "tokyo_trip_custom_places",
     placeOverrides: "tokyo_trip_place_overrides",
-    checklist: "tokyo_trip_checklist_state",
+    checklist: "tokyo_trip_checklist_state",       // 行前清單的打勾狀態 { 項目 id: true/false }
+    checklistItems: "tokyo_trip_checklist_items",  // 行前清單:自己加的項目與刪掉的預設項目
     budget: "tokyo_trip_budget_inputs",
     expenses: "tokyo_trip_expenses",  // 預算分頁的花費明細
     // Google 底圖的通行碼,依主題分開存:{ light: {...}, dark: {...} }
@@ -1948,27 +1949,105 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".marker-pin").forEach(pin => pin.classList.remove("active"));
   }
 
-  // Packing Checklist Persistence
+  // ==========================================
+  // 行前清單分頁:預設項目 (data.js 的 TRIP_METADATA.checklist) + 自己加的項目
+  // 打勾、自己加的項目、刪掉的預設項目只存在這支手機;組合與新增刪除的規則在 checklist.js
+  // ==========================================
   function initChecklist() {
-    const checklistContainer = document.querySelector(".packing-checklist");
-    if (!checklistContainer) return;
+    const listEl = document.getElementById("checklist-items");
+    const form = document.getElementById("checklist-form");
+    const input = document.getElementById("checklist-new-text");
+    const errorEl = document.getElementById("checklist-error");
+    const emptyEl = document.getElementById("checklist-empty");
+    const restoreBtn = document.getElementById("checklist-restore-btn");
+    if (!listEl || !form || !input || !errorEl || !emptyEl || !restoreBtn || typeof Checklist === "undefined") return;
 
-    // Load saved checklist states
-    const savedStates = readJson(STORAGE_KEYS.checklist, {}) || {};
+    const defaults = (typeof TRIP_METADATA !== "undefined" && Array.isArray(TRIP_METADATA.checklist))
+      ? TRIP_METADATA.checklist : [];
+    let stored = Checklist.normalize(readJson(STORAGE_KEYS.checklistItems, null));
+    // 打勾狀態 { 項目 id: true/false };預設項目的 id 沿用改版前的,舊的打勾紀錄直接對得上
+    const rawChecked = readJson(STORAGE_KEYS.checklist, {});
+    const checked = rawChecked && typeof rawChecked === "object" && !Array.isArray(rawChecked) ? rawChecked : {};
 
-    const checkboxes = checklistContainer.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(cb => {
-      const id = cb.id;
-      if (id && savedStates[id] !== undefined) {
-        cb.checked = savedStates[id];
+    // 寫不進去 (例如私密瀏覽) 也不中斷畫面,只是下次打開不會記得
+    const save = (key, value) => {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (e) {
+        console.error(`Failed to save ${key}:`, e);
       }
+    };
+    const TEXT_ERRORS = { empty: "請先輸入項目", tooLong: `項目最多 ${Checklist.MAX_LENGTH} 個字` };
+    const showError = (message) => {
+      errorEl.textContent = message;
+      errorEl.hidden = !message;
+    };
 
-      // Add event listener to save state when changed
-      cb.addEventListener("change", () => {
-        savedStates[cb.id] = cb.checked;
-        localStorage.setItem(STORAGE_KEYS.checklist, JSON.stringify(savedStates));
+    function render() {
+      const items = Checklist.buildItems(defaults, stored);
+      listEl.innerHTML = items.map(item => `
+        <li class="todo-item">
+          <label class="todo-label">
+            <input type="checkbox" data-item-id="${escapeHtml(item.id)}"${checked[item.id] ? " checked" : ""}>
+            <span>${escapeHtml(item.text)}</span>
+          </label>
+          <button type="button" class="checklist-delete-btn" data-item-id="${escapeHtml(item.id)}" aria-label="刪除「${escapeHtml(item.text)}」">
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        </li>`).join("");
+      emptyEl.hidden = items.length > 0;
+      // 刪過「目前還在旅程資料裡」的預設項目才顯示還原
+      restoreBtn.hidden = !stored.hidden.some(id => defaults.some(item => item.id === id));
+    }
+
+    listEl.addEventListener("change", (event) => {
+      const cb = event.target.closest('input[type="checkbox"][data-item-id]');
+      if (!cb) return;
+      checked[cb.dataset.itemId] = cb.checked;
+      save(STORAGE_KEYS.checklist, checked);
+    });
+
+    listEl.addEventListener("click", (event) => {
+      const btn = event.target.closest(".checklist-delete-btn");
+      if (!btn) return;
+      const id = btn.dataset.itemId;
+      const item = Checklist.buildItems(defaults, stored).find(i => i.id === id);
+      if (!item) return;
+      confirmDialog(`刪除「${item.text}」？`).then(ok => {
+        if (!ok) return;
+        stored = Checklist.removeItem(stored, id, defaults);
+        delete checked[id]; // 還原的預設項目從沒有打勾開始
+        save(STORAGE_KEYS.checklistItems, stored);
+        save(STORAGE_KEYS.checklist, checked);
+        render();
       });
     });
+
+    // 按加入或在輸入欄按 Enter 都會送出;空白或太長時提示並回到輸入欄
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const result = Checklist.parseText(input.value);
+      if (!result.ok) {
+        showError(TEXT_ERRORS[result.reason]);
+        input.focus();
+        return;
+      }
+      const id = `custom-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+      stored = Checklist.addItem(stored, result.value, id);
+      save(STORAGE_KEYS.checklistItems, stored);
+      input.value = "";
+      showError("");
+      render();
+    });
+    input.addEventListener("input", () => showError(""));
+
+    restoreBtn.addEventListener("click", () => {
+      stored = Checklist.restoreDefaults(stored);
+      save(STORAGE_KEYS.checklistItems, stored);
+      render();
+    });
+
+    render();
   }
 
   // ==========================================

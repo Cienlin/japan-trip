@@ -88,6 +88,10 @@
           <span class="material-symbols-outlined tab-icon">flight_takeoff</span>
           <span class="tab-label">行前指南</span>
         </button>
+        <button class="tab-btn" data-tab="checklist" id="tab-btn-checklist">
+          <span class="material-symbols-outlined tab-icon">playlist_add_check</span>
+          <span class="tab-label">行前清單</span>
+        </button>
       </nav>
       
       <!-- Tab Content Area -->
@@ -367,23 +371,26 @@
               <p class="tips-note"><strong>💴 現金 vs 卡</strong>：Lawson、老店、居酒屋、章魚燒攤只收現金；連鎖店、百貨、Uniqlo、Alpen 可刷卡或 IC 卡。建議每人 3~5 萬日幣現鈔。</p>
             </div>
           </div>
+        </section>
 
-          <!-- Packing Checklist -->
+        <!-- Tab 5: 行前清單 — 預設項目在 data.js 的 TRIP_METADATA.checklist;
+             自己加的項目、刪掉的預設項目、打勾狀態只存在這支手機 (app.js 的 initChecklist,計算在 checklist.js) -->
+        <section class="tab-pane" id="pane-checklist">
           <div class="logistics-card">
             <div class="card-header">
               <span class="material-symbols-outlined logistics-icon">playlist_add_check</span>
               <h3>行前清單 (5人出發)</h3>
             </div>
-            <div class="packing-checklist">
-              <label class="todo-item"><input type="checkbox" id="checklist-passport"> <span>護照正本 (效期大於 6 個月)</span></label>
-              <label class="todo-item"><input type="checkbox" id="checklist-vjw"> <span>Visit Japan Web 填寫完成 (入境 QR Code)</span></label>
-              <label class="todo-item"><input type="checkbox" id="checklist-cash"> <span>日幣現金 (建議每人準備 3~5 萬日幣現鈔，其餘刷卡)</span></label>
-              <label class="todo-item"><input type="checkbox" id="checklist-sim"> <span>上網網卡 (eSIM 或實體 SIM 卡)</span></label>
-              <label class="todo-item"><input type="checkbox" id="checklist-power"> <span>行動電源與日本規格插頭充電線 (日本為兩扁腳插座，100V)</span></label>
-              <label class="todo-item"><input type="checkbox" id="checklist-clothes"> <span>保暖冬裝 (東京12月氣溫約 5°C ~ 12°C，室內有暖氣建議洋蔥式穿法)</span></label>
-              <label class="todo-item"><input type="checkbox" id="checklist-skincare"> <span>保濕乳液、護唇膏 (日本冬天空氣非常乾燥)</span></label>
-              <label class="todo-item"><input type="checkbox" id="checklist-medicine"> <span>個人常備藥物及環保餐具</span></label>
-            </div>
+            <ul class="packing-checklist" id="checklist-items"></ul>
+            <p class="checklist-empty" id="checklist-empty" hidden>清單是空的，可以從下面加入要帶的東西。</p>
+            <form class="checklist-form" id="checklist-form" novalidate>
+              <label class="visually-hidden" for="checklist-new-text">新增項目</label>
+              <input type="text" id="checklist-new-text" maxlength="40" autocomplete="off" placeholder="新增項目，例如 充電線">
+              <button type="submit" class="btn btn-primary btn-sm">加入</button>
+            </form>
+            <p class="checklist-error" id="checklist-error" hidden></p>
+            <button type="button" class="btn btn-outline btn-sm checklist-restore" id="checklist-restore-btn" hidden>還原被刪掉的預設項目</button>
+            <p class="checklist-local-note">清單與打勾只存在這支手機，清除瀏覽器資料就會消失。</p>
           </div>
         </section>
       </main>
@@ -395,7 +402,7 @@
       <div id="map"></div>
 
       <!-- Version + Viewport Debug Badge (方便診斷 iOS PWA viewport bug) -->
-      <div class="version-badge" id="version-badge">v1.5.1</div>
+      <div class="version-badge" id="version-badge">v1.6.0</div>
       
       <!-- Theme & Action Floating Toolbar -->
       <div class="floating-toolbar">
@@ -574,6 +581,7 @@
   <script src="data.js"></script>
   <script src="basemap.js"></script>
   <script src="budget.js"></script>
+  <script src="checklist.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

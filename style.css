@@ -250,7 +250,8 @@ textarea {
   color: var(--text-main);
 }
 
-/* Tab Navigation:沒有框和色塊,目前的分頁用螢光筆 (見上方共用規則) */
+/* Tab Navigation:沒有框和色塊,目前的分頁用螢光筆 (見上方共用規則)
+   5 個分頁:電腦版也是「圖示在上、文字在下」,420px 的側邊欄才排得下 */
 .tab-navigation {
   display: flex;
   margin: 6px 12px 4px;
@@ -258,18 +259,20 @@ textarea {
 
 .tab-btn {
   flex: 1;
+  min-width: 0;
   background: none;
   border: none;
-  padding: 10px 4px;
-  font-size: 0.9rem;
+  padding: 6px 2px;
+  font-size: 0.84rem;
   font-weight: 400;
+  white-space: nowrap;
   color: var(--text-muted);
   cursor: pointer;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 2px;
   transition: color var(--transition-fast);
   border-radius: var(--border-radius-sm);
   outline: none;
@@ -292,9 +295,9 @@ textarea {
 }
 
 .tab-icon {
-  width: 20px;
-  height: 20px;
-  font-size: 20px;
+  width: 22px;
+  height: 22px;
+  font-size: 22px;
 }
 
 /* Tab Content */
@@ -1090,24 +1093,36 @@ textarea {
   gap: 4px;
 }
 
-/* 行前清單:手繪感的方框,打勾後文字劃掉 */
+/* ==========================================
+   行前清單分頁:一張便條;每一項是手繪感的方框 + 文字 + 刪除鈕,打勾後文字劃掉
+   ========================================== */
 .packing-checklist {
+  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
 .todo-item {
   display: flex;
   align-items: flex-start;
+  gap: 4px;
+}
+
+.todo-label {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
   gap: 10px;
+  padding: 7px 0;
   font-size: 0.9rem;
   line-height: 1.5;
+  overflow-wrap: anywhere;
   cursor: pointer;
   user-select: none;
 }
 
-.todo-item input {
+.todo-label input {
   flex: none;
   width: 20px;
   height: 20px;
@@ -1120,18 +1135,91 @@ textarea {
   cursor: pointer;
 }
 
-.todo-item input:checked {
+.todo-label input:checked {
   background-image: var(--check-mark);
 }
 
-.todo-item input:focus-visible {
+.todo-label input:focus-visible {
   outline: 2px solid var(--accent-gold);
   outline-offset: 2px;
 }
 
-.todo-item input:checked + span {
+.todo-label input:checked + span {
   text-decoration: line-through;
   color: var(--text-muted);
+}
+
+/* 每一項右邊的刪除鈕 (跟花費明細的刪除鈕一樣) */
+.checklist-delete-btn {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.checklist-delete-btn .material-symbols-outlined {
+  font-size: 20px;
+}
+
+@media (hover: hover) {
+  .checklist-delete-btn:hover {
+    color: var(--status-danger-text);
+    background: rgba(214, 70, 60, 0.1);
+  }
+}
+
+.checklist-empty {
+  padding: 8px 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* 新增項目:只有底線的輸入欄 + 加入按鈕,排在同一行 */
+.checklist-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.checklist-form .btn {
+  flex: none;
+}
+
+.checklist-error {
+  margin-top: 6px;
+  font-size: 0.82rem;
+  color: var(--status-danger-text);
+}
+
+.checklist-restore {
+  margin-top: 14px;
+}
+
+.checklist-local-note {
+  margin-top: 12px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* 只給螢幕閱讀器的文字 (例如輸入欄的標籤) */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 /* ==========================================
@@ -2054,10 +2142,11 @@ body.theme-dark .icon-moon {
   color: var(--status-danger-text);
 }
 
-/* 輸入欄:只有底線 (表單與預算分頁共用) */
+/* 輸入欄:只有底線 (表單、預算分頁、行前清單共用) */
 .form-group input,
 .form-group select,
-.calc-group input {
+.calc-group input,
+.checklist-form input {
   width: 100%;
   min-width: 0;
   background: transparent;
@@ -2082,14 +2171,16 @@ body.theme-dark .icon-moon {
 
 .form-group input::placeholder,
 .form-group textarea::placeholder,
-.calc-group input::placeholder {
+.calc-group input::placeholder,
+.checklist-form input::placeholder {
   color: var(--text-muted);
   opacity: 0.7;
 }
 
 .form-group input:focus,
 .form-group select:focus,
-.calc-group input:focus {
+.calc-group input:focus,
+.checklist-form input:focus {
   border-bottom-color: var(--accent-gold);
 }
 

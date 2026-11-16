@@ -2,11 +2,11 @@
 
 ## 1. 準備
 
-- [ ] 1.1 修改 `docs/roadmap.md`：Phase 2 和「目前進度」註明行前清單分頁（`checklist-tab`）是凍結期的破例。驗證：roadmap 兩處都寫到
+- [x] 1.1 修改 `docs/roadmap.md`：Phase 2 和「目前進度」註明行前清單分頁（`checklist-tab`）是凍結期的破例。驗證：roadmap 兩處都寫到
 
 ## 2. 清單的純函式與測試
 
-- [ ] 2.1 先寫 `tests/checklist.test.js`（`node --test`），涵蓋：
+- [x] 2.1 先寫 `tests/checklist.test.js`（`node --test`），涵蓋：
   - `normalize`：
     - null、字串、壞掉的 JSON 結構 → 空的 `{ v: 1, hidden: [], custom: [] }`
     - `custom` 裡缺 id 或文字的那筆要丟掉，其他保留
@@ -25,14 +25,14 @@
   - `restoreDefaults`：`hidden` 清空，`custom` 不變
 
   驗證：`checklist.js` 還沒寫之前，測試會失敗
-- [ ] 2.2 實作 `checklist.js`。驗證：
+- [x] 2.2 實作 `checklist.js`。驗證：
   - `node --check checklist.js` 通過，`node --test "tests/*.test.js"` 全部通過
   - 暫時拿掉 3 個判斷（hidden 過濾、空白檢查、刪預設項目時改用 hidden），對應的測試會失敗；還原後通過
 
 ## 3. 資料與網頁
 
-- [ ] 3.1 `data.js` 新增 `TRIP_METADATA.checklist`：8 個預設項目，id 與文字照 `index.html` 現在的內容；`tools/check-data.js` 檢查清單資料（是陣列、id 不重複、文字不空白）。驗證：`node tools/check-data.js` 沒有 ❌；故意把一個 id 改成重複的，會出現 ❌，改回後沒有
-- [ ] 3.2 修改 `index.html`：
+- [x] 3.1 `data.js` 新增 `TRIP_METADATA.checklist`：8 個預設項目，id 與文字照 `index.html` 現在的內容；`tools/check-data.js` 檢查清單資料（是陣列、id 不重複、文字不空白）。驗證：`node tools/check-data.js` 沒有 ❌；故意把一個 id 改成重複的，會出現 ❌，改回後沒有
+- [x] 3.2 修改 `index.html`：
   - 分頁列最後加「行前清單」按鈕：`data-tab="checklist"`、圖示 `playlist_add_check`、文字包在 `.tab-label` 裡
   - 新增 `#pane-checklist`：一張 `.logistics-card`，裡面有清單容器、空清單提示、新增表單（只有底線的輸入欄、`maxlength="40"`、加入按鈕、錯誤提示）、還原按鈕、說明小字
   - 拿掉行前指南的「行前清單」卡片
@@ -41,11 +41,11 @@
   驗證：
   - `node tools/check-data.js` 沒有 ❌，圖示已經在 `icon_names` 裡
   - grep 確認 `#pane-logistics` 裡沒有 `packing-checklist`
-- [ ] 3.3 `sw.js` 的 `SHELL_ASSETS` 加入 `checklist.js`。驗證：`node --check sw.js`；`SHELL_ASSETS` 列的每個檔案都存在
+- [x] 3.3 `sw.js` 的 `SHELL_ASSETS` 加入 `checklist.js`。驗證：`node --check sw.js`；`SHELL_ASSETS` 列的每個檔案都存在
 
 ## 4. 畫面與互動
 
-- [ ] 4.1 修改 `app.js`：
+- [x] 4.1 修改 `app.js`：
   - `STORAGE_KEYS` 加 `checklistItems`
   - `initChecklist()` 改寫：讀資料時用 `Checklist.normalize()`；用 `Checklist.buildItems()` 畫出清單，文字經過 `escapeHtml()`
   - 打勾：存回 `STORAGE_KEYS.checklist`
@@ -57,7 +57,7 @@
   - `node --check app.js` 通過
   - grep 確認清單文字都經過 `escapeHtml()`
   - 用 node 模擬一份改版前的打勾紀錄，`buildItems` 的 id 對得上
-- [ ] 4.2 修改 `style.css`：
+- [x] 4.2 修改 `style.css`：
   - 清單項目右側的刪除鈕
   - 新增欄與加入按鈕排在同一行，輸入欄只有底線
   - 還原按鈕、空清單提示
@@ -67,7 +67,7 @@
 
 ## 5. 文件、版號與上線
 
-- [ ] 5.1 更新文件：
+- [x] 5.1 更新文件：
   - `GLOSSARY.md`：行前指南拿掉行前清單；行前清單的定義加上預設項目與自己的項目
   - `CLAUDE.md`：`TRIP_METADATA.checklist` 的說明，以及分頁順序
   - `README.md`：功能列表
@@ -75,7 +75,7 @@
   - `notebook-look` 的 appearance 規格差異：「區塊是便條紙」加上行前清單
 
   驗證：這幾份文件都寫到；`openspec validate checklist-tab --strict` 與 `openspec validate notebook-look --strict` 通過
-- [ ] 5.2 版號升到 v1.6.0，跑靜態檢查。驗證：`node --check`（app.js、sw.js、checklist.js）、`node tools/check-data.js` 沒有 ❌、`node --test "tests/*.test.js"` 全部通過
+- [x] 5.2 版號升到 v1.6.0，跑靜態檢查。驗證：`node --check`（app.js、sw.js、checklist.js）、`node tools/check-data.js` 沒有 ❌、`node --test "tests/*.test.js"` 全部通過
 - [ ] 5.3 commit、push，給使用者手機測試清單。要測的包括：
   - 改版前勾過的項目還是勾的
   - 新增項目、空白提示、40 字上限

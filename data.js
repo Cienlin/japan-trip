@@ -34,7 +34,19 @@ const TRIP_METADATA = {
   budget: {
     flightTwd: 14424,  // 機票 (台幣)
     jpyRate: 0.21      // 匯率 (台幣 / 1 日圓) — 臺灣銀行現金賣出,2026-11-12
-  }
+  },
+  // 行前清單的預設項目 (大家共用);旅伴自己加的項目、刪掉的預設項目、打勾狀態只存在各自的手機
+  // id 是手機上打勾紀錄的 key:已經有的 id 不要改,新增項目用新的 id
+  checklist: [
+    { id: "checklist-passport", text: "護照正本 (效期大於 6 個月)" },
+    { id: "checklist-vjw", text: "Visit Japan Web 填寫完成 (入境 QR Code)" },
+    { id: "checklist-cash", text: "日幣現金 (建議每人準備 3~5 萬日幣現鈔，其餘刷卡)" },
+    { id: "checklist-sim", text: "上網網卡 (eSIM 或實體 SIM 卡)" },
+    { id: "checklist-power", text: "行動電源與日本規格插頭充電線 (日本為兩扁腳插座，100V)" },
+    { id: "checklist-clothes", text: "保暖冬裝 (東京12月氣溫約 5°C ~ 12°C，室內有暖氣建議洋蔥式穿法)" },
+    { id: "checklist-skincare", text: "保濕乳液、護唇膏 (日本冬天空氣非常乾燥)" },
+    { id: "checklist-medicine", text: "個人常備藥物及環保餐具" }
+  ]
 };
 
 const PLACES = [

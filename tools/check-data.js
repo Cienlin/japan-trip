@@ -53,6 +53,21 @@ const budget = TRIP_METADATA.budget || {};
     errors.push(`TRIP_METADATA.budget.${key} 要是大於 0 的數字:${budget[key]}`);
   }
 });
+// 行前清單的預設項目:id 是手機上打勾紀錄的 key,不能重複
+const checklist = TRIP_METADATA.checklist;
+if (!Array.isArray(checklist)) {
+  errors.push("TRIP_METADATA.checklist (行前清單的預設項目) 要是陣列");
+} else {
+  const checklistIds = new Set();
+  checklist.forEach((item, i) => {
+    const where = `TRIP_METADATA.checklist 第 ${i + 1} 項`;
+    if (!item || typeof item.id !== "string" || !item.id.trim()) errors.push(`${where} 沒有 id`);
+    else if (checklistIds.has(item.id)) errors.push(`${where} 的 id 重複:${item.id}`);
+    else checklistIds.add(item.id);
+    if (!item || typeof item.text !== "string" || !item.text.trim()) errors.push(`${where} 沒有文字`);
+    else if (item.text.trim().length > 40) warnings.push(`${where} 超過 40 字 (旅伴自己加的項目上限是 40 字):${item.text}`);
+  });
+}
 const perPersonTwd = TRIP_METADATA.accommodation?.perPersonTwd;
 if (typeof perPersonTwd !== "number" || !(perPersonTwd > 0)) {
   errors.push(`TRIP_METADATA.accommodation.perPersonTwd (每人分攤住宿,台幣) 要是大於 0 的數字:${perPersonTwd}`);

@@ -15,7 +15,7 @@
 
 ## 行程資料 `data.js`
 
-- `TRIP_METADATA`：機票、飯店、`startDate`（Day 1 的日期，旅行中用來判斷今天是 Day 幾）、`budget`（預算分頁的機票 `flightTwd` 與匯率 `jpyRate` 預設值；總預算沒有預設值，由各自在手機上填；app.js 與 index.html 不寫死這些數字，改這裡就好）、`accommodation.perPersonTwd`（每人分攤住宿，已付款的台幣金額，預算分頁直接使用、不隨匯率換算）
+- `TRIP_METADATA`：機票、飯店、`startDate`（Day 1 的日期，旅行中用來判斷今天是 Day 幾）、`budget`（預算分頁的機票 `flightTwd` 與匯率 `jpyRate` 預設值；總預算沒有預設值，由各自在手機上填；app.js 與 index.html 不寫死這些數字，改這裡就好）、`accommodation.perPersonTwd`（每人分攤住宿，已付款的台幣金額，預算分頁直接使用、不隨匯率換算）、`checklist`（行前清單的預設項目 `[{ id, text }]`；`id` 是手機上打勾紀錄的 key，已經有的不要改，新增項目用新的 id）
 - `PLACES`：每個地點的欄位
   - `category`：`food` / `shopping` / `sightseeing` / `lodging` / `transport`
   - `day`：1～6；`null` 代表候補（不排入行程）
@@ -52,7 +52,9 @@
 
 - `app.js`：整個 app 包在一個 `DOMContentLoaded` 裡。儲存名稱統一用 `STORAGE_KEYS`，讀取 localStorage 用 `readJson()`，飯店用 `HOTEL_ID`
 - **本機編輯**：內建地點的修改存成 localStorage 的 override（`EDITABLE_FIELDS`），自訂地點存在 `tokyo_trip_custom_places`，都只存在各自的手機。開啟時會自動清掉「已經跟 data.js 相同」的 override，以及「data.js 已有同名同座標地點」的自訂地點
-- **預算分頁**（分頁順序：行程規劃｜美食景點｜預算｜行前指南）：
+- **分頁順序**：行程規劃｜美食景點｜預算｜行前指南｜行前清單（手機底部 5 個；電腦版側邊欄也是圖示在上、文字在下）
+- **行前清單分頁**：預設項目來自 `TRIP_METADATA.checklist`，旅伴可以在自己的手機新增、刪除項目（預設項目刪掉只是不顯示，可以還原）。打勾狀態存在 `STORAGE_KEYS.checklist`（`{ 項目 id: true/false }`），自己的項目與刪掉的預設項目存在 `STORAGE_KEYS.checklistItems`（`{ v: 1, hidden, custom }`），都只存在各自的手機；組合與新增刪除的規則在 `checklist.js`，改了要跑 `node --test "tests/*.test.js"`
+- **預算分頁**：
   - 設定只把旅伴改過的欄位存進 `STORAGE_KEYS.budget`（`{ v: 3, rate?, flight?, budgetTwd? }`），沒改過的一律用 `TRIP_METADATA.budget` 的最新值；舊版資料由 `Budget.migrateSettings()` 轉換
   - 花費明細存在 `STORAGE_KEYS.expenses`（`[{ id, amount, note, createdAt }]`），金額只接受正整數日圓，不分類別、不能修改（刪掉重記）
   - 都只存在各自的手機；金額解析與加總在 `budget.js`，改了要跑 `node --test "tests/*.test.js"`
