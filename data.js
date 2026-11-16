@@ -42,10 +42,23 @@ const TRIP_METADATA = {
     { id: "checklist-vjw", text: "Visit Japan Web 填寫完成 (入境 QR Code)" },
     { id: "checklist-cash", text: "日幣現金 (建議每人準備 3~5 萬日幣現鈔，其餘刷卡)" },
     { id: "checklist-sim", text: "上網網卡 (eSIM 或實體 SIM 卡)" },
-    { id: "checklist-power", text: "行動電源與日本規格插頭充電線 (日本為兩扁腳插座，100V)" },
-    { id: "checklist-clothes", text: "保暖冬裝 (東京12月氣溫約 5°C ~ 12°C，室內有暖氣建議洋蔥式穿法)" },
-    { id: "checklist-skincare", text: "保濕乳液、護唇膏 (日本冬天空氣非常乾燥)" },
-    { id: "checklist-medicine", text: "個人常備藥物及環保餐具" }
+    { id: "checklist-powerbank", text: "行動電源(嚴禁放入托運行李)，每人最多限帶 2 顆" },
+    { id: "checklist-trash-bag", text: "垃圾袋(裝髒衣服用)" },
+    { id: "checklist-luggage-scale", text: "行李秤" },
+    { id: "checklist-lotion", text: "乳液類(要記得分裝成小瓶)" },
+    { id: "checklist-cable", text: "充電線" },
+    { id: "checklist-meds", text: "自己要吃的藥" },
+    { id: "checklist-clothing", text: "衣物" },
+    { id: "checklist-mask", text: "口罩" },
+    { id: "checklist-essentials", text: "鑰匙、錢包、耳機(出門三寶)" },
+    { id: "checklist-toothbrush", text: "牙膏牙刷" },
+    { id: "checklist-lip-balm", text: "護唇膏" },
+    { id: "checklist-backup-info", text: "手機備份好機票跟住宿的資訊" },
+    { id: "checklist-camera", text: "相機" },
+    { id: "checklist-insurance", text: "保險" },
+    { id: "checklist-suica", text: "西瓜卡處理" },
+    { id: "checklist-tickets", text: "車票訂好或看好" },
+    { id: "checklist-ready", text: "一顆準備好出去玩的心" }
   ]
 };
 
