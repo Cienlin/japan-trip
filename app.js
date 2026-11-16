@@ -1965,7 +1965,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const defaults = (typeof TRIP_METADATA !== "undefined" && Array.isArray(TRIP_METADATA.checklist))
       ? TRIP_METADATA.checklist : [];
     let stored = Checklist.normalize(readJson(STORAGE_KEYS.checklistItems, null));
-    // 打勾狀態 { 項目 id: true/false };預設項目的 id 沿用改版前的,舊的打勾紀錄直接對得上
+    // 打勾狀態 { 項目 id: true/false };文字沒變的預設項目沿用原本的 id,打勾紀錄直接對得上
+    // (data.js 拿掉的預設項目,它的打勾紀錄留在手機上但不會再顯示)
     const rawChecked = readJson(STORAGE_KEYS.checklist, {});
     let checked = rawChecked && typeof rawChecked === "object" && !Array.isArray(rawChecked) ? rawChecked : {};
 

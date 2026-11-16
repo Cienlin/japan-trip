@@ -85,7 +85,7 @@
 
   驗證：這幾份文件都寫到；`openspec validate checklist-tab --strict` 與 `openspec validate notebook-look --strict` 通過
 - [x] 5.2 版號升到 v1.6.0，跑靜態檢查。驗證：`node --check`（app.js、sw.js、checklist.js）、`node tools/check-data.js` 沒有 ❌、`node --test "tests/*.test.js"` 全部通過
-- [ ] 5.3 commit、push，給使用者手機測試清單。要測的包括：
+- [x] 5.3 commit、push，給使用者手機測試清單。要測的包括：
   - 改版前勾過的項目還是勾的
   - 新增項目、空白提示、40 字上限
   - 刪除預設項目與自己的項目，確認時取消
@@ -95,4 +95,9 @@
   - 電腦版的分頁
 
   驗證：使用者實測回報，問題都修正
-- [ ] 5.4 實測沒問題後跑 `/code-review`，每個發現都要處理：修正、說明理由後不採用，或記進 `docs/backlog.md`。驗證：審查結果整理給使用者
+- [x] 5.4 實測沒問題後跑 `/code-review`，每個發現都要處理：修正、說明理由後不採用，或記進 `docs/backlog.md`。驗證：審查結果整理給使用者
+  - 2026-11-16 `/code-review medium`（範圍 ef36e79..HEAD，包含 notebook-look 與 checklist-tab）：沒有發現錯誤。3 個小地方的處理：
+    - **修正**：`initChecklist()` 的註解說「舊的打勾紀錄直接對得上」，預設項目換成 21 項後只有 4 項沿用，註解改正（v1.6.3）
+    - **不採用**：加入跟看得到的預設項目同文字的項目時會先出現兩次、重開 app 才合併。理由：這是合併設計本來的行為，清單上看得到那一項，不太會重複加
+    - **不採用**：輸入欄的 `maxlength="40"` 把 emoji 算 2 個字。理由：只是比「40 字」更嚴，不會壞資料，清單項目很少用 emoji
+    - 審查只抽查了 `style.css`，外觀由使用者手機實測確認
