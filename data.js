@@ -114,11 +114,11 @@ const PLACES = [
     imageFolder: "Lawson 押上店",
     gmaps: "https://maps.google.com/?q=Lawson+Oshiage",
     transitInfo: {
-      from: "Chiikawa Land 晴空塔店 (Solamachi)",
+      from: "SYLA HOTEL Oshiage",
       method: "walk",
       line: "徒步 (Walk 250m)",
       duration: 4,
-      details: "逛完 Solamachi 往飯店方向走回來，Lawson 就在飯店旁。"
+      details: "check-in 放好行李後出門，Lawson 就在飯店旁，走 250 公尺就到。"
     }
   },
 
@@ -226,6 +226,46 @@ const PLACES = [
 
   // ==================== DAY 3 (12/11 週五, 平日) — 新宿 ====================
   {
+    id: "sekaido_shinjuku",
+    name: "世界堂 (Sekaido) 新宿本店",
+    englishName: "Sekaido Shinjuku Main Store (世界堂 新宿本店)",
+    category: "shopping",
+    lat: 35.6899,
+    lng: 139.7063,
+    day: 3,
+    time: "11:00",
+    desc: "幫家人看文具。畫材、文具專賣店，整棟 5 層樓，多數商品最多打 8 折。9:30～21:00，年中無休（年初除外）。在新宿三丁目，離 D3 的 Alpen Tokyo 步行約 10 分鐘。",
+    imageFolder: "世界堂 新宿本店",
+    gmaps: "https://maps.google.com/?q=世界堂+新宿本店",
+    transitInfo: {
+      from: "SYLA HOTEL Oshiage",
+      method: "subway",
+      line: "半藏門線 → 都營新宿線 (押上 → 新宿三丁目)",
+      duration: 30,
+      details: "10:30 押上站搭半藏門線至九段下站（約 16 分鐘），轉都營新宿線至新宿三丁目站（約 8 分鐘），出站步行約 3 分鐘。"
+    }
+  },
+  {
+    id: "eifukuen_shinjuku",
+    name: "燒肉 永福苑 新宿店",
+    englishName: "Yakiniku Eifukuen Shinjuku (焼肉 永福苑)",
+    category: "food",
+    lat: 35.6873,
+    lng: 139.6968,
+    day: 3,
+    time: "12:00",
+    desc: "開了 30 年的燒肉店，新宿南口步行 5 分鐘（南新宿セントラルビル 2F）。午餐有便宜的炭火豬五花（サムギョプサル）套餐，晚餐人均約 ¥4,000～5,000。午市 11:30～15:00、晚市 17:00 起，週日公休。⚠️ 老闆不吃牛：可以點豬五花。",
+    imageFolder: "燒肉 永福苑",
+    gmaps: "https://maps.app.goo.gl/kPDQ27uJYL5Qu1os6",
+    transitInfo: {
+      from: "世界堂 新宿本店",
+      method: "walk",
+      line: "徒步 (Walk 約 1km)",
+      duration: 13,
+      details: "從新宿三丁目往新宿南口方向走，過南口後沿甲州街道往西到南新宿，店在南新宿セントラルビル 2F。"
+    }
+  },
+  {
     id: "alpen_tokyo",
     name: "Alpen Tokyo 體育用品旗艦",
     englishName: "Alpen Tokyo Shinjuku (アルペントーキョー)",
@@ -238,11 +278,11 @@ const PLACES = [
     imageFolder: "Alpen Tokyo",
     gmaps: "https://maps.google.com/?q=Alpen+Tokyo+Shinjuku",
     transitInfo: {
-      from: "SYLA HOTEL Oshiage",
-      method: "subway",
-      line: "半藏門線 → 都營新宿線 (押上 → 新宿三丁目)",
-      duration: 35,
-      details: "11:55 押上站搭半藏門線至九段下站（約 16 分鐘），轉都營新宿線至新宿三丁目站（約 8 分鐘），出站往新宿站東口方向步行約 7 分鐘。"
+      from: "燒肉 永福苑 新宿店",
+      method: "walk",
+      line: "徒步 (Walk 約 1km)",
+      duration: 13,
+      details: "吃完從南新宿往北走，經新宿南口到新宿站東口一帶，步行約 1 公里。"
     }
   },
   {
@@ -315,7 +355,7 @@ const PLACES = [
     lat: 35.6648,
     lng: 139.7153,
     day: 4,
-    time: "10:30",
+    time: "10:00",
     desc: "法國時尚品牌 Maison Kitsuné 旗下咖啡廳，木造和風竹林裝潢極有質感。點一杯拿鐵配狐狸餅乾，開啟表參道/青山散步日。",
     imageFolder: "Cafe Kitsune 青山",
     gmaps: "https://maps.google.com/?q=Cafe+Kitsune+Aoyama",
@@ -324,7 +364,47 @@ const PLACES = [
       method: "subway",
       line: "半藏門線 (押上 → 表參道)",
       duration: 35,
-      details: "10:00 押上站搭半藏門線直達表參道站（10 站、25 分鐘），B4 出口步行 6 分鐘。"
+      details: "09:25 押上站搭半藏門線直達表參道站（10 站、25 分鐘），B4 出口步行 6 分鐘。"
+    }
+  },
+  {
+    id: "jingu_gaien_ginkgo",
+    name: "神宮外苑 銀杏並木 (推薦景點)",
+    englishName: "Meiji Jingu Gaien Ginkgo Avenue (明治神宮外苑 いちょう並木)",
+    category: "sightseeing",
+    lat: 35.6727,
+    lng: 139.7206,
+    day: 4,
+    time: "10:30",
+    desc: "東京最有名的銀杏大道，約 300 公尺、約 150 棵銀杏排成四列，免費。從 D4 的 Café Kitsuné 青山步行約 15 分鐘。⚠️ 往年最美是 11 月下旬到 12 月上旬，12/9 之後可能是尾聲（滿地落葉），出發前一週再看一次黃葉狀況。",
+    imageFolder: "神宮外苑 銀杏並木",
+    gmaps: "https://maps.app.goo.gl/mLFjLwzYTBKCrs2c7",
+    transitInfo: {
+      from: "Café Kitsuné 青山",
+      method: "walk",
+      line: "徒步 (Walk 約 1km)",
+      duration: 15,
+      details: "從 Café Kitsuné 往北走到青山通り，往青山一丁目方向走到「青山二丁目」路口，銀杏並木就在路口北側。"
+    }
+  },
+  {
+    id: "meiji_jingu",
+    name: "明治神宮 (推薦景點)",
+    englishName: "Meiji Jingu Shrine",
+    category: "sightseeing",
+    lat: 35.6764,
+    lng: 139.6993,
+    day: 4,
+    time: "12:00",
+    desc: "東京市中心的巨型森林神社，鳥居下拍照極美，五人拍團體照的絕佳場所。",
+    imageFolder: "明治神宮",
+    gmaps: "https://maps.app.goo.gl/78zYWAVM5sRB9NMS9",
+    transitInfo: {
+      from: "神宮外苑 銀杏並木",
+      method: "subway",
+      line: "銀座線 → 千代田線 (外苑前 → 明治神宮前〈原宿〉)",
+      duration: 30,
+      details: "走到外苑前站搭銀座線 1 站到表參道站，轉千代田線 1 站到明治神宮前〈原宿〉站，出站經原宿口鳥居步行約 10 分鐘到本殿。"
     }
   },
   {
@@ -340,11 +420,11 @@ const PLACES = [
     imageFolder: "大阪燒",
     gmaps: null,
     transitInfo: {
-      from: "Café Kitsuné 青山",
+      from: "明治神宮",
       method: "walk",
-      line: "徒步 (Walk 1.3km 穿過表參道)",
-      duration: 17,
-      details: "從 Café Kitsuné 往西沿表參道方向漫步，到原宿一帶找大阪燒店。"
+      line: "徒步 (Walk 約 1.5km)",
+      duration: 20,
+      details: "參拜完從本殿走回原宿口鳥居，過神宮橋往裏原宿方向，到原宿一帶找大阪燒店。"
     }
   },
   {
@@ -388,6 +468,46 @@ const PLACES = [
     }
   },
   {
+    id: "pokemon_center_shibuya",
+    name: "寶可夢中心 澀谷",
+    englishName: "Pokémon Center Shibuya (ポケモンセンターシブヤ)",
+    category: "shopping",
+    lat: 35.6621,
+    lng: 139.6986,
+    day: 4,
+    time: "16:30",
+    desc: "在澀谷 PARCO 6F，同一層還有 Nintendo TOKYO。",
+    imageFolder: "寶可夢中心 澀谷",
+    gmaps: "https://maps.google.com/?q=Pokemon+Center+Shibuya",
+    transitInfo: {
+      from: "HARBS 澀谷 Hikarie",
+      method: "walk",
+      line: "徒步 (Walk 約 700m)",
+      duration: 12,
+      details: "從 Hikarie 經澀谷站走到八公口，過全向十字路口後沿公園通り往上走到澀谷 PARCO，搭電梯到 6F。"
+    }
+  },
+  {
+    id: "taco_bell_shibuya",
+    name: "Taco Bell 澀谷道玄坂店",
+    englishName: "Taco Bell Shibuya Dogenzaka (タコベル 渋谷道玄坂店)",
+    category: "food",
+    lat: 35.6599,
+    lng: 139.6976,
+    day: 4,
+    time: "17:30",
+    desc: "道玄坂 2-25-14 1F，平日 11:00～23:00、週末 10:00～23:00。",
+    imageFolder: "Taco Bell 澀谷",
+    gmaps: "https://maps.google.com/?q=Taco+Bell+Shibuya+Dogenzaka",
+    transitInfo: {
+      from: "寶可夢中心 澀谷",
+      method: "walk",
+      line: "徒步 (Walk 約 500m)",
+      duration: 7,
+      details: "從澀谷 PARCO 往南走到道玄坂，店在 1F。"
+    }
+  },
+  {
     id: "yamawarau_omotesando",
     name: "山笑ふ 壽喜燒 / 涮涮鍋 表參道",
     englishName: "Sukiyaki Shabushabu Yamawarau (山笑ふ 表参道店)",
@@ -400,35 +520,16 @@ const PLACES = [
     imageFolder: "山笑ふ 壽喜燒",
     gmaps: "https://maps.google.com/?q=Yamawarau+Omotesando",
     transitInfo: {
-      from: "HARBS 澀谷 Hikarie",
+      from: "Taco Bell 澀谷道玄坂店",
       method: "subway",
       line: "東京 Metro 銀座線 (澀谷 → 表參道)",
-      duration: 10,
-      details: "澀谷站搭銀座線 1 站至表參道站，A4 出口步行 4 分鐘。晚餐結束搭半藏門線直達押上。"
+      duration: 20,
+      details: "從道玄坂走到澀谷站（約 7 分鐘），搭銀座線 1 站至表參道站，A4 出口步行 4 分鐘。晚餐結束搭半藏門線直達押上。"
     }
   },
 
-  // ==================== DAY 5 (12/13 週日) — 晴空塔 + 清澄白河 + 淺草 + 入谷 ====================
-  {
-    id: "tokyo_skytree",
-    name: "東京晴空塔 天望展望台",
-    englishName: "Tokyo Skytree Tembo Deck",
-    category: "sightseeing",
-    lat: 35.7101,
-    lng: 139.8107,
-    day: 5,
-    time: "09:00",
-    desc: "住飯店旁邊，全世界最高的獨立式電波塔（634m）！天望甲板 350m 高，看整個東京 + 富士山。週末 9:00 開門（平日 10:00），D5 是週日，開門就上去人比較少；也可以先買 Fast Ticket 免排隊。",
-    imageFolder: "晴空塔展望台",
-    gmaps: "https://maps.google.com/?q=Tokyo+Skytree",
-    transitInfo: {
-      from: "SYLA HOTEL Oshiage",
-      method: "walk",
-      line: "徒步 (Walk 400m)",
-      duration: 5,
-      details: "從飯店步行約 5 分鐘到晴空塔，4F 是天望甲板的售票、入口樓層。"
-    }
-  },
+  // ==================== DAY 5 (12/13 週日) — 清澄白河 + 秋葉原 + 龜有 + 淺草 + 入谷 + 晴空塔 ====================
+  // 10:00 有 3 站同時間 (TEN&、秋葉原、龜有),排序跟這裡的先後一樣;排時間時再調整 (見 docs/行程待討論.md)
   {
     id: "patisserie_ten",
     name: "PATISSERIE TEN& 泡芙 清澄白河",
@@ -442,11 +543,51 @@ const PLACES = [
     imageFolder: "PATISSERIE TEN 泡芙",
     gmaps: "https://maps.google.com/?q=PATISSERIE+TEN+Kiyosumi-shirakawa",
     transitInfo: {
-      from: "東京晴空塔",
+      from: "SYLA HOTEL Oshiage",
       method: "subway",
       line: "半藏門線 (押上 → 清澄白河)",
-      duration: 12,
-      details: "從晴空塔走到押上站，搭半藏門線直達清澄白河站（3 站、6 分鐘），B2 出口步行 5 分鐘。"
+      duration: 15,
+      details: "從飯店走到押上站，搭半藏門線直達清澄白河站（3 站、6 分鐘），B2 出口步行 5 分鐘。"
+    }
+  },
+  {
+    id: "akihabara",
+    name: "秋葉原電器街 (推薦景點)",
+    englishName: "Akihabara Electric Town",
+    category: "shopping",
+    lat: 35.6984,
+    lng: 139.7731,
+    day: 5,
+    time: "10:00",
+    desc: "你們興趣裡的動漫電玩男子聖地！Yodobashi Camera 9 層、GiGO 遊戲中心、Super Potato 二手電玩、扭蛋機殿堂。",
+    imageFolder: "秋葉原",
+    gmaps: "https://maps.google.com/?q=Akihabara+Electric+Town",
+    transitInfo: {
+      from: "PATISSERIE TEN&",
+      method: "subway",
+      line: "半藏門線 → 銀座線 (清澄白河 → 末廣町)",
+      duration: 25,
+      details: "清澄白河搭半藏門線 2 站到三越前，轉東京 Metro 銀座線 2 站到末廣町站（約 15 分鐘），出站就是秋葉原電器街（中央通り）。"
+    }
+  },
+  {
+    id: "kameari_ryotsu",
+    name: "龜有 兩津勘吉銅像",
+    englishName: "Ryotsu Kankichi Statue, Kameari (両津勘吉像)",
+    category: "sightseeing",
+    lat: 35.7663,
+    lng: 139.8478,
+    day: 5,
+    time: "10:00",
+    desc: "《烏龍派出所》的故鄉，龜有站北口有兩津勘吉銅像，車站周邊還有十幾座角色銅像可以邊走邊找。",
+    imageFolder: "龜有 兩津勘吉",
+    gmaps: "https://maps.app.goo.gl/K6bQ9cS8sqXLqtmy5",
+    transitInfo: {
+      from: "秋葉原電器街",
+      method: "subway",
+      line: "日比谷線 → 千代田線 (秋葉原 → 北千住 → 龜有)",
+      duration: 30,
+      details: "秋葉原站搭東京 Metro 日比谷線到北千住站（約 15 分鐘），轉千代田線（直通 JR 常磐線各站停車）2 站到龜有站（約 6 分鐘；有些班次只到綾瀨，在綾瀨換車），北口出站就是兩津勘吉銅像。"
     }
   },
   {
@@ -462,11 +603,11 @@ const PLACES = [
     imageFolder: "淺草寺",
     gmaps: "https://maps.google.com/?q=Sensoji+Temple",
     transitInfo: {
-      from: "PATISSERIE TEN&",
-      method: "subway",
-      line: "半藏門線 → 銀座線 (清澄白河 → 淺草)",
-      duration: 25,
-      details: "清澄白河搭半藏門線到三越前，轉東京 Metro 銀座線到淺草站（約 20 分鐘），出站步行 2 分鐘到雷門，穿過仲見世通到淺草寺。"
+      from: "龜有 兩津勘吉銅像",
+      method: "train",
+      line: "JR 常磐線 → 東武晴空塔線 (龜有 → 北千住 → 淺草)",
+      duration: 35,
+      details: "龜有站搭 JR 常磐線各站停車（直通千代田線）2 站到北千住站，轉東武晴空塔線（東武スカイツリーライン），搭往淺草的車到淺草站（約 15 分鐘），出站步行 3 分鐘到雷門，穿過仲見世通到淺草寺。"
     }
   },
   {
@@ -530,6 +671,46 @@ const PLACES = [
     }
   },
   {
+    id: "tokyo_skytree",
+    name: "東京晴空塔 天望展望台",
+    englishName: "Tokyo Skytree Tembo Deck",
+    category: "sightseeing",
+    lat: 35.7101,
+    lng: 139.8107,
+    day: 5,
+    time: "15:00",
+    desc: "住飯店旁邊，全世界最高的獨立式電波塔（634m）！天望甲板 350m 高，看整個東京 + 富士山。週末 9:00 開門（平日 10:00），D5 是週日人比較多，可以先買 Fast Ticket 免排隊。",
+    imageFolder: "晴空塔展望台",
+    gmaps: "https://maps.google.com/?q=Tokyo+Skytree",
+    transitInfo: {
+      from: "American Diner Andra",
+      method: "subway",
+      line: "銀座線 → 都營淺草線 (稻荷町 → 淺草 → 押上)",
+      duration: 25,
+      details: "走到東京 Metro 銀座線稻荷町站，搭 2 站到淺草站，轉都營淺草線 2 站到押上站，押上站直通晴空塔，4F 是天望甲板的售票、入口樓層。也可以直接搭計程車（約 10 分鐘）。"
+    }
+  },
+  {
+    id: "miffy_solamachi",
+    name: "miffy style Solamachi(米飛兔)",
+    englishName: "miffy style Solamachi",
+    category: "shopping",
+    lat: 35.709856,
+    lng: 139.809797,
+    day: 5,
+    time: "16:30",
+    desc: "幫我姊買米飛兔",
+    imageFolder: "miffy style Solamachi",
+    gmaps: "https://maps.app.goo.gl/PSQ5NGPd21AJ1KC97",
+    transitInfo: {
+      from: "Chiikawa Land 晴空塔店 (Solamachi)",
+      method: "walk",
+      line: "徒步 (Solamachi 館內)",
+      duration: 5,
+      details: "同在 Tokyo Solamachi 裡，館內走幾分鐘就到，樓層看館內指引。"
+    }
+  },
+  {
     id: "otafuku_oden",
     name: "關東煮",
     englishName: "おでん (Oden)",
@@ -542,11 +723,11 @@ const PLACES = [
     imageFolder: "關東煮",
     gmaps: null,
     transitInfo: {
-      from: "American Diner Andra",
-      method: "walk",
-      line: "徒步 (Walk 約 1.4km)",
-      duration: 18,
-      details: "從 American Diner Andra 往東北步行約 1.4 公里到淺草北邊的千束一帶，附近找一家關東煮；不想走可以搭計程車（約 5 分鐘）。吃完直接叫計程車回押上約 ¥1,200。"
+      from: "miffy style Solamachi",
+      method: "subway",
+      line: "都營淺草線 (押上 → 淺草)",
+      duration: 30,
+      details: "押上站搭都營淺草線 2 站到淺草站（約 5 分鐘），往北步行約 1.3 公里到淺草北邊的千束一帶，附近找一家關東煮；不想走可以從押上直接搭計程車（約 10 分鐘）。吃完直接叫計程車回押上約 ¥1,200。"
     }
   },
 
@@ -581,17 +762,17 @@ const PLACES = [
     category: "shopping",
     lat: 35.7100,
     lng: 139.8120,
-    day: 1,
-    time: "19:30",
+    day: 5,
+    time: "16:00",
     desc: "去晃一下晴空塔，然後我要買及掰卡哇",
     imageFolder: "Chiikawa 晴空塔店",
     gmaps: "https://maps.app.goo.gl/M3JUiBgcyr4PSaEt6",
     transitInfo: {
-      from: "SYLA HOTEL Oshiage",
+      from: "東京晴空塔",
       method: "walk",
-      line: "徒步 (Walk 300m)",
-      duration: 4,
-      details: "放好行李後從飯店步行 3 分鐘到 Tokyo Solamachi 3 樓 East Yard 12 番地。"
+      line: "徒步 (晴空塔 → Solamachi)",
+      duration: 5,
+      details: "看完展望台下樓，Tokyo Solamachi 就在晴空塔下方，到 3 樓 East Yard 12 番地。"
     }
   },
   {
@@ -631,48 +812,6 @@ const PLACES = [
     transitInfo: null
   },
   {
-    id: "meiji_jingu",
-    name: "明治神宮 (推薦景點)",
-    englishName: "Meiji Jingu Shrine",
-    category: "sightseeing",
-    lat: 35.6764,
-    lng: 139.6993,
-    day: null,
-    time: null,
-    desc: "🌟 **推薦候補**：東京市中心的巨型森林神社，鳥居下拍照極美。若 D4 想在原宿多留 1 小時，走 15 分鐘就到，五人拍團體照的絕佳場所。",
-    imageFolder: "明治神宮",
-    gmaps: "https://maps.app.goo.gl/78zYWAVM5sRB9NMS9",
-    transitInfo: null
-  },
-  {
-    id: "akihabara",
-    name: "秋葉原電器街 (推薦景點)",
-    englishName: "Akihabara Electric Town",
-    category: "shopping",
-    lat: 35.6984,
-    lng: 139.7731,
-    day: null,
-    time: null,
-    desc: "🌟 **推薦候補**：你們興趣裡的動漫電玩男子聖地！Yodobashi Camera 9 層、GiGO 遊戲中心、Super Potato 二手電玩、扭蛋機殿堂。若想加碼可用半天，離 D5 入谷只有 3 站（日比谷線）。",
-    imageFolder: "秋葉原",
-    gmaps: "https://maps.google.com/?q=Akihabara+Electric+Town",
-    transitInfo: null
-  },
-  {
-    id: "eifukuen_shinjuku",
-    name: "燒肉 永福苑 新宿店",
-    englishName: "Yakiniku Eifukuen Shinjuku (焼肉 永福苑)",
-    category: "food",
-    lat: 35.6873,
-    lng: 139.6968,
-    day: null,
-    time: null,
-    desc: "開了 30 年的燒肉店，新宿南口步行 5 分鐘（南新宿セントラルビル 2F）。午餐有便宜的炭火豬五花（サムギョプサル）套餐，晚餐人均約 ¥4,000～5,000。午市 11:30～15:00、晚市 17:00 起，週日公休。⚠️ 老闆不吃牛：可以點豬五花。可以排在 D3 新宿日。",
-    imageFolder: "燒肉 永福苑",
-    gmaps: "https://maps.app.goo.gl/kPDQ27uJYL5Qu1os6",
-    transitInfo: null
-  },
-  {
     id: "negishi_yurakucho",
     name: "牛たん ねぎし 有楽町店",
     englishName: "Gyutan Negishi Yurakucho (牛たん とろろ 麦めし ねぎし)",
@@ -684,76 +823,6 @@ const PLACES = [
     desc: "牛舌、山藥泥、麥飯套餐的連鎖名店，在東京國際論壇前，JR 有楽町站步行 2 分鐘。11:00～22:00，有 8 人包廂。⚠️ 牛舌專門店，老闆不吃牛要先確認能點什麼。可以排在 D2 銀座、東京車站之間。",
     imageFolder: "ねぎし 有楽町",
     gmaps: "https://maps.app.goo.gl/Qu1NW8mVxvP75m7M9",
-    transitInfo: null
-  },
-  {
-    id: "pokemon_center_shibuya",
-    name: "寶可夢中心 澀谷",
-    englishName: "Pokémon Center Shibuya (ポケモンセンターシブヤ)",
-    category: "shopping",
-    lat: 35.6621,
-    lng: 139.6986,
-    day: null,
-    time: null,
-    desc: "在澀谷 PARCO 6F，同一層還有 Nintendo TOKYO。可以排在 D4 下午在澀谷的時候。",
-    imageFolder: "寶可夢中心 澀谷",
-    gmaps: "https://maps.google.com/?q=Pokemon+Center+Shibuya",
-    transitInfo: null
-  },
-  {
-    id: "taco_bell_shibuya",
-    name: "Taco Bell 澀谷道玄坂店",
-    englishName: "Taco Bell Shibuya Dogenzaka (タコベル 渋谷道玄坂店)",
-    category: "food",
-    lat: 35.6599,
-    lng: 139.6976,
-    day: null,
-    time: null,
-    desc: "道玄坂 2-25-14 1F，平日 11:00～23:00、週末 10:00～23:00。可以排在 D4 下午在澀谷的時候。",
-    imageFolder: "Taco Bell 澀谷",
-    gmaps: "https://maps.google.com/?q=Taco+Bell+Shibuya+Dogenzaka",
-    transitInfo: null
-  },
-  {
-    id: "kameari_ryotsu",
-    name: "龜有 兩津勘吉銅像",
-    englishName: "Ryotsu Kankichi Statue, Kameari (両津勘吉像)",
-    category: "sightseeing",
-    lat: 35.7663,
-    lng: 139.8478,
-    day: null,
-    time: null,
-    desc: "《烏龍派出所》的故鄉，龜有站北口有兩津勘吉銅像，車站周邊還有十幾座角色銅像可以邊走邊找。可以排在 D2 早上：逛完從龜有搭千代田線（直通 JR 常磐線各停）直達日比谷，約 30 分鐘，再走到銀座吃とんかつ檍。",
-    imageFolder: "龜有 兩津勘吉",
-    gmaps: "https://maps.app.goo.gl/K6bQ9cS8sqXLqtmy5",
-    transitInfo: null
-  },
-  {
-    id: "jingu_gaien_ginkgo",
-    name: "神宮外苑 銀杏並木 (推薦景點)",
-    englishName: "Meiji Jingu Gaien Ginkgo Avenue (明治神宮外苑 いちょう並木)",
-    category: "sightseeing",
-    lat: 35.6727,
-    lng: 139.7206,
-    day: null,
-    time: null,
-    desc: "🌟 **推薦候補**：東京最有名的銀杏大道，約 300 公尺、約 150 棵銀杏排成四列，免費。從 D4 的 Café Kitsuné 青山步行約 15 分鐘。⚠️ 往年最美是 11 月下旬到 12 月上旬，12/9 之後可能是尾聲（滿地落葉），出發前一週再看一次黃葉狀況。",
-    imageFolder: "神宮外苑 銀杏並木",
-    gmaps: "https://maps.app.goo.gl/mLFjLwzYTBKCrs2c7",
-    transitInfo: null
-  },
-  {
-    id: "sekaido_shinjuku",
-    name: "世界堂 (Sekaido) 新宿本店",
-    englishName: "Sekaido Shinjuku Main Store (世界堂 新宿本店)",
-    category: "shopping",
-    lat: 35.6899,
-    lng: 139.7063,
-    day: null,
-    time: null,
-    desc: "幫家人看文具。畫材、文具專賣店，整棟 5 層樓，多數商品最多打 8 折。9:30～21:00，年中無休（年初除外）。在新宿三丁目，離 D3 的 Alpen Tokyo 步行約 10 分鐘。",
-    imageFolder: "世界堂 新宿本店",
-    gmaps: "https://maps.google.com/?q=世界堂+新宿本店",
     transitInfo: null
   },
 ];
