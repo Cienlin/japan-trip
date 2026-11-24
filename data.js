@@ -825,4 +825,18 @@ const PLACES = [
     gmaps: "https://maps.app.goo.gl/Qu1NW8mVxvP75m7M9",
     transitInfo: null
   },
+  {
+    id: "surugaya",
+    name: "駿河屋",
+    englishName: "Suruga-ya Anime & Hobby Store",
+    category: "shopping",
+    lat: 35.701594,
+    lng: 139.771828,
+    day: null,
+    time: null,
+    desc: "要去買我妹的車車",
+    imageFolder: "駿河屋",
+    gmaps: "https://maps.app.goo.gl/wWji8Mj1nqZ9avne8",
+    transitInfo: null
+  },
 ];

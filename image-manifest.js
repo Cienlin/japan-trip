@@ -38,5 +38,6 @@ const PLACE_IMAGES = {
   "chiikawa_solamachi": ["Chiikawa 晴空塔店/1.jpg?v=b7adcb3a","Chiikawa 晴空塔店/2.jpg?v=3c422122"],
   "chiikawa_tokyo_station": ["Chiikawa 東京車站店/1.jpg?v=e5454d2a","Chiikawa 東京車站店/2.jpg?v=c6911431"],
   "yamada_unagi": ["山田的鰻/1.jpg?v=08232d47","山田的鰻/2.jpg?v=1577cf7f","山田的鰻/3.jpg?v=70d7bccf"],
-  "negishi_yurakucho": ["ねぎし 有楽町/1.jpg?v=15eacbc6","ねぎし 有楽町/2.jpg?v=3892a924"]
+  "negishi_yurakucho": ["ねぎし 有楽町/1.jpg?v=15eacbc6","ねぎし 有楽町/2.jpg?v=3892a924"],
+  "surugaya": []
 };
