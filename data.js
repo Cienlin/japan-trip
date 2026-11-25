@@ -192,7 +192,7 @@ const PLACES = [
     lng: 139.764498,
     day: 2,
     time: "15:15",
-    desc: "老字號和菓子店，買草莓大福或豆大福外帶。月～土 10:00～21:00、日 10:00～20:00，無休。",
+    desc: "老字號和菓子店，就是奇哥影片裡那間。買草莓大福或豆大福外帶。月～土 10:00～21:00、日 10:00～20:00，無休。",
     imageFolder: "銀座あけぼの",
     gmaps: "https://maps.google.com/?q=銀座あけぼの+銀座本店",
     transitInfo: {
@@ -429,26 +429,6 @@ const PLACES = [
     }
   },
   {
-    id: "yaiyai_okonomiyaki",
-    name: "大阪燒",
-    englishName: "お好み焼き (Okonomiyaki)",
-    category: "food",
-    lat: 35.6670,
-    lng: 139.7057,
-    day: 4,
-    time: "13:00",
-    desc: "你清單上的『大阪燒』實際位置！原宿裏通鐵板燒老店，客人自己在鐵板前煎大阪燒、廣島燒、文字燒、炒麵。5 個人圍鐵板一起玩最好玩。",
-    imageFolder: "大阪燒",
-    gmaps: null,
-    transitInfo: {
-      from: "明治神宮",
-      method: "walk",
-      line: "徒步 (Walk 約 1.5km)",
-      duration: 20,
-      details: "參拜完從本殿走回原宿口鳥居，過神宮橋往裏原宿方向，到原宿一帶找大阪燒店。"
-    }
-  },
-  {
     id: "chiikawa_harajuku",
     name: "Chiikawa Land 原宿店",
     englishName: "Chiikawa Land Harajuku (Kiddy Land 1F)",
@@ -461,11 +441,11 @@ const PLACES = [
     imageFolder: "Chiikawa 原宿店",
     gmaps: "https://maps.app.goo.gl/JBWr123mratPgxdP8",
     transitInfo: {
-      from: "大阪燒",
+      from: "明治神宮",
       method: "walk",
-      line: "徒步 (Walk 250m)",
-      duration: 3,
-      details: "從裏原宿やいやい大阪燒出來往明治通り/表參道方向步行 3 分鐘至 Kiddy Land 原宿店 1F。"
+      line: "徒步 (Walk 約 1.5km)",
+      duration: 20,
+      details: "參拜完從本殿走回原宿口鳥居，過神宮橋沿表參道走到 Kiddy Land 原宿店 1F。"
     }
   },
   {
@@ -632,26 +612,6 @@ const PLACES = [
     }
   },
   {
-    id: "umezono_daifuku",
-    name: "大福",
-    englishName: "大福 (Daifuku)",
-    category: "food",
-    lat: 35.7145,
-    lng: 139.7959,
-    day: 5,
-    time: "12:30",
-    desc: "這個大幅好像不是我要的那間，我看過的是奇哥影片的",
-    imageFolder: "大福",
-    gmaps: null,
-    transitInfo: {
-      from: "章魚燒",
-      method: "walk",
-      line: "徒步 (Walk 200m)",
-      duration: 3,
-      details: "在仲見世通一帶找和菓子店買大福，走幾分鐘就到。"
-    }
-  },
-  {
     id: "american_diner_andra",
     name: "American Diner Andra 漢堡",
     englishName: "American Diner Andra (アンドラ) Iriya",
@@ -664,7 +624,7 @@ const PLACES = [
     imageFolder: "American Diner Andra",
     gmaps: "https://maps.app.goo.gl/uhuaHdVNmjzKpiri8",
     transitInfo: {
-      from: "大福",
+      from: "章魚燒",
       method: "subway",
       line: "東京 Metro 日比谷線 (淺草 → 入谷)",
       duration: 10,
@@ -866,6 +826,36 @@ const PLACES = [
     desc: "法國時尚品牌 Maison Kitsuné 旗下咖啡廳，木造和風竹林裝潢極有質感。點一杯拿鐵配狐狸餅乾，開啟表參道/青山散步日。",
     imageFolder: "Cafe Kitsune 青山",
     gmaps: "https://maps.google.com/?q=Cafe+Kitsune+Aoyama",
+    transitInfo: null
+  },
+  {
+    // D2 改吃月島もんじゃ たまとや 東京駅,這站移回候補 (2026-11-25)
+    id: "yaiyai_okonomiyaki",
+    name: "大阪燒",
+    englishName: "お好み焼き (Okonomiyaki)",
+    category: "food",
+    lat: 35.6670,
+    lng: 139.7057,
+    day: null,
+    time: null,
+    desc: "你清單上的『大阪燒』實際位置！原宿裏通鐵板燒老店，客人自己在鐵板前煎大阪燒、廣島燒、文字燒、炒麵。5 個人圍鐵板一起玩最好玩。",
+    imageFolder: "大阪燒",
+    gmaps: null,
+    transitInfo: null
+  },
+  {
+    // D2 改買銀座あけぼの,這站移回候補 (2026-11-25)
+    id: "umezono_daifuku",
+    name: "大福",
+    englishName: "大福 (Daifuku)",
+    category: "food",
+    lat: 35.7145,
+    lng: 139.7959,
+    day: null,
+    time: null,
+    desc: "這個大幅好像不是我要的那間，我看過的是奇哥影片的",
+    imageFolder: "大福",
+    gmaps: null,
     transitInfo: null
   },
 ];

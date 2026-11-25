@@ -19,7 +19,6 @@ const PLACE_IMAGES = {
   "omoide_yokocho": ["居酒屋/1.jpg?v=1b53404c","居酒屋/2.jpg?v=5ec9d961"],
   "jingu_gaien_ginkgo": ["神宮外苑 銀杏並木/1.jpg?v=3a671514","神宮外苑 銀杏並木/2.jpg?v=80aa6935","神宮外苑 銀杏並木/3.jpg?v=f582dcfb"],
   "meiji_jingu": ["明治神宮/1.jpg?v=20d65434","明治神宮/2.jpg?v=636a7d8b","明治神宮/3.jpg?v=971adbec","明治神宮/4.jpg?v=a4a78e15","明治神宮/5.jpg?v=5c2b3056"],
-  "yaiyai_okonomiyaki": ["大阪燒/1.jpg?v=b19a1612"],
   "chiikawa_harajuku": ["Chiikawa 原宿店/1.jpg?v=0b49397a","Chiikawa 原宿店/2.jpg?v=7e0d20a4","Chiikawa 原宿店/3.jpg?v=9ce60525"],
   "harbs_shibuya": ["HARBS 澀谷/1.jpg?v=6561115e","HARBS 澀谷/2.jpg?v=2f7d49bc"],
   "pokemon_center_shibuya": ["寶可夢中心 澀谷/1.jpg?v=093c1fe1","寶可夢中心 澀谷/2.jpg?v=67daf53c","寶可夢中心 澀谷/3.jpg?v=8760b12e"],
@@ -29,7 +28,6 @@ const PLACE_IMAGES = {
   "akihabara": ["秋葉原/1.jpg?v=93bc7f5a","秋葉原/2.jpg?v=0e5bd4ce","秋葉原/3.jpg?v=6fec9829"],
   "sensoji_night": ["淺草寺/1.jpg?v=4386852e","淺草寺/2.jpg?v=45e8a87e","淺草寺/3.jpg?v=6bd80874"],
   "takoyaki_asakusa": ["章魚燒/1.jpg?v=6fdcfa6b"],
-  "umezono_daifuku": ["大福/1.jpg?v=5524f6bb"],
   "american_diner_andra": ["American Diner Andra/1.jpg?v=e7438c8b","American Diner Andra/2.jpg?v=a299f70e"],
   "tokyo_skytree": ["晴空塔展望台/1.jpg?v=d27ae77d","晴空塔展望台/2.jpg?v=3197ee78"],
   "miffy_solamachi": ["miffy style Solamachi/1.jpg?v=aee09131","miffy style Solamachi/2.jpg?v=a5476708","miffy style Solamachi/3.jpg?v=0e6f2413","miffy style Solamachi/4.jpg?v=f54b27f3"],
@@ -41,5 +39,7 @@ const PLACE_IMAGES = {
   "negishi_yurakucho": ["ねぎし 有楽町/1.jpg?v=15eacbc6","ねぎし 有楽町/2.jpg?v=3892a924"],
   "surugaya": [],
   "hanayama_udon": ["花山烏冬 銀座/1.jpg?v=379dcad9","花山烏冬 銀座/2.jpg?v=df456c91","花山烏冬 銀座/3.jpg?v=9c108980","花山烏冬 銀座/4.jpg?v=c2e0421a"],
-  "cafe_kitsune_aoyama": ["Cafe Kitsune 青山/1.jpg?v=26fe7430","Cafe Kitsune 青山/2.jpg?v=cfd3432d","Cafe Kitsune 青山/3.jpg?v=5114d8a7"]
+  "cafe_kitsune_aoyama": ["Cafe Kitsune 青山/1.jpg?v=26fe7430","Cafe Kitsune 青山/2.jpg?v=cfd3432d","Cafe Kitsune 青山/3.jpg?v=5114d8a7"],
+  "yaiyai_okonomiyaki": ["大阪燒/1.jpg?v=b19a1612"],
+  "umezono_daifuku": ["大福/1.jpg?v=5524f6bb"]
 };
