@@ -346,27 +346,7 @@ const PLACES = [
     }
   },
 
-  // ==================== DAY 4 (12/12 週六) — 青山 / 原宿 / 澀谷 / 表參道 ====================
-  {
-    id: "cafe_kitsune_aoyama",
-    name: "Café Kitsuné 青山",
-    englishName: "Café Kitsuné Aoyama (カフェ キツネ)",
-    category: "food",
-    lat: 35.6648,
-    lng: 139.7153,
-    day: 4,
-    time: "10:00",
-    desc: "法國時尚品牌 Maison Kitsuné 旗下咖啡廳，木造和風竹林裝潢極有質感。點一杯拿鐵配狐狸餅乾，開啟表參道/青山散步日。",
-    imageFolder: "Cafe Kitsune 青山",
-    gmaps: "https://maps.google.com/?q=Cafe+Kitsune+Aoyama",
-    transitInfo: {
-      from: "SYLA HOTEL Oshiage",
-      method: "subway",
-      line: "半藏門線 (押上 → 表參道)",
-      duration: 35,
-      details: "09:25 押上站搭半藏門線直達表參道站（10 站、25 分鐘），B4 出口步行 6 分鐘。"
-    }
-  },
+  // ==================== DAY 4 (12/12 週六) — 神宮外苑 / 明治神宮 / 原宿 / 澀谷 / 表參道 ====================
   {
     id: "jingu_gaien_ginkgo",
     name: "神宮外苑 銀杏並木 (推薦景點)",
@@ -376,15 +356,15 @@ const PLACES = [
     lng: 139.7206,
     day: 4,
     time: "10:30",
-    desc: "東京最有名的銀杏大道，約 300 公尺、約 150 棵銀杏排成四列，免費。從 D4 的 Café Kitsuné 青山步行約 15 分鐘。⚠️ 往年最美是 11 月下旬到 12 月上旬，12/9 之後可能是尾聲（滿地落葉），出發前一週再看一次黃葉狀況。",
+    desc: "東京最有名的銀杏大道，約 300 公尺、約 150 棵銀杏排成四列，免費。⚠️ 往年最美是 11 月下旬到 12 月上旬，12/9 之後可能是尾聲（滿地落葉），出發前一週再看一次黃葉狀況。",
     imageFolder: "神宮外苑 銀杏並木",
     gmaps: "https://maps.app.goo.gl/mLFjLwzYTBKCrs2c7",
     transitInfo: {
-      from: "Café Kitsuné 青山",
-      method: "walk",
-      line: "徒步 (Walk 約 1km)",
-      duration: 15,
-      details: "從 Café Kitsuné 往北走到青山通り，往青山一丁目方向走到「青山二丁目」路口，銀杏並木就在路口北側。"
+      from: "SYLA HOTEL Oshiage",
+      method: "subway",
+      line: "半藏門線 (押上 → 青山一丁目)",
+      duration: 35,
+      details: "09:55 押上站搭半藏門線直達青山一丁目站（約 22 分鐘），出站沿青山通り往外苑前方向走到「青山二丁目」路口，銀杏並木就在路口北側。"
     }
   },
   {
@@ -831,6 +811,20 @@ const PLACES = [
     desc: "來自群馬的百年老店，招牌「鬼紐川寬烏龍麵」寬達 5 公分，麵條 Q 彈超有嚼勁，搭特製芝麻沾醬。17:30 傍晚場開店，避開午餐排隊。是烏龍麵愛好者的朝聖店。",
     imageFolder: "花山烏冬 銀座",
     gmaps: "https://maps.google.com/?q=Godaime+Hanayama+Udon+Ginza",
+    transitInfo: null
+  },
+  {
+    id: "cafe_kitsune_aoyama",
+    name: "Café Kitsuné 青山",
+    englishName: "Café Kitsuné Aoyama (カフェ キツネ)",
+    category: "food",
+    lat: 35.6648,
+    lng: 139.7153,
+    day: null,
+    time: null,
+    desc: "法國時尚品牌 Maison Kitsuné 旗下咖啡廳，木造和風竹林裝潢極有質感。點一杯拿鐵配狐狸餅乾，開啟表參道/青山散步日。",
+    imageFolder: "Cafe Kitsune 青山",
+    gmaps: "https://maps.google.com/?q=Cafe+Kitsune+Aoyama",
     transitInfo: null
   },
 ];

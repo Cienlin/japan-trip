@@ -15,7 +15,6 @@ const PLACE_IMAGES = {
   "magical_chiikawa_shinjuku": ["魔法少女吉伊卡哇 新宿/1.jpg?v=46c84230","魔法少女吉伊卡哇 新宿/2.jpg?v=3adb2209","魔法少女吉伊卡哇 新宿/3.jpg?v=72210bb9"],
   "shake_shack_shinjuku": ["Shake Shack 新宿/1.jpg?v=92449f06"],
   "omoide_yokocho": ["居酒屋/1.jpg?v=1b53404c","居酒屋/2.jpg?v=5ec9d961"],
-  "cafe_kitsune_aoyama": ["Cafe Kitsune 青山/1.jpg?v=26fe7430","Cafe Kitsune 青山/2.jpg?v=cfd3432d","Cafe Kitsune 青山/3.jpg?v=5114d8a7"],
   "jingu_gaien_ginkgo": ["神宮外苑 銀杏並木/1.jpg?v=3a671514","神宮外苑 銀杏並木/2.jpg?v=80aa6935","神宮外苑 銀杏並木/3.jpg?v=f582dcfb"],
   "meiji_jingu": ["明治神宮/1.jpg?v=20d65434","明治神宮/2.jpg?v=636a7d8b","明治神宮/3.jpg?v=971adbec","明治神宮/4.jpg?v=a4a78e15","明治神宮/5.jpg?v=5c2b3056"],
   "yaiyai_okonomiyaki": ["大阪燒/1.jpg?v=b19a1612"],
@@ -39,5 +38,6 @@ const PLACE_IMAGES = {
   "yamada_unagi": ["山田的鰻/1.jpg?v=08232d47","山田的鰻/2.jpg?v=1577cf7f","山田的鰻/3.jpg?v=70d7bccf"],
   "negishi_yurakucho": ["ねぎし 有楽町/1.jpg?v=15eacbc6","ねぎし 有楽町/2.jpg?v=3892a924"],
   "surugaya": [],
-  "hanayama_udon": ["花山烏冬 銀座/1.jpg?v=379dcad9","花山烏冬 銀座/2.jpg?v=df456c91","花山烏冬 銀座/3.jpg?v=9c108980","花山烏冬 銀座/4.jpg?v=c2e0421a"]
+  "hanayama_udon": ["花山烏冬 銀座/1.jpg?v=379dcad9","花山烏冬 銀座/2.jpg?v=df456c91","花山烏冬 銀座/3.jpg?v=9c108980","花山烏冬 銀座/4.jpg?v=c2e0421a"],
+  "cafe_kitsune_aoyama": ["Cafe Kitsune 青山/1.jpg?v=26fe7430","Cafe Kitsune 青山/2.jpg?v=cfd3432d","Cafe Kitsune 青山/3.jpg?v=5114d8a7"]
 };
