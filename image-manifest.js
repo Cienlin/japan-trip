@@ -4,10 +4,10 @@ const PLACE_IMAGES = {
   "syla_hotel": ["SYLA 飯店/1.jpg?v=3e27d816","SYLA 飯店/2.jpg?v=7993cd1f","SYLA 飯店/3.jpg?v=c2ff7a62","SYLA 飯店/4.jpg?v=90a70c49","SYLA 飯店/5.jpg?v=74a4b47e","SYLA 飯店/6.jpg?v=f7ddec42","SYLA 飯店/7.jpg?v=639a7840","SYLA 飯店/8.jpg?v=c0f44cb4","SYLA 飯店/9.jpg?v=598222bd","SYLA 飯店/10.jpg?v=3d4bd94a","SYLA 飯店/11.jpg?v=29f25b4d"],
   "narita_airport": ["成田國際機場/1.jpg?v=55fcc2c9","成田國際機場/2.jpg?v=78dfaa12","成田國際機場/3.jpg?v=676e0e85"],
   "lawson_oshiage": ["Lawson 押上店/1.jpg?v=443b4e64","Lawson 押上店/2.jpg?v=3c66c906"],
+  "kameari_ryotsu": ["龜有 兩津勘吉/1.jpg?v=f3ac64ae","龜有 兩津勘吉/2.jpg?v=10880a80","龜有 兩津勘吉/3.jpg?v=b9cac95d","龜有 兩津勘吉/4.jpg?v=7a4cc29f"],
   "tonkatsu_aoki": ["とんかつ檍 銀座/1.jpg?v=5f727d0e","とんかつ檍 銀座/2.jpg?v=74b01f83","とんかつ檍 銀座/3.jpg?v=40a65ce9"],
   "uniqlo_ginza": ["Uniqlo 銀座/1.jpg?v=112e8a61","Uniqlo 銀座/2.jpg?v=ddb08f94"],
   "the_stand_canele": ["THE STAND 可麗露/1.jpg?v=1eea3b2c","THE STAND 可麗露/2.jpg?v=579223ac","THE STAND 可麗露/3.jpg?v=05775ba9"],
-  "hanayama_udon": ["花山烏冬 銀座/1.jpg?v=379dcad9","花山烏冬 銀座/2.jpg?v=df456c91","花山烏冬 銀座/3.jpg?v=9c108980","花山烏冬 銀座/4.jpg?v=c2e0421a"],
   "tokyo_station_souvenirs": ["東京車站一番街/1.jpg?v=342a83b7","東京車站一番街/2.jpg?v=732ce966","東京車站一番街/3.jpg?v=3395df58"],
   "sekaido_shinjuku": ["世界堂 新宿本店/1.jpg?v=a4c36eae","世界堂 新宿本店/2.jpg?v=7a8987ea","世界堂 新宿本店/3.jpg?v=3f31bb21"],
   "eifukuen_shinjuku": ["燒肉 永福苑/1.jpg?v=a9f9c793","燒肉 永福苑/2.jpg?v=a6e845de","燒肉 永福苑/3.jpg?v=a08706cb"],
@@ -26,7 +26,6 @@ const PLACE_IMAGES = {
   "yamawarau_omotesando": ["山笑ふ 壽喜燒/1.jpg?v=b261e631","山笑ふ 壽喜燒/2.jpg?v=890d6bb3"],
   "patisserie_ten": ["PATISSERIE TEN 泡芙/1.jpg?v=036676f0","PATISSERIE TEN 泡芙/2.jpg?v=c53093b9","PATISSERIE TEN 泡芙/3.jpg?v=82b7e8aa"],
   "akihabara": ["秋葉原/1.jpg?v=93bc7f5a","秋葉原/2.jpg?v=0e5bd4ce","秋葉原/3.jpg?v=6fec9829"],
-  "kameari_ryotsu": ["龜有 兩津勘吉/1.jpg?v=f3ac64ae","龜有 兩津勘吉/2.jpg?v=10880a80","龜有 兩津勘吉/3.jpg?v=b9cac95d","龜有 兩津勘吉/4.jpg?v=7a4cc29f"],
   "sensoji_night": ["淺草寺/1.jpg?v=4386852e","淺草寺/2.jpg?v=45e8a87e","淺草寺/3.jpg?v=6bd80874"],
   "takoyaki_asakusa": ["章魚燒/1.jpg?v=6fdcfa6b"],
   "umezono_daifuku": ["大福/1.jpg?v=5524f6bb"],
@@ -39,5 +38,6 @@ const PLACE_IMAGES = {
   "chiikawa_tokyo_station": ["Chiikawa 東京車站店/1.jpg?v=e5454d2a","Chiikawa 東京車站店/2.jpg?v=c6911431"],
   "yamada_unagi": ["山田的鰻/1.jpg?v=08232d47","山田的鰻/2.jpg?v=1577cf7f","山田的鰻/3.jpg?v=70d7bccf"],
   "negishi_yurakucho": ["ねぎし 有楽町/1.jpg?v=15eacbc6","ねぎし 有楽町/2.jpg?v=3892a924"],
-  "surugaya": []
+  "surugaya": [],
+  "hanayama_udon": ["花山烏冬 銀座/1.jpg?v=379dcad9","花山烏冬 銀座/2.jpg?v=df456c91","花山烏冬 銀座/3.jpg?v=9c108980","花山烏冬 銀座/4.jpg?v=c2e0421a"]
 };

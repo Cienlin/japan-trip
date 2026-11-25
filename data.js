@@ -122,7 +122,27 @@ const PLACES = [
     }
   },
 
-  // ==================== DAY 2 (12/10 週四) — 銀座 + 東京車站 ====================
+  // ==================== DAY 2 (12/10 週四) — 龜有 + 銀座 + 東京車站 ====================
+  {
+    id: "kameari_ryotsu",
+    name: "龜有 兩津勘吉銅像",
+    englishName: "Ryotsu Kankichi Statue, Kameari (両津勘吉像)",
+    category: "sightseeing",
+    lat: 35.7663,
+    lng: 139.8478,
+    day: 2,
+    time: "10:00",
+    desc: "《烏龍派出所》的故鄉，龜有站北口有兩津勘吉銅像，車站周邊還有十幾座角色銅像可以邊走邊找。",
+    imageFolder: "龜有 兩津勘吉",
+    gmaps: "https://maps.app.goo.gl/K6bQ9cS8sqXLqtmy5",
+    transitInfo: {
+      from: "SYLA HOTEL Oshiage",
+      method: "train",
+      line: "東武晴空塔線 → 千代田線 (押上 → 北千住 → 龜有)",
+      duration: 35,
+      details: "押上站搭東武晴空塔線（東武スカイツリーライン）到北千住站，轉千代田線（直通 JR 常磐線各站停車）2 站到龜有站（有些班次只到綾瀨，在綾瀨換車），北口出站就是兩津勘吉銅像。"
+    }
+  },
   {
     id: "tonkatsu_aoki",
     name: "とんかつ檍 銀座 8 丁目店",
@@ -136,11 +156,11 @@ const PLACES = [
     imageFolder: "とんかつ檍 銀座",
     gmaps: "https://maps.google.com/?q=Tonkatsu+Aoki+Ginza+8-chome",
     transitInfo: {
-      from: "SYLA HOTEL Oshiage",
+      from: "龜有 兩津勘吉銅像",
       method: "subway",
-      line: "都營淺草線 (押上 → 新橋)",
-      duration: 25,
-      details: "10:45 押上站搭都營淺草線直達新橋站（約 17 分鐘），出站往銀座方向步行約 5 分鐘到銀座 8 丁目，店在地下室。"
+      line: "千代田線 (龜有 → 日比谷)",
+      duration: 45,
+      details: "10:30 龜有站搭 JR 常磐線各站停車（直通千代田線）直達日比谷站（約 30 分鐘；有些班次只到綾瀨，在綾瀨換車），出站往銀座 8 丁目方向步行約 12 分鐘，店在地下室。"
     }
   },
   {
@@ -181,26 +201,6 @@ const PLACES = [
       line: "徒步 (Walk 500m)",
       duration: 7,
       details: "從 Uniqlo 銀座往北 500 公尺，接近有樂町站高架橋下。"
-    }
-  },
-  {
-    id: "hanayama_udon",
-    name: "五代目 花山烏冬 銀座店",
-    englishName: "Godaime Hanayama Udon Ginza (五代目 花山うどん)",
-    category: "food",
-    lat: 35.6699,
-    lng: 139.7691,
-    day: 2,
-    time: "17:30",
-    desc: "來自群馬的百年老店，招牌「鬼紐川寬烏龍麵」寬達 5 公分，麵條 Q 彈超有嚼勁，搭特製芝麻沾醬。17:30 傍晚場開店，避開午餐排隊。是烏龍麵愛好者的朝聖店。",
-    imageFolder: "花山烏冬 銀座",
-    gmaps: "https://maps.google.com/?q=Godaime+Hanayama+Udon+Ginza",
-    transitInfo: {
-      from: "THE STAND 可麗露",
-      method: "walk",
-      line: "徒步 (Walk 550m)",
-      duration: 7,
-      details: "從有樂町 THE STAND 走回銀座 4 丁目方向約 550 公尺。"
     }
   },
   {
@@ -515,8 +515,8 @@ const PLACES = [
     lat: 35.6675,
     lng: 139.7110,
     day: 4,
-    time: "19:00",
-    desc: "好像要訂位，他們都吃牛我只吃豬",
+    time: "18:30",
+    desc: "訂位好了，他們都吃牛我只吃豬",
     imageFolder: "山笑ふ 壽喜燒",
     gmaps: "https://maps.google.com/?q=Yamawarau+Omotesando",
     transitInfo: {
@@ -528,8 +528,8 @@ const PLACES = [
     }
   },
 
-  // ==================== DAY 5 (12/13 週日) — 清澄白河 + 秋葉原 + 龜有 + 淺草 + 入谷 + 晴空塔 ====================
-  // 10:00 有 3 站同時間 (TEN&、秋葉原、龜有),排序跟這裡的先後一樣;排時間時再調整 (見 docs/行程待討論.md)
+  // ==================== DAY 5 (12/13 週日) — 清澄白河 + 秋葉原 + 淺草 + 入谷 + 晴空塔 ====================
+  // 10:00 有 2 站同時間 (TEN&、秋葉原),排序跟這裡的先後一樣;排時間時再調整 (見 docs/行程待討論.md)
   {
     id: "patisserie_ten",
     name: "PATISSERIE TEN& 泡芙 清澄白河",
@@ -571,26 +571,6 @@ const PLACES = [
     }
   },
   {
-    id: "kameari_ryotsu",
-    name: "龜有 兩津勘吉銅像",
-    englishName: "Ryotsu Kankichi Statue, Kameari (両津勘吉像)",
-    category: "sightseeing",
-    lat: 35.7663,
-    lng: 139.8478,
-    day: 5,
-    time: "10:00",
-    desc: "《烏龍派出所》的故鄉，龜有站北口有兩津勘吉銅像，車站周邊還有十幾座角色銅像可以邊走邊找。",
-    imageFolder: "龜有 兩津勘吉",
-    gmaps: "https://maps.app.goo.gl/K6bQ9cS8sqXLqtmy5",
-    transitInfo: {
-      from: "秋葉原電器街",
-      method: "subway",
-      line: "日比谷線 → 千代田線 (秋葉原 → 北千住 → 龜有)",
-      duration: 30,
-      details: "秋葉原站搭東京 Metro 日比谷線到北千住站（約 15 分鐘），轉千代田線（直通 JR 常磐線各站停車）2 站到龜有站（約 6 分鐘；有些班次只到綾瀨，在綾瀨換車），北口出站就是兩津勘吉銅像。"
-    }
-  },
-  {
     id: "sensoji_night",
     name: "淺草寺",
     englishName: "Senso-ji Temple (浅草寺) & Kaminarimon (雷門)",
@@ -603,11 +583,11 @@ const PLACES = [
     imageFolder: "淺草寺",
     gmaps: "https://maps.google.com/?q=Sensoji+Temple",
     transitInfo: {
-      from: "龜有 兩津勘吉銅像",
-      method: "train",
-      line: "JR 常磐線 → 東武晴空塔線 (龜有 → 北千住 → 淺草)",
-      duration: 35,
-      details: "龜有站搭 JR 常磐線各站停車（直通千代田線）2 站到北千住站，轉東武晴空塔線（東武スカイツリーライン），搭往淺草的車到淺草站（約 15 分鐘），出站步行 3 分鐘到雷門，穿過仲見世通到淺草寺。"
+      from: "秋葉原電器街",
+      method: "subway",
+      line: "東京 Metro 銀座線 (末廣町 → 淺草)",
+      duration: 20,
+      details: "末廣町站搭銀座線直達淺草站（5 站、約 10 分鐘），出站步行 2 分鐘到雷門，穿過仲見世通到淺草寺。"
     }
   },
   {
@@ -788,11 +768,11 @@ const PLACES = [
     imageFolder: "Chiikawa 東京車站店",
     gmaps: "https://maps.google.com/?q=Chiikawa+Land+TOKYO+Station",
     transitInfo: {
-      from: "花山烏冬",
-      method: "subway",
-      line: "東京 Metro 丸之內線 (銀座 → 東京)",
-      duration: 8,
-      details: "銀座站搭丸之內線 1 站至東京站，出站直通東京車站一番街 B1F 角色街。"
+      from: "THE STAND 可麗露",
+      method: "train",
+      line: "JR 山手線 (有樂町 → 東京)",
+      duration: 12,
+      details: "從 THE STAND 走到有樂町站，搭 JR 山手線 1 站到東京站（2 分鐘），往八重洲方向走到東京車站一番街 B1F 角色街。"
     }
   },
 
@@ -837,6 +817,20 @@ const PLACES = [
     desc: "要去買我妹的車車",
     imageFolder: "駿河屋",
     gmaps: "https://maps.app.goo.gl/wWji8Mj1nqZ9avne8",
+    transitInfo: null
+  },
+  {
+    id: "hanayama_udon",
+    name: "五代目 花山烏冬 銀座店",
+    englishName: "Godaime Hanayama Udon Ginza (五代目 花山うどん)",
+    category: "food",
+    lat: 35.6699,
+    lng: 139.7691,
+    day: null,
+    time: null,
+    desc: "來自群馬的百年老店，招牌「鬼紐川寬烏龍麵」寬達 5 公分，麵條 Q 彈超有嚼勁，搭特製芝麻沾醬。17:30 傍晚場開店，避開午餐排隊。是烏龍麵愛好者的朝聖店。",
+    imageFolder: "花山烏冬 銀座",
+    gmaps: "https://maps.google.com/?q=Godaime+Hanayama+Udon+Ginza",
     transitInfo: null
   },
 ];
