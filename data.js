@@ -122,7 +122,7 @@ const PLACES = [
     }
   },
 
-  // ==================== DAY 2 (12/10 週四) — 龜有 + 銀座 + 東京車站 ====================
+  // ==================== DAY 2 (12/10 週四) — 龜有 + 銀座 + 東京車站 (2026-11-25 照另一個 AI 的推薦排) ====================
   {
     id: "kameari_ryotsu",
     name: "龜有 兩津勘吉銅像",
@@ -131,7 +131,7 @@ const PLACES = [
     lat: 35.7663,
     lng: 139.8478,
     day: 2,
-    time: "10:00",
+    time: "09:30",
     desc: "《烏龍派出所》的故鄉，龜有站北口有兩津勘吉銅像，車站周邊還有十幾座角色銅像可以邊走邊找。",
     imageFolder: "龜有 兩津勘吉",
     gmaps: "https://maps.app.goo.gl/K6bQ9cS8sqXLqtmy5",
@@ -151,7 +151,7 @@ const PLACES = [
     lat: 35.6682,
     lng: 139.7615,
     day: 2,
-    time: "11:15",
+    time: "11:05",
     desc: "東京炸豬排前三強！選用高品質林 SPF 豬肉，外皮金黃酥脆、切面粉嫩多汁。桌上有多款高級岩鹽，搭鹽吃能吃出豬肉甘甜。11:00 開店，建議 11:15 前到店排隊，不然要排 1 小時起跳。",
     imageFolder: "とんかつ檍 銀座",
     gmaps: "https://maps.google.com/?q=Tonkatsu+Aoki+Ginza+8-chome",
@@ -160,7 +160,7 @@ const PLACES = [
       method: "subway",
       line: "千代田線 (龜有 → 日比谷)",
       duration: 45,
-      details: "10:30 龜有站搭 JR 常磐線各站停車（直通千代田線）直達日比谷站（約 30 分鐘；有些班次只到綾瀨，在綾瀨換車），出站往銀座 8 丁目方向步行約 12 分鐘，店在地下室。"
+      details: "10:15 龜有站搭 JR 常磐線各站停車（直通千代田線）直達日比谷站（約 30 分鐘；有些班次只到綾瀨，在綾瀨換車），出站往銀座 8 丁目方向步行約 12 分鐘，店在地下室。"
     }
   },
   {
@@ -171,7 +171,7 @@ const PLACES = [
     lat: 35.6702,
     lng: 139.7635,
     day: 2,
-    time: "13:30",
+    time: "13:00",
     desc: "你們清單裡「一定要去」的點！全球最大 Uniqlo 旗艦店，12 層樓。特別聯名款、UT 客製化專區、頂樓 Uniqlo Coffee。留 1.5 ~ 2 小時慢慢挑冬裝。",
     imageFolder: "Uniqlo 銀座",
     gmaps: "https://maps.app.goo.gl/gghggXqJd81zzHmi9",
@@ -184,6 +184,26 @@ const PLACES = [
     }
   },
   {
+    id: "ginza_akebono",
+    name: "銀座あけぼの 銀座本店",
+    englishName: "Ginza Akebono (銀座あけぼの 銀座本店)",
+    category: "food",
+    lat: 35.67132,
+    lng: 139.764498,
+    day: 2,
+    time: "15:15",
+    desc: "老字號和菓子店，買草莓大福或豆大福外帶。月～土 10:00～21:00、日 10:00～20:00，無休。",
+    imageFolder: "銀座あけぼの",
+    gmaps: "https://maps.google.com/?q=銀座あけぼの+銀座本店",
+    transitInfo: {
+      from: "Uniqlo 銀座旗艦店",
+      method: "walk",
+      line: "徒步 (Walk 約 300m)",
+      duration: 5,
+      details: "從 Uniqlo 銀座沿中央通往北走到銀座 5 丁目，約 300 公尺。"
+    }
+  },
+  {
     id: "the_stand_canele",
     name: "THE STAND 可麗露",
     englishName: "THE STAND Yurakucho",
@@ -191,16 +211,36 @@ const PLACES = [
     lat: 35.6748,
     lng: 139.7627,
     day: 2,
-    time: "16:00",
+    time: "15:45",
     desc: "有樂町高架橋下的精緻咖啡酒吧，外帶「可麗露 Canelé」外皮酥脆、內裡溫潤，被譽為東京可麗露天花板。可以坐下喝杯咖啡休息，也可買 5 個可麗露帶著走。",
     imageFolder: "THE STAND 可麗露",
     gmaps: "https://maps.google.com/?q=THE+STAND+Yurakucho",
     transitInfo: {
-      from: "Uniqlo 銀座旗艦店",
+      from: "銀座あけぼの 銀座本店",
       method: "walk",
-      line: "徒步 (Walk 500m)",
+      line: "徒步 (Walk 約 500m)",
       duration: 7,
-      details: "從 Uniqlo 銀座往北 500 公尺，接近有樂町站高架橋下。"
+      details: "從銀座 5 丁目往有樂町站方向走，THE STAND 在有樂町站高架橋下。"
+    }
+  },
+  {
+    id: "tamatoya_tokyo_station",
+    name: "月島もんじゃ たまとや 東京駅",
+    englishName: "Tsukishima Monja Tamatoya Tokyo Station (月島もんじゃ たまとや 東京駅)",
+    category: "food",
+    lat: 35.6823771,
+    lng: 139.7681174,
+    day: 2,
+    time: "17:15",
+    desc: "月島本店的排隊名店，有豬肉、海鮮的大阪燒和文字燒，對不吃牛友善。在東京站八重洲北口改札外的グランスタ八重北 B1F 黑塀橫丁，11:00～23:00。建議先訂 5 人位；店裡鐵板多比較熱，穿好穿脫的衣服。",
+    imageFolder: "月島もんじゃ たまとや",
+    gmaps: "https://maps.google.com/?q=月島もんじゃ+たまとや+東京駅",
+    transitInfo: {
+      from: "THE STAND 可麗露",
+      method: "train",
+      line: "JR 山手線 (有樂町 → 東京)",
+      duration: 12,
+      details: "從 THE STAND 走到有樂町站，搭 JR 山手線 1 站到東京站（2 分鐘），往八重洲北口方向走到グランスタ八重北 B1F 黑塀橫丁。"
     }
   },
   {
@@ -211,7 +251,7 @@ const PLACES = [
     lat: 35.6812,
     lng: 139.7671,
     day: 2,
-    time: "19:30",
+    time: "19:45",
     desc: "東京最強伴手禮大本營。Tokyo Banana、Press Butter Sand 焦糖奶油餅、NY Perfect Cheese 起司條、Calbee+ 現炸薯條、寶可夢中心、寶可夢角色街、拉麵激戰區全在這一棟。5 人分頭掃貨最快。",
     imageFolder: "東京車站一番街",
     gmaps: "https://maps.google.com/?q=Tokyo+Station+First+Avenue",
@@ -744,16 +784,16 @@ const PLACES = [
     lat: 35.6812,
     lng: 139.7671,
     day: 2,
-    time: "19:00",
+    time: "19:15",
     desc: "賣伴手禮如果有順便經過的話可以在逛一下",
     imageFolder: "Chiikawa 東京車站店",
     gmaps: "https://maps.google.com/?q=Chiikawa+Land+TOKYO+Station",
     transitInfo: {
-      from: "THE STAND 可麗露",
-      method: "train",
-      line: "JR 山手線 (有樂町 → 東京)",
-      duration: 12,
-      details: "從 THE STAND 走到有樂町站，搭 JR 山手線 1 站到東京站（2 分鐘），往八重洲方向走到東京車站一番街 B1F 角色街。"
+      from: "月島もんじゃ たまとや 東京駅",
+      method: "walk",
+      line: "徒步 (東京車站地下街)",
+      duration: 5,
+      details: "從八重洲北口的黑塀橫丁沿地下街往八重洲中央口方向走，到東京車站一番街 B1F 角色街。"
     }
   },
 
