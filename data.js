@@ -26,7 +26,7 @@ const TRIP_METADATA = {
     totalCostJpy: 165598,
     perPersonTwd: 9061,
     link: "https://www.agoda.com/zh-tw/syla-hotel-oshiage/hotel/all/tokyo-jp.html?checkIn=2026-12-9&los=5",
-    coordinates: [35.7108, 139.8150]
+    coordinates: [35.706344, 139.81491]
   },
   // 預算計算機 (行前指南) 的預設值,每人計算。
   // 手機只記住使用者自己改過的欄位,沒改過的一律用這裡的最新值,改了之後大家的手機都會更新
@@ -68,8 +68,8 @@ const PLACES = [
     name: "SYLA HOTEL Oshiage",
     englishName: "シーラホテル押上",
     category: "lodging",
-    lat: 35.7108,
-    lng: 139.8150,
+    lat: 35.706344,
+    lng: 139.81491,
     day: 1,
     time: "19:00",
     desc: "本次旅程的住宿大本營。位於墨田區押上，走 5 分鐘就是東京晴空塔與押上地鐵站。押上站同時擁有 4 條線 — 半藏門線（直達澀谷、清澄白河）、都營淺草線（直達淺草、銀座、機場）、京成押上線與東武伊勢崎線，機場往返都不用轉車。第一天約 19:00 抵達 check-in、放行李。",
@@ -102,6 +102,26 @@ const PLACES = [
     transitInfo: null
   },
   {
+    id: "yoshikatsu_oshiage",
+    name: "大阪燒文字稍",
+    englishName: "Yoshikatsu",
+    category: "food",
+    lat: 35.708095,
+    lng: 139.816562,
+    day: 1,
+    time: "20:00",
+    desc: "老闆自己經營的小店，有英文菜單，評價看起來不錯",
+    imageFolder: "大阪燒文字稍",
+    gmaps: "https://maps.app.goo.gl/Mrh9PzRwWcAEYtEv9",
+    transitInfo: {
+      from: "SYLA HOTEL Oshiage",
+      method: "walk",
+      line: "徒步 (Walk 約 300m)",
+      duration: 4,
+      details: "check-in 放好行李後出門，從飯店往北走約 300 公尺。"
+    }
+  },
+  {
     id: "lawson_oshiage",
     name: "Lawson 押上店 (第一晚宵夜)",
     englishName: "Lawson Oshiage",
@@ -114,11 +134,11 @@ const PLACES = [
     imageFolder: "Lawson 押上店",
     gmaps: "https://maps.google.com/?q=Lawson+Oshiage",
     transitInfo: {
-      from: "SYLA HOTEL Oshiage",
+      from: "大阪燒文字稍",
       method: "walk",
-      line: "徒步 (Walk 250m)",
-      duration: 4,
-      details: "check-in 放好行李後出門，Lawson 就在飯店旁，走 250 公尺就到。"
+      line: "徒步 (Walk 約 500m)",
+      duration: 7,
+      details: "吃完往押上站方向走約 500 公尺，買完再走回飯店（約 600 公尺）。"
     }
   },
 

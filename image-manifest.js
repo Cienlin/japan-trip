@@ -3,6 +3,7 @@
 const PLACE_IMAGES = {
   "syla_hotel": ["SYLA 飯店/1.jpg?v=3e27d816","SYLA 飯店/2.jpg?v=7993cd1f","SYLA 飯店/3.jpg?v=c2ff7a62","SYLA 飯店/4.jpg?v=90a70c49","SYLA 飯店/5.jpg?v=74a4b47e","SYLA 飯店/6.jpg?v=f7ddec42","SYLA 飯店/7.jpg?v=639a7840","SYLA 飯店/8.jpg?v=c0f44cb4","SYLA 飯店/9.jpg?v=598222bd","SYLA 飯店/10.jpg?v=3d4bd94a","SYLA 飯店/11.jpg?v=29f25b4d"],
   "narita_airport": ["成田國際機場/1.jpg?v=55fcc2c9","成田國際機場/2.jpg?v=78dfaa12","成田國際機場/3.jpg?v=676e0e85"],
+  "yoshikatsu_oshiage": [],
   "lawson_oshiage": ["Lawson 押上店/1.jpg?v=443b4e64","Lawson 押上店/2.jpg?v=3c66c906"],
   "kameari_ryotsu": ["龜有 兩津勘吉/1.jpg?v=f3ac64ae","龜有 兩津勘吉/2.jpg?v=10880a80","龜有 兩津勘吉/3.jpg?v=b9cac95d","龜有 兩津勘吉/4.jpg?v=7a4cc29f"],
   "tonkatsu_aoki": ["とんかつ檍 銀座/1.jpg?v=5f727d0e","とんかつ檍 銀座/2.jpg?v=74b01f83","とんかつ檍 銀座/3.jpg?v=40a65ce9"],
