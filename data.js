@@ -184,6 +184,26 @@ const PLACES = [
     }
   },
   {
+    id: "patisserie_ten",
+    name: "PATISSERIE TEN& 泡芙 日比谷",
+    englishName: "pâtisserie TEN& 日比谷OKUROJI (パティスリー テンアンド)",
+    category: "food",
+    lat: 35.671639,
+    lng: 139.759782,
+    day: 2,
+    time: "12:30",
+    desc: "日比谷 OKUROJI（有樂町到新橋之間的 JR 高架橋下）的法式甜點店，招牌是點了才現灌卡士達的餅乾泡芙（香草 ¥830）。外帶 12:00～16:00、17:30～20:00，開店前常排隊。",
+    imageFolder: "PATISSERIE TEN 泡芙",
+    gmaps: "https://maps.app.goo.gl/wAdQFjfhKBbkjNq67",
+    transitInfo: {
+      from: "Tonkatsu Aoki",
+      method: "walk",
+      line: "徒步 (Walk 約 400m)",
+      duration: 6,
+      details: "從銀座 8 丁目往日比谷方向走，穿過 JR 高架橋到日比谷 OKUROJI，約 400 公尺。"
+    }
+  },
+  {
     id: "uniqlo_ginza",
     name: "Uniqlo 銀座旗艦店",
     englishName: "UNIQLO Ginza (ユニクロ 銀座店)",
@@ -196,11 +216,11 @@ const PLACES = [
     imageFolder: "Uniqlo 銀座",
     gmaps: "https://maps.app.goo.gl/gghggXqJd81zzHmi9",
     transitInfo: {
-      from: "Tonkatsu Aoki",
+      from: "PATISSERIE TEN&",
       method: "walk",
-      line: "徒步 (Walk 400m)",
+      line: "徒步 (Walk 約 400m)",
       duration: 6,
-      details: "從銀座 8 丁目沿中央通往北步行 400 公尺，Uniqlo 12 層旗艦大樓在銀座 6 丁目。"
+      details: "從日比谷 OKUROJI 穿過 JR 高架橋往銀座方向走，到中央通的 Uniqlo（銀座 6 丁目），約 400 公尺。"
     }
   },
   {
@@ -550,28 +570,7 @@ const PLACES = [
     }
   },
 
-  // ==================== DAY 5 (12/13 週日) — 日比谷 + 秋葉原 + 淺草 + 晴空塔 ====================
-  // 10:00 有 2 站同時間 (TEN&、秋葉原),排序跟這裡的先後一樣;排時間時再調整 (見 docs/行程待討論.md)
-  {
-    id: "patisserie_ten",
-    name: "PATISSERIE TEN& 泡芙 日比谷",
-    englishName: "pâtisserie TEN& 日比谷OKUROJI (パティスリー テンアンド)",
-    category: "food",
-    lat: 35.671639,
-    lng: 139.759782,
-    day: 5,
-    time: "10:00",
-    desc: "日比谷 OKUROJI（有樂町到新橋之間的 JR 高架橋下）的法式甜點店，招牌是點了才現灌卡士達的餅乾泡芙（香草 ¥830）。外帶 12:00～16:00、17:30～20:00，開店前常排隊。",
-    imageFolder: "PATISSERIE TEN 泡芙",
-    gmaps: "https://maps.google.com/?q=日比谷OKUROJI+パティスリーテンアンド",
-    transitInfo: {
-      from: "SYLA HOTEL Oshiage",
-      method: "subway",
-      line: "都營淺草線 (押上 → 新橋)",
-      duration: 35,
-      details: "從飯店走到押上站（約 5 分鐘），搭都營淺草線直達新橋站（約 17 分鐘），往有樂町方向沿 JR 高架橋走到日比谷 OKUROJI。"
-    }
-  },
+  // ==================== DAY 5 (12/13 週日) — 秋葉原 + 淺草 + 晴空塔 ====================
   {
     id: "akihabara",
     name: "秋葉原電器街 (推薦景點)",
@@ -585,11 +584,11 @@ const PLACES = [
     imageFolder: "秋葉原",
     gmaps: "https://maps.google.com/?q=Akihabara+Electric+Town",
     transitInfo: {
-      from: "PATISSERIE TEN&",
+      from: "SYLA HOTEL Oshiage",
       method: "train",
-      line: "JR 京濱東北線 (有樂町 → 秋葉原)",
-      duration: 20,
-      details: "從日比谷 OKUROJI 走到有樂町站（約 6 分鐘），搭 JR 京濱東北線或山手線 4 站到秋葉原站（約 7 分鐘），電器街口出站就是秋葉原電器街。"
+      line: "半藏門線 → JR 總武線 (押上 → 錦糸町 → 秋葉原)",
+      duration: 25,
+      details: "從飯店走到押上站（約 5 分鐘），搭半藏門線 1 站到錦糸町站，轉 JR 中央・總武線各站停車 3 站到秋葉原站，電器街口出站就是秋葉原電器街。"
     }
   },
   {
