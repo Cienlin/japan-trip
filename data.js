@@ -387,27 +387,7 @@ const PLACES = [
     }
   },
 
-  // ==================== DAY 4 (12/12 週六) — 神宮外苑 / 明治神宮 / 原宿 / 澀谷 / 表參道 ====================
-  {
-    id: "jingu_gaien_ginkgo",
-    name: "神宮外苑 銀杏並木 (推薦景點)",
-    englishName: "Meiji Jingu Gaien Ginkgo Avenue (明治神宮外苑 いちょう並木)",
-    category: "sightseeing",
-    lat: 35.6727,
-    lng: 139.7206,
-    day: 4,
-    time: "10:30",
-    desc: "東京最有名的銀杏大道，約 300 公尺、約 150 棵銀杏排成四列，免費。⚠️ 往年最美是 11 月下旬到 12 月上旬，12/9 之後可能是尾聲（滿地落葉），出發前一週再看一次黃葉狀況。",
-    imageFolder: "神宮外苑 銀杏並木",
-    gmaps: "https://maps.app.goo.gl/mLFjLwzYTBKCrs2c7",
-    transitInfo: {
-      from: "SYLA HOTEL Oshiage",
-      method: "subway",
-      line: "半藏門線 (押上 → 青山一丁目)",
-      duration: 40,
-      details: "從飯店走到押上站（約 5 分鐘），搭半藏門線直達青山一丁目站（約 22 分鐘），出站沿青山通り往外苑前方向走到「青山二丁目」路口（約 7 分鐘），銀杏並木就在路口北側。"
-    }
-  },
+  // ==================== DAY 4 (12/12 週六) — 明治神宮 / 神宮外苑 / 原宿 / 澀谷 / 表參道 ====================
   {
     id: "meiji_jingu",
     name: "明治神宮 (推薦景點)",
@@ -416,16 +396,36 @@ const PLACES = [
     lat: 35.6764,
     lng: 139.6993,
     day: 4,
-    time: "12:00",
+    time: "10:30",
     desc: "東京市中心的巨型森林神社，鳥居下拍照極美，五人拍團體照的絕佳場所。",
     imageFolder: "明治神宮",
     gmaps: "https://maps.app.goo.gl/78zYWAVM5sRB9NMS9",
     transitInfo: {
-      from: "神宮外苑 銀杏並木",
+      from: "SYLA HOTEL Oshiage",
       method: "subway",
-      line: "銀座線 → 千代田線 (外苑前 → 明治神宮前〈原宿〉)",
+      line: "半藏門線 → 千代田線 (押上 → 表參道 → 明治神宮前〈原宿〉)",
+      duration: 50,
+      details: "從飯店走到押上站（約 5 分鐘），搭半藏門線到表參道站（約 25 分鐘），轉千代田線 1 站到明治神宮前〈原宿〉站，出站經原宿口鳥居步行約 10 分鐘到本殿。"
+    }
+  },
+  {
+    id: "jingu_gaien_ginkgo",
+    name: "神宮外苑 銀杏並木 (推薦景點)",
+    englishName: "Meiji Jingu Gaien Ginkgo Avenue (明治神宮外苑 いちょう並木)",
+    category: "sightseeing",
+    lat: 35.6727,
+    lng: 139.7206,
+    day: 4,
+    time: "12:00",
+    desc: "東京最有名的銀杏大道，約 300 公尺、約 150 棵銀杏排成四列，免費。⚠️ 往年最美是 11 月下旬到 12 月上旬，12/9 之後可能是尾聲（滿地落葉），出發前一週再看一次黃葉狀況。",
+    imageFolder: "神宮外苑 銀杏並木",
+    gmaps: "https://maps.app.goo.gl/mLFjLwzYTBKCrs2c7",
+    transitInfo: {
+      from: "明治神宮",
+      method: "subway",
+      line: "千代田線 → 銀座線 (明治神宮前〈原宿〉 → 表參道 → 外苑前)",
       duration: 30,
-      details: "走到外苑前站搭銀座線 1 站到表參道站，轉千代田線 1 站到明治神宮前〈原宿〉站，出站經原宿口鳥居步行約 10 分鐘到本殿。"
+      details: "參拜完從本殿走回原宿口鳥居（約 10 分鐘），明治神宮前〈原宿〉站搭千代田線 1 站到表參道站，轉銀座線 1 站到外苑前站，出站往青山一丁目方向走到「青山二丁目」路口，銀杏並木就在路口北側。"
     }
   },
   {
@@ -441,11 +441,11 @@ const PLACES = [
     imageFolder: "Chiikawa 原宿店",
     gmaps: "https://maps.app.goo.gl/JBWr123mratPgxdP8",
     transitInfo: {
-      from: "明治神宮",
-      method: "walk",
-      line: "徒步 (Walk 約 1.5km)",
-      duration: 20,
-      details: "參拜完從本殿走回原宿口鳥居，過神宮橋沿表參道走到 Kiddy Land 原宿店 1F。"
+      from: "神宮外苑 銀杏並木",
+      method: "subway",
+      line: "東京 Metro 銀座線 (外苑前 → 表參道)",
+      duration: 25,
+      details: "從銀杏並木走回青山通り到外苑前站，搭銀座線 1 站到表參道站，沿表參道往原宿方向走約 10 分鐘到 Kiddy Land 原宿店 1F。也可以沿青山通り、表參道一路走過去（約 25 分鐘）。"
     }
   },
   {
