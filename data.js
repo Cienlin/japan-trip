@@ -529,7 +529,7 @@ const PLACES = [
     }
   },
 
-  // ==================== DAY 5 (12/13 週日) — 清澄白河 + 秋葉原 + 淺草 + 入谷 + 晴空塔 ====================
+  // ==================== DAY 5 (12/13 週日) — 清澄白河 + 秋葉原 + 淺草 + 晴空塔 ====================
   // 10:00 有 2 站同時間 (TEN&、秋葉原),排序跟這裡的先後一樣;排時間時再調整 (見 docs/行程待討論.md)
   {
     id: "patisserie_ten",
@@ -612,26 +612,6 @@ const PLACES = [
     }
   },
   {
-    id: "american_diner_andra",
-    name: "American Diner Andra 漢堡",
-    englishName: "American Diner Andra (アンドラ) Iriya",
-    category: "food",
-    lat: 35.7136,
-    lng: 139.7814,
-    day: 5,
-    time: "14:00",
-    desc: "看起來很猛的漢堡",
-    imageFolder: "American Diner Andra",
-    gmaps: "https://maps.app.goo.gl/uhuaHdVNmjzKpiri8",
-    transitInfo: {
-      from: "章魚燒",
-      method: "subway",
-      line: "東京 Metro 日比谷線 (淺草 → 入谷)",
-      duration: 10,
-      details: "從淺草站搭日比谷線 2 站至入谷站（3 分鐘），出站步行 5 分鐘。"
-    }
-  },
-  {
     id: "tokyo_skytree",
     name: "東京晴空塔 天望展望台",
     englishName: "Tokyo Skytree Tembo Deck",
@@ -644,11 +624,11 @@ const PLACES = [
     imageFolder: "晴空塔展望台",
     gmaps: "https://maps.google.com/?q=Tokyo+Skytree",
     transitInfo: {
-      from: "American Diner Andra",
+      from: "章魚燒",
       method: "subway",
-      line: "銀座線 → 都營淺草線 (稻荷町 → 淺草 → 押上)",
-      duration: 25,
-      details: "走到東京 Metro 銀座線稻荷町站，搭 2 站到淺草站，轉都營淺草線 2 站到押上站，押上站直通晴空塔，4F 是天望甲板的售票、入口樓層。也可以直接搭計程車（約 10 分鐘）。"
+      line: "都營淺草線 (淺草 → 押上)",
+      duration: 20,
+      details: "從雷門一帶走到淺草站，搭都營淺草線 2 站到押上站（約 5 分鐘），押上站直通晴空塔，4F 是天望甲板的售票、入口樓層。也可以過吾妻橋一路走過去（約 25 分鐘）。"
     }
   },
   {
@@ -856,6 +836,21 @@ const PLACES = [
     desc: "這個大幅好像不是我要的那間，我看過的是奇哥影片的",
     imageFolder: "大福",
     gmaps: null,
+    transitInfo: null
+  },
+  {
+    // D5 是週日,Andra 週日公休 (週一～六 11:30～14:00、18:00～22:00),移回候補 (2026-11-26)
+    id: "american_diner_andra",
+    name: "American Diner Andra 漢堡",
+    englishName: "American Diner Andra (アンドラ) Iriya",
+    category: "food",
+    lat: 35.7136,
+    lng: 139.7814,
+    day: null,
+    time: null,
+    desc: "看起來很猛的漢堡",
+    imageFolder: "American Diner Andra",
+    gmaps: "https://maps.app.goo.gl/uhuaHdVNmjzKpiri8",
     transitInfo: null
   },
 ];
