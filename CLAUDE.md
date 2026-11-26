@@ -53,6 +53,10 @@
 - `app.js`：整個 app 包在一個 `DOMContentLoaded` 裡。儲存名稱統一用 `STORAGE_KEYS`，讀取 localStorage 用 `readJson()`，飯店用 `HOTEL_ID`
 - **本機編輯**：內建地點的修改存成 localStorage 的 override（`EDITABLE_FIELDS`），自訂地點存在 `tokyo_trip_custom_places`，都只存在各自的手機。開啟時會自動清掉「已經跟 data.js 相同」的 override，以及「data.js 已有同名同座標地點」的自訂地點
 - **分頁順序**：行程規劃｜美食景點｜預算｜行前指南｜行前清單（手機底部 5 個；電腦版側邊欄也是圖示在上、文字在下）
+- **建議出門時間**（OpenSpec change `depart-time`）：時間軸每天最上面顯示「建議 HH:MM 從飯店出發」，由 `departure.js` 算出（第一站時間減掉從飯店過去的交通分鐘數，往前取整到 5 分鐘），`data.js` 沒有這個欄位
+  - 從飯店到當天第一站的 `transitInfo.duration` 要從走出飯店算起（含走到押上站、等車），`details` 不寫出發時刻
+  - `tools/check-data.js` 提醒兩件事：建議出門時間太早（第一站是景點早於 09:30、其他早於 10:00，對應排行程的起床原則），以及第一段交通說明寫了時刻
+  - `departure.js` 改了要跑 `node --test "tests/*.test.js"`
 - **行前清單分頁**：預設項目來自 `TRIP_METADATA.checklist`，旅伴可以在自己的手機新增、刪除項目（預設項目刪掉只是不顯示，可以還原；自己加的項目跟預設項目文字一樣時，打開時自動合併成一項，打勾跟著搬過去）。打勾狀態存在 `STORAGE_KEYS.checklist`（`{ 項目 id: true/false }`），自己的項目與刪掉的預設項目存在 `STORAGE_KEYS.checklistItems`（`{ v: 1, hidden, custom }`），都只存在各自的手機；組合與新增刪除的規則在 `checklist.js`，改了要跑 `node --test "tests/*.test.js"`
 - **預算分頁**：
   - 設定只把旅伴改過的欄位存進 `STORAGE_KEYS.budget`（`{ v: 3, rate?, flight?, budgetTwd? }`），沒改過的一律用 `TRIP_METADATA.budget` 的最新值；舊版資料由 `Budget.migrateSettings()` 轉換

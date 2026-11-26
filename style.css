@@ -607,6 +607,17 @@ textarea {
   margin-top: 2px;
 }
 
+/* 每天時間軸最上面的「建議 HH:MM 從飯店出發」:沿用交通說明的虛線與圓點,時間用藍墨水加粗 */
+.depart-log {
+  font-size: 0.86rem;
+  color: var(--text-main);
+}
+
+.depart-time {
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+
 /* 🧭 Google Maps 路線連結 (時間軸與抽屜的交通區塊共用) */
 .transit-nav-link {
   display: inline-block;

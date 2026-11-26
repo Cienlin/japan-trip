@@ -1357,9 +1357,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const prevStopMap = buildPrevStopMap(allPlaces);
 
     // Build timeline elements
+    let previousDay = null;
     filteredPlaces.forEach(place => {
       // 交通資訊描述「如何抵達此地點」,所以畫在卡片之前
       const transitView = getTransitView(place, prevStopMap);
+      const isFirstOfDay = place.day !== previousDay;
+      previousDay = place.day;
+      // 當天第一次從飯店出門:先畫建議出門時間 (只在沿用共用行程的交通說明時才有可靠的分鐘數)
+      if (isFirstOfDay && transitView?.info && transitView.fromPlace.id === HOTEL_ID) {
+        const departLog = buildDepartureLog(place, transitView.info);
+        if (departLog) timelineContainer.appendChild(departLog);
+      }
       if (transitView) timelineContainer.appendChild(buildTransitLog(transitView));
 
       const itemEl = document.createElement("div");
@@ -1535,6 +1543,24 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       `;
     }
+    return el;
+  }
+
+  // 每天時間軸最上面的「建議 HH:MM 從飯店出發」(算法在 departure.js);算不出來時回傳 null
+  function buildDepartureLog(place, info) {
+    const departTime = Departure.suggest(place.time, info.duration);
+    if (!departTime) return null;
+    const el = document.createElement("div");
+    el.className = "transit-log depart-log";
+    el.innerHTML = `
+      <div class="transit-icon-wrapper">
+        <span class="transit-icon">🏨</span>
+      </div>
+      <div>
+        建議 <span class="depart-time">${escapeHtml(departTime)}</span> 從飯店出發
+        <div class="transit-details">第一站 ${escapeHtml(normalizeTime(place.time))}・路上約 ${escapeHtml(info.duration)} 分鐘</div>
+      </div>
+    `;
     return el;
   }
 

@@ -6,8 +6,19 @@
 //
 // 前一站的判斷方式與 app.js 的 buildPrevStopMap 相同:
 // 當天依時間排序,第一站的前一站是飯店;dayStart 的地點是當天起點,沒有前一站
+//
+// 當天第一次從飯店出門 (第一站的前一站是飯店) 另外檢查:
+// - 建議出門時間 (departure.js,跟 app 同一個算法) 太早時提醒,門檻見 EARLIEST_DEPARTURE
+// - 這段交通說明寫了時刻時提醒:出發時刻改由 app 算出的建議出門時間顯示,說明裡不寫
 const fs = require("fs");
 const path = require("path");
+const Departure = require("../departure.js");
+
+// 建議出門時間的門檻 = 起床時間 + 準備 1 小時 (CLAUDE.md 的排行程原則,2026-11-26):
+// 平常 9 點起床;第一站是需要早點到的景點 (例如龜有、神社) 最早 8:30 起床
+const EARLIEST_DEPARTURE = { sightseeing: "09:30", default: "10:00" };
+// 交通說明裡的時刻,例如「09:55 押上站搭…」
+const CLOCK_TIME = /(^|\D)\d{1,2}:\d{2}(?!\d)/;
 
 const ROOT = path.join(__dirname, "..");
 const read = (file) => fs.readFileSync(path.join(ROOT, file), "utf8");
@@ -153,6 +164,18 @@ for (const p of scheduled) {
   }
   if (!info.line || !info.details) {
     warnings.push(`${label(p)}的 transitInfo 缺少 line 或 details`);
+  }
+
+  // 當天第一次從飯店出門
+  if (isFirstOfDay && prev.id === HOTEL_ID) {
+    const depart = Departure.suggest(p.time, info.duration);
+    const earliest = p.category === "sightseeing" ? EARLIEST_DEPARTURE.sightseeing : EARLIEST_DEPARTURE.default;
+    if (depart && depart < earliest) {
+      warnings.push(`Day ${p.day} 要 ${depart} 出門 (第一站${label(p)} ${normalizeTime(p.time)}、路上 ${info.duration} 分鐘),早於 ${earliest}`);
+    }
+    if (CLOCK_TIME.test(info.details || "")) {
+      warnings.push(`${label(p)}是 Day ${p.day} 從飯店出發的第一段交通,說明裡寫了時刻;出發時刻改由 app 的建議出門時間顯示,說明裡不用寫`);
+    }
   }
 
   // 前一站同一天時,出發時間 + 交通時間不能晚於抵達時間 (通常是時間打錯)

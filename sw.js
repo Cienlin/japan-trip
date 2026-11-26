@@ -9,7 +9,7 @@
 //   - 其他跨源 (Leaflet CDN、Google Fonts):stale-while-revalidate
 //   圖片 / 圖磚 / CDN 快取名稱固定,改版不會被清掉
 
-const VERSION = 'v1.6.10';
+const VERSION = 'v1.7.0';
 const SHELL_CACHE = `tokyo-shell-${VERSION}`;
 const IMAGE_CACHE = 'tokyo-images';
 const TILE_CACHE = 'tokyo-tiles';
@@ -30,6 +30,7 @@ const SHELL_ASSETS = [
   './basemap.js',
   './budget.js',
   './checklist.js',
+  './departure.js',
   './assets/GoogleMaps_Logo_WithLightOutline.svg',
   './assets/GoogleMaps_Logo_WithDarkOutline.svg',
   './manifest.json',

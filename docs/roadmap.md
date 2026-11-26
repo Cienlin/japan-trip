@@ -11,14 +11,14 @@
 |---|---|---|
 | Phase 0 | 導入開發流程（OpenSpec + Matt Pocock skills）、建立名詞表 `GLOSSARY.md`，只動文件 | ✅ 2026-10-01 |
 | Phase 1 | 規則考古：把現有程式的規則寫成基準規格 `openspec/specs/`（8 份）；程式跟規格不一致的地方、還沒決定的設計問題記在 `docs/backlog.md` | ✅ 2026-10-01 寫完，使用者審閱中 |
-| Phase 2 | 凍結期：旅行結束前不動網站架構，只做 Quick fix（行程資料、照片、行前指南文字）。破例：地圖底圖改用 Google 圖磚（OpenSpec change `google-map-tiles`，2026-11-12 完成，v1.4.9 上線）；預算分頁與逐筆記帳（`budget-tab`，2026-11-12 完成，v1.4.16 上線）；外觀改版「藍墨水手帳」（`notebook-look`，2026-11-16 完成，v1.5.0 上線）；行前清單獨立分頁、可自己新增刪除項目（`checklist-tab`，2026-11-16 完成，v1.6.0 上線） | 進行中，到 2026-12-14 |
+| Phase 2 | 凍結期：旅行結束前不動網站架構，只做 Quick fix（行程資料、照片、行前指南文字）。破例：地圖底圖改用 Google 圖磚（OpenSpec change `google-map-tiles`，2026-11-12 完成，v1.4.9 上線）；預算分頁與逐筆記帳（`budget-tab`，2026-11-12 完成，v1.4.16 上線）；外觀改版「藍墨水手帳」（`notebook-look`，2026-11-16 完成，v1.5.0 上線）；行前清單獨立分頁、可自己新增刪除項目（`checklist-tab`，2026-11-16 完成，v1.6.0 上線）；時間軸每天顯示建議出門時間（`depart-time`，2026-11-26 進行中） | 進行中，到 2026-12-14 |
 | Phase 3 | 重構：資料跟程式分開，純邏輯拆成模組並用 `node --test` 測試；處理 backlog 標「Phase 3」的項目，並決定 D1、D2 | 旅行後 |
 | Phase 4 | 加後端，讓旅伴的修改能同步；一併決定 backlog B9 | 旅行後 |
 | Phase 5 | 需要手機原生功能時，才用 Capacitor 包成 App | 視需要 |
 
 ## 目前進度
 
-最後更新：2026-11-16
+最後更新：2026-11-26
 
 - Phase 1 的規格與 backlog 已 commit，使用者還在審閱；有要改的地方直接改規格或 backlog
 - 旅行前原則上只做 Quick fix；Phase 3 等旅行結束再開始
@@ -26,3 +26,4 @@
 - 凍結期破例已完成（2026-11-12）：預算計算機搬到新的「預算」分頁，總預算各自設定，旅途中逐筆記錄花費；使用者手機實測通過。紀錄在 `openspec/changes/archive/` 的 `budget-tab`
 - 凍結期破例已完成（2026-11-16）：外觀改版「藍墨水手帳」，用 artifact 樣板定案（字型改霞鶩文楷、便條紙＋淺藍紙膠帶、螢光筆標示分頁、方格紙只鋪在行程區、天數按鈕加日期）；使用者手機實測通過。紀錄在 `openspec/changes/archive/` 的 `notebook-look`，規格在 `openspec/specs/appearance`
 - 凍結期破例已完成（2026-11-16）：行前清單從行前指南搬到最後一個分頁，每個人可以在自己的手機新增、刪除項目（預設項目寫在 `data.js`，刪掉可還原；自己加的項目跟預設項目一樣時自動合併）；使用者手機實測通過。紀錄在 `openspec/changes/archive/` 的 `checklist-tab`，規格在 `openspec/specs/packing-checklist`
+- 凍結期破例進行中（2026-11-26）：時間軸每天最上面顯示「建議 HH:MM 從飯店出發」，由第一站時間減掉交通分鐘數自動算出；資料檢查提醒出門太早（第一站是景點 09:30、其他 10:00）。OpenSpec change `depart-time`
