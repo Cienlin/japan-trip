@@ -224,6 +224,27 @@ const PLACES = [
     }
   },
   {
+    // 2026-11-26 從 D3 新宿店改到有樂町這間 (id 沿用,手機上的本機修改才對得上)
+    id: "shake_shack_shinjuku",
+    name: "Shake Shack 東京國際論壇店",
+    englishName: "Shake Shack Tokyo International Forum (東京国際フォーラム店)",
+    category: "food",
+    lat: 35.676377,
+    lng: 139.763542,
+    day: 2,
+    time: "16:00",
+    desc: "有樂丁旁邊就有",
+    imageFolder: "Shake Shack 新宿",
+    gmaps: "https://maps.app.goo.gl/N6BM7Cv5CkdcTCii7",
+    transitInfo: {
+      from: "THE STAND 可麗露",
+      method: "walk",
+      line: "徒步 (Walk 約 200m)",
+      duration: 3,
+      details: "從 THE STAND 往有樂町站方向走，Shake Shack 在東京國際論壇 C 棟 1F，有樂町站出來走 1 分鐘。"
+    }
+  },
+  {
     id: "tamatoya_tokyo_station",
     name: "月島もんじゃ たまとや 東京駅",
     englishName: "Tsukishima Monja Tamatoya Tokyo Station (月島もんじゃ たまとや 東京駅)",
@@ -236,11 +257,11 @@ const PLACES = [
     imageFolder: "月島もんじゃ たまとや",
     gmaps: "https://maps.google.com/?q=月島もんじゃ+たまとや+東京駅",
     transitInfo: {
-      from: "THE STAND 可麗露",
+      from: "Shake Shack 東京國際論壇店",
       method: "train",
       line: "JR 山手線 (有樂町 → 東京)",
       duration: 12,
-      details: "從 THE STAND 走到有樂町站，搭 JR 山手線 1 站到東京站（2 分鐘），往八重洲北口方向走到グランスタ八重北 B1F 黑塀橫丁。"
+      details: "從 Shake Shack 走到有樂町站（約 2 分鐘），搭 JR 山手線 1 站到東京站（2 分鐘），往八重洲北口方向走到グランスタ八重北 B1F 黑塀橫丁。"
     }
   },
   {
@@ -346,26 +367,6 @@ const PLACES = [
     }
   },
   {
-    id: "shake_shack_shinjuku",
-    name: "Shake Shack 新宿 Southern Terrace",
-    englishName: "Shake Shack Shinjuku Southern Terrace",
-    category: "food",
-    lat: 35.6862,
-    lng: 139.7005,
-    day: 3,
-    time: "14:30",
-    desc: "新宿南口小田急塔 2F，吃一下",
-    imageFolder: "Shake Shack 新宿",
-    gmaps: "https://maps.google.com/?q=Shake+Shack+Shinjuku+Southern+Terrace",
-    transitInfo: {
-      from: "魔法少女吉伊卡哇專賣店 新宿店",
-      method: "walk",
-      line: "徒步 (Walk 600m)",
-      duration: 8,
-      details: "從新宿 Marui 本館沿甲州街道往新宿南口方向步行 600 公尺至小田急南塔 2F。"
-    }
-  },
-  {
     // 押上的兩家串燒店二選一 (都在とうきょうスカイツリー站旁),座標用車站;還沒選定所以不放 Google Maps 連結
     id: "omoide_yokocho",
     name: "居酒屋",
@@ -379,11 +380,11 @@ const PLACES = [
     imageFolder: "居酒屋",
     gmaps: null,
     transitInfo: {
-      from: "Shake Shack 新宿",
+      from: "魔法少女吉伊卡哇專賣店 新宿店",
       method: "subway",
-      line: "都營新宿線 → 半藏門線 (新宿 → 押上)",
-      duration: 45,
-      details: "新宿站搭都營新宿線到九段下站，轉半藏門線到押上站（約 30 分鐘）。可以先回飯店放戰利品，再從飯店走約 7 分鐘到とうきょうスカイツリー站旁；吃完走回飯店，不用趕末班車。"
+      line: "都營新宿線 → 半藏門線 (新宿三丁目 → 押上)",
+      duration: 40,
+      details: "從新宿 Marui 本館走到新宿三丁目站，搭都營新宿線到九段下站，轉半藏門線到押上站（約 30 分鐘）。可以先回飯店放戰利品，再從飯店走約 7 分鐘到とうきょうスカイツリー站旁；吃完走回飯店，不用趕末班車。"
     }
   },
 
