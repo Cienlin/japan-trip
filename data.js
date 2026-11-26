@@ -126,19 +126,19 @@ const PLACES = [
     name: "Lawson 押上店 (第一晚宵夜)",
     englishName: "Lawson Oshiage",
     category: "food",
-    lat: 35.7115,
-    lng: 139.8138,
+    lat: 35.707195,
+    lng: 139.814303,
     day: 1,
     time: "21:45",
     desc: "必吃炸機跟炸熱狗，可以買回去房間吃",
     imageFolder: "Lawson 押上店",
-    gmaps: "https://maps.google.com/?q=Lawson+Oshiage",
+    gmaps: "https://maps.app.goo.gl/khvugDydoS4jSPTJ6",
     transitInfo: {
       from: "大阪燒文字稍",
       method: "walk",
-      line: "徒步 (Walk 約 500m)",
-      duration: 7,
-      details: "吃完往押上站方向走約 500 公尺，買完再走回飯店（約 600 公尺）。"
+      line: "徒步 (Walk 約 250m)",
+      duration: 4,
+      details: "吃完往飯店方向走約 250 公尺，Lawson 就在飯店附近，買完走回飯店只要 1～2 分鐘。"
     }
   },
 
